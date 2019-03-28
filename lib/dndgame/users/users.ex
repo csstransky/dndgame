@@ -1,12 +1,12 @@
-defmodule TaskTracker.Users do
+defmodule Dndgame.Users do
   @moduledoc """
   The Users context.
   """
 
   import Ecto.Query, warn: false
-  alias TaskTracker.Repo
+  alias Dndgame.Repo
 
-  alias TaskTracker.Users.User
+  alias Dndgame.Users.User
 
   @doc """
   Returns the list of users.
