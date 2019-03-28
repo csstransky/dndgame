@@ -12,7 +12,7 @@ config :dndgame,
 
 # Configures the endpoint
 config :dndgame, DndgameWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "localhost", port: 4000],
   secret_key_base: "unqO1DktJZjiORiKv96vtIFP4WgyF46nno6VimjPdWCcvXKQ+uAdllHSuG8MYgod",
   render_errors: [view: DndgameWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Dndgame.PubSub, adapter: Phoenix.PubSub.PG2]

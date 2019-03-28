@@ -68,8 +68,8 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :dndgame, Dndgame.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "dndgame",
+  password: "dndgame",
   database: "dndgame_dev",
   hostname: "localhost",
   pool_size: 10
