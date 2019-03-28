@@ -73,7 +73,7 @@ defmodule Dndgame.Users do
     if manager_id == nil do
       "No Manager Assigned"
     else
-      manager = TaskTracker.Users.get_user!(manager_id)
+      manager = Dndgame.Users.get_user!(manager_id)
       manager.name
     end
   end
