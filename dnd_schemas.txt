@@ -1,0 +1,120 @@
+Character
++ Name: String
++ STR: int
++ DEX: int
++ CON: int
++ INT: int
++ WIS: int
++ CHA: int
+// I don't know if this helps, but I want saves and profiencies to be loaded from class
+// and race so that you don't have to go fishing for it with a DB query
++ Saves: [String] // ["STR", "CON"]
++ Profiencies: [string] // ["Athletics", "Stealth"]
++ Prof_Bonus: int
++ weapon_prof: [string] // ["Simple", "Martial"]
++ armor_prof: [string] // ["light", "medium"]
++ Initiative: int
++ HP: int
++ AC: int
++ MP: int
++ SP: int
++ level: int
++ exp: int
++ Weapon: has_one
++ Armor: has_one
++ Race: has_one
++ Class: has_one
+// Another option is that all the relations up top are maps instead that are loaded into, like:
+// Class: %{skills, hit_dice}, but then you run into the issue with skills
+
+
+Race
++ Name: String
++ Desc: String
++ Profiencies: [string] // ["Athletics", "Stealth"]
++ Saves: [String] // ["STR", "CON"]
+// Better way to do this?
++ STR_Bonus: int
++ DEX_Bonus: int
++ CON_Bonus: int
++ INT_Bonus: int
++ WIS_Bonus: int
++ CHA_Bonus: int
++ Size: string
+
+Class
++ Name: String
++ Desc: String
++ hit_dice: (range_min, range_top)
++ Profiencies: [string] // ["Athletics", "Stealth"]
++ Saves: [String] // ["STR", "CON"]
++ weapon_prof: [string] // ["Simple", "Martial"]
++ armor_prof: [string] // ["light", "medium"]
++ skills: has_many
++ spells: has_many
+
+// Does it make sense to actually combine spells and skils?
+Skill
++ Name: String
++ Desc: String
++ level_req: int
++ type: string ("damage", "buff", "debuff", "heal", "rest") // I think I'm going to replace "damge" with //  //"fire", "ice", etc instead
++ sp_cost: int
++ dice: (range_min, range_top)
++ dice_bonus: int
++ target: string ("self", "enemy", "party", "enemies")
+
+Spell
++ Name: String
++ Desc: String
++ level_req: int
++ type: string ("damage", "buff", "debuff", "heal", "rest"
++ mp_cost: int
++ dice: (range_min, range_top)
++ dice_bonus: int
++ target: string ("self", "enemy", "party", "enemies")
+
+
+Weapon
++ Name: String 
++ Desc: String
++ Attack: reference ->
++ weapon_category: String 
+
+Attack
++ Name: String
++ Desc: String
++ Attack_Bonus: int
++ type: string // "fire", "ice"
++ Damage_Dice: (range_min, range_top) // tuple
++ Damage_Bonus: int
+
+Armor
++ Name: String
++ Desc: String
++ armor_category: String // "light", "heavy"
++ base: int
++ dex_bonus: Boolean
++ STR_minimum: int
++ stealth_disadvantage: Boolean
+
+# For splitting die: 
+dice = "2d6"
+String.split(dice, "d")
+Output : ["2", "5"]
+
+=======================
+Starting stuff for now:
+=======================
+Classes:
+Barbarian
+Wizard
+Cleric
+Rogue
+
+Races:
+Human
+Gnome
+Elf
+Dwarf
+Dragonborn
