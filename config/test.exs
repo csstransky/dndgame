@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :dndgame, Dndgame.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "dndgame",
+  password: "dndgame",
   database: "dndgame_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

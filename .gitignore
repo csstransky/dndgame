@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-dndgame-*.tar
+memory-*.tar
 
 # If NPM crashes, it generates a log, let's ignore it too.
 npm-debug.log
@@ -40,3 +40,13 @@ npm-debug.log
 # secrets files as long as you replace their contents by environment
 # variables.
 /config/*.secret.exs
+
+# I'm starting to think that downloading Atom was a big mistake
+.elixir_ls/
+/.elixir_ls/
+/.elix*
+
+# For Bryce's stuff
+.idea/
+/.id*
+*.iml
