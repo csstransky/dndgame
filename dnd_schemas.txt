@@ -29,9 +29,7 @@ Character
 
 Race
 + Name: String
-+ Desc: String\
-+ Saves: [String] // ["STR", "CON"]
-// Better way to do this?
++ Desc: String
 + STR_Bonus: int
 + DEX_Bonus: int
 + CON_Bonus: int
