@@ -1,14 +1,18 @@
 # from ntuck
 
-defmodule Dndgame.AuthController do
+defmodule DndgameWeb.AuthController do
   use DndgameWeb, :controller
   alias Dndgame.User
+
+  def index(conn, _params) do
+    render(conn, "index.html")
+  end
 
   @doc """
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
   based on the chosen strategy.
   """
-  def index(conn, %{"provider" => provider}) do
+  def index2(conn, %{"provider" => provider}) do
     redirect conn, external: authorize_url!(provider)
   end
 

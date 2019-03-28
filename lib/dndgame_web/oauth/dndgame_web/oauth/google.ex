@@ -17,7 +17,7 @@ defmodule Google do
   # Public API
 
   def client do
-    Application.get_env(:oauth2_example, Google)
+    Application.get_env(:dndgame, Google)
     |> Keyword.merge(config())
     |> OAuth2.Client.new()
   end

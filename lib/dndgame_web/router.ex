@@ -17,14 +17,14 @@ defmodule DndgameWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/login", AuthController, :index
+    get "/login", LoginController, :login
     resources "/users", UserController
   end
 
-  scope "/auth", Dndgame do
+  scope "/auth", DndgameWeb do
     pipe_through :browser
 
-    get "/:provider", AuthController, :index
+    get "/:provider", AuthController, :index2
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
   end
