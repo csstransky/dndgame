@@ -1,3 +1,8 @@
+User
++ Email: String
++ Password_Hash: String
++ Token: String // We'll ask Bryce, but is this really a string?
+
 Character
 + Name: String
 + STR: int
@@ -20,12 +25,11 @@ Character
 + SP: int
 + level: int
 + exp: int
-+ Weapon: has_one
-+ Armor: has_one
-+ Race: has_one
-+ Class: has_one
-// Another option is that all the relations up top are maps instead that are loaded into, like:
-// Class: %{skills, hit_dice}, but then you run into the issue with skills
++ Weapon: has_one Weapon
++ Armor: has_one Armor
++ Race: has_one Race
++ Class: hax_one Class
++ User: belongs_to User
 
 
 Race
@@ -72,13 +76,13 @@ Spell
 + mp_cost: int
 + dice: (range_min, range_top)
 + dice_bonus: int
-+ target: string ("self", "enemy", "party", "enemies")
++ target: string ("member", "enemy", "party", "enemies")
 
 
 Weapon
 + Name: String 
 + Desc: String
-+ Attack: reference ->
++ Attack: has_one Attack
 + weapon_category: String 
 
 Attack
@@ -88,6 +92,7 @@ Attack
 + type: string // "fire", "ice"
 + Damage_Dice: (range_min, range_top) // tuple
 + Damage_Bonus: int
++ target: string ("member", "enemy", "party", "enemies")
 
 Armor
 + Name: String
@@ -98,10 +103,37 @@ Armor
 + STR_minimum: int
 + stealth_disadvantage: Boolean
 
-# For splitting die: 
-dice = "2d6"
-String.split(dice, "d")
-Output : ["2", "5"]
+Monster
++ Name: string
++ Desc: string
++ HP: int
++ Saves: [String] // ["STR", "CON"]
++ Profiencies: [string] // ["Athletics", "Stealth"] needed?
++ Prof_Bonus: int
++ Initiative: int
++ HP: int
++ AC: int
++ MP: int
++ SP: int
++ Type: String // "fire", "ice"
++ Attacks: has_many ??
+
+
+Monster_has_attack (join table)
++ Monster_id
++ Attack_id
+
+Character_has_item (join table)
++ Character_id
++ Item_id
+
+Character_has_skill (join table)
++ Character_id
++ Skill_id
+
+Character_has_spell (join table)
++ Character_id
++ Spell_id
 
 =======================
 Starting stuff for now:
@@ -118,3 +150,9 @@ Gnome
 Elf
 Dwarf
 Dragonborn
+
+
+# For splitting die: 
+dice = "2d6"
+String.split(dice, "d")
+Output : ["2", "5"]
