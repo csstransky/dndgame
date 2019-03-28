@@ -3,20 +3,20 @@ defmodule Dndgame.Repo.Migrations.CreateCharacters do
 
   def change do
     create table(:characters) do
-      add :name, :string
-      add :str, :integer
-      add :dex, :integer
-      add :con, :integer
-      add :int, :integer
-      add :wis, :integer
-      add :cha, :integer
-      add :initiative, :integer
-      add :hp, :integer
       add :ac, :integer
-      add :mp, :integer
-      add :sp, :integer
-      add :level, :integer
+      add :cha, :integer
+      add :con, :integer
+      add :dex, :integer
       add :exp, :integer
+      add :hp, :integer
+      add :initiative, :integer
+      add :int, :integer
+      add :level, :integer
+      add :mp, :integer
+      add :name, :string
+      add :sp, :integer
+      add :str, :integer
+      add :wis, :integer
       add :weapon, references(:weapons, on_delete: :nothing)
       add :armor, references(:armors, on_delete: :nothing)
       add :race, references(:races, on_delete: :nothing)

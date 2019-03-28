@@ -1,0 +1,78 @@
+<h1>Show Character</h1>
+
+<ul>
+
+  <li>
+    <strong>Ac:</strong>
+    <%= @character.ac %>
+  </li>
+
+  <li>
+    <strong>Cha:</strong>
+    <%= @character.cha %>
+  </li>
+
+  <li>
+    <strong>Con:</strong>
+    <%= @character.con %>
+  </li>
+
+  <li>
+    <strong>Dex:</strong>
+    <%= @character.dex %>
+  </li>
+
+  <li>
+    <strong>Exp:</strong>
+    <%= @character.exp %>
+  </li>
+
+  <li>
+    <strong>Hp:</strong>
+    <%= @character.hp %>
+  </li>
+
+  <li>
+    <strong>Initiative:</strong>
+    <%= @character.initiative %>
+  </li>
+
+  <li>
+    <strong>Int:</strong>
+    <%= @character.int %>
+  </li>
+
+  <li>
+    <strong>Level:</strong>
+    <%= @character.level %>
+  </li>
+
+  <li>
+    <strong>Mp:</strong>
+    <%= @character.mp %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @character.name %>
+  </li>
+
+  <li>
+    <strong>Sp:</strong>
+    <%= @character.sp %>
+  </li>
+
+  <li>
+    <strong>Str:</strong>
+    <%= @character.str %>
+  </li>
+
+  <li>
+    <strong>Wis:</strong>
+    <%= @character.wis %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.character_path(@conn, :edit, @character) %></span>
+<span><%= link "Back", to: Routes.character_path(@conn, :index) %></span>

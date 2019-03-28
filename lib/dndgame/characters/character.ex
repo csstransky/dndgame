@@ -29,7 +29,7 @@ defmodule Dndgame.Characters.Character do
   @doc false
   def changeset(character, attrs) do
     character
-    |> cast(attrs, [:name, :str, :dex, :con, :int, :wis, :cha, :initiative, :hp, :ac, :mp, :sp, :level, :exp])
-    |> validate_required([:name, :str, :dex, :con, :int, :wis, :cha, :initiative, :hp, :ac, :mp, :sp, :level, :exp])
+    |> cast(attrs, [:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis])
+    |> validate_required([:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis])
   end
 end

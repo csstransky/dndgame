@@ -18,6 +18,7 @@ defmodule DndgameWeb.Router do
 
     get "/", PageController, :index
     resources "/users", UserController
+    resources "/characters", CharacterController
   end
 
   # Other scopes may use custom stacks.
