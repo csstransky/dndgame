@@ -28,7 +28,7 @@ Character
 + Weapon: has_one Weapon
 + Armor: has_one Armor
 + Race: has_one Race
-+ Class: hax_one Class
++ Class: has_one Class
 + User: belongs_to User
 
 
@@ -117,7 +117,6 @@ Monster
 + SP: int
 + Type: String // "fire", "ice"
 + Attacks: has_many ??
-
 
 Monster_has_attack (join table)
 + Monster_id
