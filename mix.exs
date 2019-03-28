@@ -20,7 +20,7 @@ defmodule Dndgame.MixProject do
   def application do
     [
       mod: {Dndgame.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :oauth2]
     ]
   end
 
@@ -46,6 +46,7 @@ defmodule Dndgame.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:distillery, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
+      {:oauth2, "~> 1.0"},
     ]
   end
 

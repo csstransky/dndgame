@@ -45,6 +45,14 @@ config :dndgame, DndgameWeb.Endpoint,
 # configured to run both http and https servers on
 # different ports.
 
+
+# OAuth config
+config :oauth2_example, Google,
+       client_id: System.get_env("GOOGLE_CLIENT_ID"),
+       client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
+       redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
+
+
 # Watch static and templates for browser reloading.
 config :dndgame, DndgameWeb.Endpoint,
   live_reload: [

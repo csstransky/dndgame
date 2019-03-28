@@ -1,12 +1,12 @@
-defmodule TaskTracker.Users do
+defmodule Dndgame.Users do
   @moduledoc """
   The Users context.
   """
 
   import Ecto.Query, warn: false
-  alias TaskTracker.Repo
+  alias Dndgame.Repo
 
-  alias TaskTracker.Users.User
+  alias Dndgame.Users.User
 
   @doc """
   Returns the list of users.
@@ -73,7 +73,7 @@ defmodule TaskTracker.Users do
     if manager_id == nil do
       "No Manager Assigned"
     else
-      manager = TaskTracker.Users.get_user!(manager_id)
+      manager = Dndgame.Users.get_user!(manager_id)
       manager.name
     end
   end
