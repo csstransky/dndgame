@@ -47,7 +47,7 @@ config :dndgame, DndgameWeb.Endpoint,
 
 
 # OAuth config
-config :oauth2_example, Google,
+config :dndgame, Google,
        client_id: System.get_env("GOOGLE_CLIENT_ID"),
        client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
        redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
