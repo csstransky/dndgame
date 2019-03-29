@@ -15,6 +15,16 @@
       <%= error_tag f, :name %> </td>
     </tr>
     <tr>
+      <td> <Strong> Class </Strong> </td>
+      <td> <%= select f, :race_id, Dndgame.Races.select_races(), class: "form-control" %> </td>
+
+ 
+    </tr>
+    <tr> 
+      <td> <Strong> Race </Strong> </td>
+      <td> <%= select f, :class_id, Dndgame.Classes.select_classes(), class: "form-control" %> </td>
+    </tr>
+    <tr>
       <td> <Strong> Armor Class </Strong> </td>
       <td><%= number_input f, :ac %>
        <%= error_tag f, :ac %> </td>
@@ -40,11 +50,7 @@
       <%= error_tag f, :initiative %> </td>
     </tr>
   </table>
-  </div>
-  <div class="col">
-    <%= select f, :race_id, Dndgame.Races.select_races() %>
-    <%= select f, :class_id, Dndgame.Classes.select_classes() %>
-  </div>
+ </div>
 </div>
 
 
