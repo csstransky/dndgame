@@ -17,6 +17,9 @@ defmodule Dndgame.Repo.Migrations.CreateCharacters do
       add :sp, :integer
       add :str, :integer
       add :wis, :integer
+      add :prof_bonus, :integer
+      add :prof_array, {:array, :string}
+      add :save_array, {:array, :string}
       add :weapon, references(:weapons, on_delete: :nothing)
       add :armor, references(:armors, on_delete: :nothing)
       add :race, references(:races, on_delete: :nothing)
@@ -26,10 +29,10 @@ defmodule Dndgame.Repo.Migrations.CreateCharacters do
       timestamps()
     end
 
-    create index(:characters, [:weapon])
-    create index(:characters, [:armor])
-    create index(:characters, [:race])
-    create index(:characters, [:class])
-    create index(:characters, [:user])
+    create index(:characters, [:weapon_id])
+    create index(:characters, [:armor_id])
+    create index(:characters, [:race_id])
+    create index(:characters, [:class_id])
+    create index(:characters, [:user_id])
   end
 end

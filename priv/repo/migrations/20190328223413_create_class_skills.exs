@@ -9,7 +9,6 @@ defmodule Dndgame.Repo.Migrations.CreateClassSkills do
       timestamps()
     end
 
-    create index(:class_skills, [:class_id])
-    create index(:class_skills, [:skill_id])
+    create unique_index(:class_skills, [:class_id, :skill_id])
   end
 end

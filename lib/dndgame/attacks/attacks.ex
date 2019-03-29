@@ -37,6 +37,10 @@ defmodule Dndgame.Attacks do
   """
   def get_attack!(id), do: Repo.get!(Attack, id)
 
+  def get_attack_by_name(name) do
+    Repo.get_by(Attack, name: name)
+  end
+
   @doc """
   Creates a attack.
 

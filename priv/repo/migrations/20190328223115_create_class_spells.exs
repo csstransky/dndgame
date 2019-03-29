@@ -3,13 +3,12 @@ defmodule Dndgame.Repo.Migrations.CreateClassSpells do
 
   def change do
     create table(:class_spells) do
-      add :class_id, references(:classes, on_delete: :nothing)
-      add :spell_id, references(:spells, on_delete: :nothing)
+      add :class_id, references(:classes)
+      add :spell_id, references(:spells)
 
       timestamps()
     end
 
-    create index(:class_spells, [:class_id])
-    create index(:class_spells, [:spell_id])
+    create unique_index(:class_spells, [:class_id, :spell_id])
   end
 end
