@@ -2,66 +2,121 @@
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
+<div>
     </div>
   <% end %>
 
-  <%= label f, :ac %>
-  <%= number_input f, :ac %>
-  <%= error_tag f, :ac %>
+<div class="row">
+  <table class="table">
+    <tr>
+      <td> <Strong> Name </Strong> </td>
+      <td> <%= text_input f, :name %>
+      <%= error_tag f, :name %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Armor Class </Strong> </td>
+      <td><%= number_input f, :ac %>
+       <%= error_tag f, :ac %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Health </Strong> </td>
+      <td> <%= number_input f, :hp %>
+        <%= error_tag f, :hp %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Mana </Strong> </td>
+      <td> <%= number_input f, :mp %>
+           <%= error_tag f, :mp %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Skill Points </Strong> </td>
+      <td> <%= number_input f, :sp %>
+         <%= error_tag f, :sp %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Initiative </Strong> </td>
+      <td> <%= number_input f, :initiative %>
+      <%= error_tag f, :initiative %> </td>
+    </tr>
+  </table>
+</div>
 
-  <%= label f, :cha %>
-  <%= number_input f, :cha %>
-  <%= error_tag f, :cha %>
 
-  <%= label f, :con %>
-  <%= number_input f, :con %>
-  <%= error_tag f, :con %>
-
-  <%= label f, :dex %>
-  <%= number_input f, :dex %>
-  <%= error_tag f, :dex %>
-
-  <%= label f, :exp %>
-  <%= number_input f, :exp %>
-  <%= error_tag f, :exp %>
-
-  <%= label f, :hp %>
-  <%= number_input f, :hp %>
-  <%= error_tag f, :hp %>
-
-  <%= label f, :initiative %>
-  <%= number_input f, :initiative %>
-  <%= error_tag f, :initiative %>
-
-  <%= label f, :int %>
-  <%= number_input f, :int %>
-  <%= error_tag f, :int %>
-
-  <%= label f, :level %>
-  <%= number_input f, :level %>
-  <%= error_tag f, :level %>
-
-  <%= label f, :mp %>
-  <%= number_input f, :mp %>
-  <%= error_tag f, :mp %>
-
-  <%= label f, :name %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
-
-  <%= label f, :sp %>
-  <%= number_input f, :sp %>
-  <%= error_tag f, :sp %>
-
-  <%= label f, :str %>
-  <%= number_input f, :str %>
-  <%= error_tag f, :str %>
-
-  <%= label f, :wis %>
-  <%= number_input f, :wis %>
-  <%= error_tag f, :wis %>
-
+  <div class="row" id="attrs">
+    <h2><u> Stats</u></h2>
+    <table class="table table-hover table-sm">
+      <thead>
+        <th scope="col-sm-8"> Skill </th>
+        <th scope="col-sm-8"> Value </th>
+      </thead>
+      <tbody>
+        <tr>
+          <td> <Strong> Dexterity </Strong> </td>
+          <td> <a id="dex2">0 </a>
+            <%= hidden_input f, :dex, id: "dex" %>
+            <%= error_tag f, :dex %> </td>
+       </tr>
+       <tr>
+         <td> <Strong> Charisma </Strong> </td>
+         <td> <a id="cha2"> 0 </a>
+           <%= hidden_input f, :cha, id: "cha" %>
+           <%= error_tag f, :cha %> </td>
+       </tr>
+       <tr>
+          <td> <Strong> Constitution </Strong> </td>
+          <td> <a id="con2"> 0 </a>
+            <%= hidden_input f, :con, id: "con" %>
+            <%= error_tag f, :con %> </td>
+       </tr>
+       <tr>
+         <td> <Strong> Intelligence </Strong> </td>
+         <td> <a id="int2"> 0 </a>
+          <%= hidden_input f, :int, id: "int" %>
+          <%= error_tag f, :int %> </td>
+       </tr>
+       <tr>
+         <td> <Strong> Strength </Strong> </td>
+         <td> <a id="str2"> 0 </a>
+           <%= hidden_input f, :str, id: "str" %>
+           <%= error_tag f, :str %> </td>
+       </tr>
+       <tr>
+         <td> <Strong> Wisdom </Strong> </td>
+         <td> <a id="wis2"> 0 </a>
+          <%= hidden_input f, :wis, id: "wis" %>
+         <%= error_tag f, :wis %> </td>
+       </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-primary" onClick="stats()" > Roll </button>
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-success"%>
   </div>
 <% end %>
+</div>
+
+<script>
+function stats() {
+  let stats = [];
+  let i;
+  for(i = 0; i < 6; i++) {
+    // gen a random number [3, 18]
+    let stat = Math.floor((Math.random() * 18) + 3);
+    stats.push(stat);
+  }
+  document.getElementById("dex").value = stats[0];
+  document.getElementById("dex2").innerHTML = stats[0];
+  document.getElementById("cha").value = stats[1];
+  document.getElementById("cha2").innerHTML = stats[1];
+  document.getElementById("con").value = stats[2];
+  document.getElementById("con2").innerHTML = stats[2];
+  document.getElementById("int").value = stats[3];
+  document.getElementById("int2").innerHTML = stats[3];
+  document.getElementById("str").value = stats[4];
+  document.getElementById("str2").innerHTML = stats[4];
+  document.getElementById("wis").value = stats[5];
+  document.getElementById("wis2").innerHTML = stats[5];
+} 
+</script>
+
