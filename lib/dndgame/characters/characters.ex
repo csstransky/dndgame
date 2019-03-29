@@ -18,7 +18,9 @@ defmodule Dndgame.Characters do
 
   """
   def list_characters do
+    preloads = [:armor, :weapon, :race, :class, :user]
     Repo.all(Character)
+    |> Repo.preload(preloads)
   end
 
   @doc """
@@ -35,7 +37,13 @@ defmodule Dndgame.Characters do
       ** (Ecto.NoResultsError)
 
   """
-  def get_character!(id), do: Repo.get!(Character, id)
+  def get_character!(id) do
+    Repo.one! from c in Character,
+      where: c.id == ^id,
+      preload: [:armor]
+   end
+
+  def get_character(id), do: Repo.get(Character, id)
 
   @doc """
   Creates a character.
@@ -102,10 +110,31 @@ defmodule Dndgame.Characters do
     Character.changeset(character, %{})
   end
 
+
       #field :ac, :integer
-  def get_ac(id) do
-    character = Character.get_character!(id)
+  def get_ac(%Character{} = character) do
     armor = character.armor
     IO.inspect(armor)
+    133
+  end
+
+  def get_hp(%Character{} = character) do
+    133
+  end
+
+  def get_mp(%Character{} = character) do
+    133
+  end
+
+  def get_sp(%Character{} = character) do
+    133
+  end
+
+  def get_initiative(%Character{} = character) do
+    133
+  end
+
+  def get_level(%Character{} = character) do
+    133
   end
 end

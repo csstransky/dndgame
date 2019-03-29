@@ -24,18 +24,18 @@
   <tbody>
 <%= for character <- @characters do %>
     <tr>
-      <td><%= character.ac %></td>
+      <td><%= Dndgame.Characters.get_ac(character) %></td>
       <td><%= character.cha %></td>
       <td><%= character.con %></td>
       <td><%= character.dex %></td>
       <td><%= character.exp %></td>
-      <td><%= character.hp %></td>
-      <td><%= character.initiative %></td>
+      <td><%= Dndgame.Characters.get_hp(character) %></td>
+      <td><%= Dndgame.Characters.get_initiative(character) %></td>
       <td><%= character.int %></td>
-      <td><%= character.level %></td>
-      <td><%= character.mp %></td>
+      <td><%= Dndgame.Characters.get_level(character) %></td>
+      <td><%= Dndgame.Characters.get_mp(character) %></td>
       <td><%= character.name %></td>
-      <td><%= character.sp %></td>
+      <td><%= Dndgame.Characters.get_sp(character) %></td>
       <td><%= character.str %></td>
       <td><%= character.wis %></td>
 
