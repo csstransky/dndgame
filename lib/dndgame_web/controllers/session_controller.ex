@@ -1,12 +1,12 @@
 defmodule DndgameWeb.SessionController do
   use DndgameWeb, :controller
 
-  def create(conn, %{"name" => name}) do
-    user = Dndgame.Users.get_user_by_name(name)
+  def create(conn, %{"email" => email}) do
+    user = Dndgame.Users.get_user_by_email(email)
     if user do
       conn
       |> put_session(:user_id, user.id)
-      |> put_flash(:info, "Welcome back #{user.name}")
+      |> put_flash(:info, "Welcome back #{user.email}")
       |> redirect(to: Routes.page_path(conn, :index))
     else
       conn

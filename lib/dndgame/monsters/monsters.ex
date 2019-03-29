@@ -37,6 +37,10 @@ defmodule Dndgame.Monsters do
   """
   def get_monster!(id), do: Repo.get!(Monster, id)
 
+  def get_monster_by_name(name) do
+    Repo.get_by(Monster, name: name)
+  end
+
   @doc """
   Creates a monster.
 

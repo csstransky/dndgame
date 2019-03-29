@@ -37,6 +37,10 @@ defmodule Dndgame.Races do
   """
   def get_race!(id), do: Repo.get!(Race, id)
 
+  def get_race_by_name(name) do
+    Repo.get_by(Race, name: name)
+  end
+
   @doc """
   Creates a race.
 

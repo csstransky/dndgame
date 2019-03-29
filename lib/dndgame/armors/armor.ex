@@ -9,7 +9,7 @@ defmodule Dndgame.Armors.Armor do
     field :dex_bonus, :boolean, default: false
     field :name, :string
     field :stealth_disadvantage, :boolean, default: false
-    field :str_minimum, :integer
+    field :str_minimum, :integer, default: 0
 
     timestamps()
   end

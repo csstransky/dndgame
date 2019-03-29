@@ -37,6 +37,10 @@ defmodule Dndgame.Armors do
   """
   def get_armor!(id), do: Repo.get!(Armor, id)
 
+  def get_armor_by_name(name) do
+    Repo.get_by(Armor, name: name)
+  end
+
   @doc """
   Creates a armor.
 

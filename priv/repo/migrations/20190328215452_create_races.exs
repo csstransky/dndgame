@@ -14,6 +14,8 @@ defmodule Dndgame.Repo.Migrations.CreateRaces do
       add :size, :string
       add :prof_array, {:array, :string}
       add :save_array, {:array, :string}
+      add :weapon_prof_array, {:array, :string}
+      add :armor_prof_array, {:array, :string}
 
       timestamps()
     end

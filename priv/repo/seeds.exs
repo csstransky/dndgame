@@ -24,12 +24,19 @@ alias Dndgame.Spells.Spell
 alias Dndgame.Spells
 alias Dndgame.Skills.Skill
 alias Dndgame.Skills
+alias Dndgame.Armors.Armor
+alias Dndgame.Armors
+alias Dndgame.Races.Race
+alias Dndgame.Races
+alias Dndgame.Users.User
+alias Dndgame.Users
 
+pwhash = Argon2.hash_pwd_salt("password")
 
-Repo.insert!(%Attack{name: "Slash", damage_dice: "1d6", damage_bonus: 0,
+Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", damage_bonus: 0,
                     attack_bonus: 0, target: "enemy", type: "normal"})
-Repo.insert!(%Weapon{name: "Short Sword", weapon_category: "simple",
-                    attack: Attacks.get_attack_by_name("Slash")})
+Repo.insert!(%Weapon{name: "Dagger", weapon_category: "simple",
+                    attack: Attacks.get_attack_by_name("Pierce")})
 Repo.insert!(%Spell{name: "Magic Missle", dice: "1d4", dice_bonus: 1,
         level_req: 1, target: "enemies", type: "force"})
 Repo.insert!(%Skill{name: "Short Rest", level_req: 0, type: "rest",
@@ -45,9 +52,17 @@ Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Wizard"),
                               skill: Skills.get_skill_by_name("Short Rest")})
 Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Magic Missle")})
+Repo.insert!(%Armor{name: "Mage Armor", base: 13, dex_bonus: true,
+                    armor_category: "Special"})
+elf_profs = ["Perception"]
+elf_wpns = ["Longsword", "Shortsword", "Shortbow", "Longbow"]
+Repo.insert!(%Race{name: "Elf", dex_bonus: 2, int_bonus: 1, size: "medium",
+                  prof_array: elf_profs, weapon_prof_array: elf_wpns})
 
-
-
-
-barb_profs = []
-barb_saves = []
+Repo.insert!(%User{email: "Cristian", admin: true, password_hash: pwhash})
+Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
+                wis: 10, cha: 13, weapon: Weapons.get_weapon_by_name("Dagger"),
+                armor: Armors.get_armor_by_name("Mage Armor"),
+                class: Classes.get_class_by_name("Wizard"),
+                race: Races.get_race_by_name("Elf"),
+                user: Users.get_user_by_email("Cristian")})

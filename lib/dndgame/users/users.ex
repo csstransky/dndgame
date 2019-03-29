@@ -51,8 +51,8 @@ defmodule Dndgame.Users do
   end
 
 
-  def get_user_by_name(name) do
-    Repo.get_by(User, name: name)
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
   end
 
   def id_to_name(id) do
@@ -60,12 +60,12 @@ defmodule Dndgame.Users do
       "nil"
     else
       user = get_user!(id)
-      user.name
+      user.email
     end
   end
 
-  def name_to_id(name) do
-    user = get_user_by_name(name)
+  def email_to_id(email) do
+    user = get_user_by_email(email)
     user.id
   end
 

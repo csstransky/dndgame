@@ -3,19 +3,19 @@ defmodule Dndgame.Races.Race do
   import Ecto.Changeset
 
   schema "races" do
-    field :cha_bonus, :integer
-    field :con_bonus, :integer
+    field :cha_bonus, :integer, default: 0
+    field :con_bonus, :integer, default: 0
     field :desc, :string, default: ""
-    field :dex_bonus, :integer
-    field :int_bonus, :integer
+    field :dex_bonus, :integer, default: 0
+    field :int_bonus, :integer, default: 0
     field :name, :string
     field :size, :string
-    field :str_bonus, :integer
-    field :wis_bonus, :integer
-    field :prof_array, {:array, :string}
-    field :save_array, {:array, :string}
-    field :weapon_prof_array, {:array, :string}
-    field :armor_prof_array, {:array, :string}
+    field :str_bonus, :integer, default: 0
+    field :wis_bonus, :integer, default: 0
+    field :prof_array, {:array, :string}, default: []
+    field :save_array, {:array, :string}, default: []
+    field :weapon_prof_array, {:array, :string}, default: []
+    field :armor_prof_array, {:array, :string}, default: []
 
 
     timestamps()
