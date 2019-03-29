@@ -18,9 +18,9 @@
       <td> <Strong> Class </Strong> </td>
       <td> <%= select f, :race_id, Dndgame.Races.select_races(), class: "form-control" %> </td>
 
- 
+
     </tr>
-    <tr> 
+    <tr>
       <td> <Strong> Race </Strong> </td>
       <td> <%= select f, :class_id, Dndgame.Classes.select_classes(), class: "form-control" %> </td>
     </tr>
@@ -57,7 +57,7 @@
   <div class="row" id="attrs">
     <div class="col-md-8">
       <div class="row">
-        <h2><u> Stats</u></h2> &nbsp; &nbsp; <button type="button" 
+        <h2><u> Stats</u></h2> &nbsp; &nbsp; <button type="button"
           class="btn btn-primary" onClick="stats()" > Roll </button>
       </div>
     <div class="row">
@@ -128,7 +128,7 @@ function stats() {
   let i;
   for(i = 0; i < 6; i++) {
     // gen a random number [3, 18]
-    let stat = Math.floor((Math.random() * 18) + 3);
+    let stat = Math.floor((Math.random() * 16) + 3);
     stats.push(stat);
   }
   document.getElementById("dex").value = stats[0];
@@ -143,7 +143,7 @@ function stats() {
   document.getElementById("str2").innerHTML = stats[4];
   document.getElementById("wis").value = stats[5];
   document.getElementById("wis2").innerHTML = stats[5];
-} 
+}
 
 function desc(skill) {
   switch(skill) {
@@ -172,6 +172,5 @@ function desc(skill) {
       document.getElementById("skill-desc").innerHTML = "Desc for wis";
       break;
   }
-} 
+}
 </script>
-
