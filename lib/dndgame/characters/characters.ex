@@ -101,4 +101,11 @@ defmodule Dndgame.Characters do
   def change_character(%Character{} = character) do
     Character.changeset(character, %{})
   end
+
+      #field :ac, :integer
+  def get_ac(id) do
+    character = Character.get_character!(id)
+    armor = character.armor
+    IO.inspect(armor)
+  end
 end
