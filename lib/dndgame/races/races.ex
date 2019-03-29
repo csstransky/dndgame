@@ -20,6 +20,11 @@ defmodule Dndgame.Races do
   def list_races do
     Repo.all(Race)
   end
+  
+  def select_races do
+    Repo.all(Race)
+    |> Enum.map(&{&1.name, &1.id})
+  end
 
   @doc """
   Gets a single race.
