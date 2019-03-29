@@ -17,11 +17,14 @@ defmodule Dndgame.Characters.Character do
     field :sp, :integer
     field :str, :integer
     field :wis, :integer
-    field :weapon, :id
-    field :armor, :id
-    field :race, :id
-    field :class, :id
-    field :user, :id
+    field :prof_bonus, :integer
+    field :prof_array, {:array, :string}
+    field :save_array, {:array, :string}
+    has_one :weapon, Dndgame.Weapons.Weapon
+    has_one :armor, Dndgame.Armors.Armor
+    has_one :race, Dndgame.Races.Race
+    has_one :class, Dndgame.Classes.Class
+    belongs_to :user, Dndgame.Users.User
 
     timestamps()
   end
@@ -29,7 +32,7 @@ defmodule Dndgame.Characters.Character do
   @doc false
   def changeset(character, attrs) do
     character
-    |> cast(attrs, [:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis])
+    |> cast(attrs, [:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis, :prof_bonus])
     |> validate_required([:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis])
   end
 end

@@ -5,7 +5,7 @@ defmodule Dndgame.Armors.Armor do
   schema "armors" do
     field :armor_category, :string
     field :base, :integer
-    field :desc, :string
+    field :desc, :string, default: ""
     field :dex_bonus, :boolean, default: false
     field :name, :string
     field :stealth_disadvantage, :boolean, default: false

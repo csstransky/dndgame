@@ -37,6 +37,10 @@ defmodule Dndgame.Weapons do
   """
   def get_weapon!(id), do: Repo.get!(Weapon, id)
 
+  def get_weapon_by_name(name) do
+    Repo.get_by(Weapon, name: name)
+  end
+
   @doc """
   Creates a weapon.
 

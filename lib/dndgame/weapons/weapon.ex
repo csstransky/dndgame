@@ -3,10 +3,10 @@ defmodule Dndgame.Weapons.Weapon do
   import Ecto.Changeset
 
   schema "weapons" do
-    field :desc, :string
+    field :desc, :string, default: ""
     field :name, :string
     field :weapon_category, :string
-    field :attack, :id
+    belongs_to :attack, Dndgame.Attacks.Attack
 
     timestamps()
   end
@@ -14,8 +14,8 @@ defmodule Dndgame.Weapons.Weapon do
   @doc false
   def changeset(weapon, attrs) do
     weapon
-    |> cast(attrs, [:name, :desc, :weapon_category])
+    |> cast(attrs, [:name, :desc, :weapon_category, :attack_id])
     |> foreign_key_constraint(:attack)
-    |> validate_required([:name, :desc, :weapon_category])
+    |> validate_required([:name, :desc, :weapon_category, :attack_id])
   end
 end
