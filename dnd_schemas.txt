@@ -12,12 +12,7 @@ Character
 + WIS: int
 + CHA: int
 // I don't know if this helps, but I want saves and profiencies to be loaded from class
-// and race so that you don't have to go fishing for it with a DB query
-+ Saves: [String] // ["STR", "CON"]
-+ Profiencies: [string] // ["Athletics", "Stealth"]
-+ Prof_Bonus: int
-+ weapon_prof: [string] // ["Simple", "Martial"]
-+ armor_prof: [string] // ["light", "medium"]
+// and race so that you don't have to go fishing for it with a DB query\
 + Initiative: int
 + HP: int
 + AC: int
@@ -28,16 +23,13 @@ Character
 + Weapon: has_one Weapon
 + Armor: has_one Armor
 + Race: has_one Race
-+ Class: hax_one Class
++ Class: has_one Class
 + User: belongs_to User
 
 
 Race
 + Name: String
 + Desc: String
-+ Profiencies: [string] // ["Athletics", "Stealth"]
-+ Saves: [String] // ["STR", "CON"]
-// Better way to do this?
 + STR_Bonus: int
 + DEX_Bonus: int
 + CON_Bonus: int
@@ -49,11 +41,7 @@ Race
 Class
 + Name: String
 + Desc: String
-+ hit_dice: (range_min, range_top)
-+ Profiencies: [string] // ["Athletics", "Stealth"]
-+ Saves: [String] // ["STR", "CON"]
-+ weapon_prof: [string] // ["Simple", "Martial"]
-+ armor_prof: [string] // ["light", "medium"]
++ hit_die: (range_min, range_top)\\
 + skills: has_many
 + spells: has_many
 
@@ -66,7 +54,7 @@ Skill
 + sp_cost: int
 + dice: (range_min, range_top)
 + dice_bonus: int
-+ target: string ("self", "enemy", "party", "enemies")
++ target: string ("member", "enemy", "party", "enemies")
 
 Spell
 + Name: String
@@ -107,8 +95,7 @@ Monster
 + Name: string
 + Desc: string
 + HP: int
-+ Saves: [String] // ["STR", "CON"]
-+ Profiencies: [string] // ["Athletics", "Stealth"] needed?
++ Saves: [String] // ["STR", "CON"]\
 + Prof_Bonus: int
 + Initiative: int
 + HP: int
@@ -117,7 +104,6 @@ Monster
 + SP: int
 + Type: String // "fire", "ice"
 + Attacks: has_many ??
-
 
 Monster_has_attack (join table)
 + Monster_id

@@ -37,6 +37,10 @@ defmodule Dndgame.Classes do
   """
   def get_class!(id), do: Repo.get!(Class, id)
 
+  def get_class_by_name(name) do
+    Repo.get_by(Class, name: name)
+  end
+
   @doc """
   Creates a class.
 

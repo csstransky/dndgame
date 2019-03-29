@@ -20,11 +20,13 @@ defmodule Dndgame.Repo.Migrations.CreateCharacters do
       add :prof_bonus, :integer
       add :prof_array, {:array, :string}
       add :save_array, {:array, :string}
-      add :weapon, references(:weapons, on_delete: :nothing)
-      add :armor, references(:armors, on_delete: :nothing)
-      add :race, references(:races, on_delete: :nothing)
-      add :class, references(:classes, on_delete: :nothing)
-      add :user, references(:users, on_delete: :nothing)
+      add :weapon_prof_array, {:array, :string}
+      add :armor_prof_array, {:array, :string}
+      add :weapon_id, references(:weapons, on_delete: :nothing)
+      add :armor_id, references(:armors, on_delete: :nothing)
+      add :race_id, references(:races, on_delete: :nothing)
+      add :class_id, references(:classes, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :nothing)
 
       timestamps()
     end

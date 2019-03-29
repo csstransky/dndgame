@@ -30,8 +30,16 @@ defmodule DndgameWeb.Router do
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
   end
 
-    scope "/ajax", DndgameWeb do
+    scope "/ajax/v1", DndgameWeb do
     pipe_through :ajax
+        resources "/monsters", MonsterController, except: [:new, :edit]
+        resources "/races", RaceController, except: [:new, :edit]
+        resources "/skills", SkillController, except: [:new, :edit]
+        resources "/spells", SpellController, except: [:new, :edit]
+        resources "/weapons", WeaponController, except: [:new, :edit]
+        resources "/armors", ArmorController, except: [:new, :edit]
+        resources "/classes", ClassController, except: [:new, :edit]
+        resources "/attacks", AttackController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

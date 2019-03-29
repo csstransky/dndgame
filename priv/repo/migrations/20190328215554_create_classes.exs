@@ -5,9 +5,11 @@ defmodule Dndgame.Repo.Migrations.CreateClasses do
     create table(:classes) do
       add :name, :string
       add :desc, :text
-      add :hit_dice, :string
+      add :hit_die, :integer
       add :prof_array, {:array, :string}
       add :save_array, {:array, :string}
+      add :weapon_prof_array, {:array, :string}
+      add :armor_prof_array, {:array, :string}
 
       timestamps()
     end

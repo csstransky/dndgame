@@ -6,15 +6,15 @@ defmodule DndgameWeb.ClassControllerTest do
 
   @create_attrs %{
     desc: "some desc",
-    hit_dice: "some hit_dice",
+    hit_die: "some hit_die",
     name: "some name"
   }
   @update_attrs %{
     desc: "some updated desc",
-    hit_dice: "some updated hit_dice",
+    hit_die: "some updated hit_die",
     name: "some updated name"
   }
-  @invalid_attrs %{desc: nil, hit_dice: nil, name: nil}
+  @invalid_attrs %{desc: nil, hit_die: nil, name: nil}
 
   def fixture(:class) do
     {:ok, class} = Classes.create_class(@create_attrs)
@@ -42,7 +42,7 @@ defmodule DndgameWeb.ClassControllerTest do
       assert %{
                "id" => id,
                "desc" => "some desc",
-               "hit_dice" => "some hit_dice",
+               "hit_die" => "some hit_die",
                "name" => "some name"
              } = json_response(conn, 200)["data"]
     end
@@ -65,7 +65,7 @@ defmodule DndgameWeb.ClassControllerTest do
       assert %{
                "id" => id,
                "desc" => "some updated desc",
-               "hit_dice" => "some updated hit_dice",
+               "hit_die" => "some updated hit_die",
                "name" => "some updated name"
              } = json_response(conn, 200)["data"]
     end

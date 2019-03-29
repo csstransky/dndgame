@@ -7,7 +7,6 @@ defmodule Dndgame.Repo.Migrations.CreateSpells do
       add :desc, :text
       add :level_req, :integer
       add :type, :string
-      add :mp_cost, :integer
       add :dice, :string
       add :dice_bonus, :integer
       add :target, :string

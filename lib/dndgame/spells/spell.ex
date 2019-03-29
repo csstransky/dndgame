@@ -7,7 +7,6 @@ defmodule Dndgame.Spells.Spell do
     field :dice, :string
     field :dice_bonus, :integer
     field :level_req, :integer
-    field :mp_cost, :integer
     field :name, :string
     field :target, :string
     field :type, :string

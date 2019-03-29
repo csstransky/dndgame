@@ -6,9 +6,9 @@ defmodule Dndgame.ClassesTest do
   describe "classes" do
     alias Dndgame.Classes.Class
 
-    @valid_attrs %{desc: "some desc", hit_dice: "some hit_dice", name: "some name"}
-    @update_attrs %{desc: "some updated desc", hit_dice: "some updated hit_dice", name: "some updated name"}
-    @invalid_attrs %{desc: nil, hit_dice: nil, name: nil}
+    @valid_attrs %{desc: "some desc", hit_die: "some hit_die", name: "some name"}
+    @update_attrs %{desc: "some updated desc", hit_die: "some updated hit_die", name: "some updated name"}
+    @invalid_attrs %{desc: nil, hit_die: nil, name: nil}
 
     def class_fixture(attrs \\ %{}) do
       {:ok, class} =
@@ -32,7 +32,7 @@ defmodule Dndgame.ClassesTest do
     test "create_class/1 with valid data creates a class" do
       assert {:ok, %Class{} = class} = Classes.create_class(@valid_attrs)
       assert class.desc == "some desc"
-      assert class.hit_dice == "some hit_dice"
+      assert class.hit_die == "some hit_die"
       assert class.name == "some name"
     end
 
@@ -44,7 +44,7 @@ defmodule Dndgame.ClassesTest do
       class = class_fixture()
       assert {:ok, %Class{} = class} = Classes.update_class(class, @update_attrs)
       assert class.desc == "some updated desc"
-      assert class.hit_dice == "some updated hit_dice"
+      assert class.hit_die == "some updated hit_die"
       assert class.name == "some updated name"
     end
 

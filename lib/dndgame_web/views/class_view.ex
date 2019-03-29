@@ -14,6 +14,6 @@ defmodule DndgameWeb.ClassView do
     %{id: class.id,
       name: class.name,
       desc: class.desc,
-      hit_dice: class.hit_dice}
+      hit_die: class.hit_die}
   end
 end

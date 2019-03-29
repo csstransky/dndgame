@@ -20,6 +20,8 @@ defmodule Dndgame.Characters.Character do
     field :prof_bonus, :integer
     field :prof_array, {:array, :string}
     field :save_array, {:array, :string}
+    field :weapon_prof_array, {:array, :string}
+    field :armor_prof_array, {:array, :string}
     has_one :weapon, Dndgame.Weapons.Weapon
     has_one :armor, Dndgame.Armors.Armor
     has_one :race, Dndgame.Races.Race

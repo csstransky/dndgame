@@ -37,6 +37,10 @@ defmodule Dndgame.Skills do
   """
   def get_skill!(id), do: Repo.get!(Skill, id)
 
+  def get_skill_by_name(name) do
+    Repo.get_by(Skill, name: name)
+  end
+
   @doc """
   Creates a skill.
 

@@ -37,6 +37,10 @@ defmodule Dndgame.Spells do
   """
   def get_spell!(id), do: Repo.get!(Spell, id)
 
+  def get_spell_by_name(name) do
+    Repo.get_by(Spell, name: name)
+  end
+
   @doc """
   Creates a spell.
 
