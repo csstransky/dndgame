@@ -4,7 +4,6 @@
   <thead>
     <tr>
       <th>Email</th>
-      <th>Password hash</th>
       <th>Admin</th>
 
       <th></th>
@@ -14,7 +13,6 @@
 <%= for user <- @users do %>
     <tr>
       <td><%= user.email %></td>
-      <td><%= user.password_hash %></td>
       <td><%= user.admin %></td>
 
       <td>

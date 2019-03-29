@@ -38,10 +38,10 @@ defmodule Dndgame.Characters do
 
   """
   def get_character!(id) do
-    Repo.one! from c in Character,
-      where: c.id == ^id,
-      preload: [:armor]
-   end
+    preloads = [:armor, :weapon, :race, :class, :user]
+    Repo.get!(Character, id)
+    |> Repo.preload(preloads)
+  end
 
   def get_character(id), do: Repo.get(Character, id)
 

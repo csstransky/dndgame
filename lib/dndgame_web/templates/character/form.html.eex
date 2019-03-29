@@ -107,11 +107,12 @@
       </table>
     </div>
     </div>
-    <div class="col"></div>
     <div class="col">
-      <div class="row">
-        <h3 id="skill-desc-title"></h3>
-        <p id="skill-desc"></p>
+      <div class="col">
+        <div class="row">
+          <h3 id="skill-desc-title"></h3>
+          <p id="skill-desc"></p>
+        </div>
       </div>
     </div>
   </div>

@@ -4,7 +4,7 @@
 
   <li>
     <strong>Ac:</strong>
-    <%= @character.ac %>
+    <%= Dndgame.Characters.get_ac(@character) %>
   </li>
 
   <li>
@@ -29,12 +29,12 @@
 
   <li>
     <strong>Hp:</strong>
-    <%= @character.hp %>
+    <%= Dndgame.Characters.get_hp(@character) %>
   </li>
 
   <li>
     <strong>Initiative:</strong>
-    <%= @character.initiative %>
+    <%= Dndgame.Characters.get_initiative(@character) %>
   </li>
 
   <li>
@@ -44,12 +44,12 @@
 
   <li>
     <strong>Level:</strong>
-    <%= @character.level %>
+    <%= Dndgame.Characters.get_level(@character) %>
   </li>
 
   <li>
     <strong>Mp:</strong>
-    <%= @character.mp %>
+    <%= Dndgame.Characters.get_mp(@character) %>
   </li>
 
   <li>
@@ -59,7 +59,7 @@
 
   <li>
     <strong>Sp:</strong>
-    <%= @character.sp %>
+    <%= Dndgame.Characters.get_sp(@character) %>
   </li>
 
   <li>
