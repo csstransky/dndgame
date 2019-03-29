@@ -7,11 +7,11 @@ defmodule Dndgame.Characters.Character do
     field :cha, :integer
     field :con, :integer
     field :dex, :integer
-    field :exp, :integer
+    field :exp, :integer, default: 0
     field :hp, :integer
     field :initiative, :integer
     field :int, :integer
-    field :level, :integer
+    field :level, :integer, default: 1
     field :mp, :integer
     field :name, :string
     field :sp, :integer
@@ -29,7 +29,7 @@ defmodule Dndgame.Characters.Character do
   @doc false
   def changeset(character, attrs) do
     character
-    |> cast(attrs, [:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis])
-    |> validate_required([:ac, :cha, :con, :dex, :exp, :hp, :initiative, :int, :level, :mp, :name, :sp, :str, :wis])
+    |> cast(attrs, [:name, :str, :dex, :con, :int, :wis, :cha, :initiative, :hp, :ac, :mp, :sp, :level, :exp])
+    |> validate_required([:name, :str, :dex, :con, :int, :wis, :cha, :initiative, :hp, :ac, :mp, :sp, :level, :exp])
   end
 end
