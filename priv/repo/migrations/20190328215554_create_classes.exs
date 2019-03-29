@@ -6,9 +6,10 @@ defmodule Dndgame.Repo.Migrations.CreateClasses do
       add :name, :string
       add :desc, :text
       add :hit_dice, :string
+      add :prof_array, {:array, :string}
+      add :save_array, {:array, :string}
 
       timestamps()
     end
-
   end
 end

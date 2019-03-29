@@ -4,13 +4,14 @@ defmodule Dndgame.Monsters.Monster do
 
   schema "monsters" do
     field :ac, :integer
-    field :desc, :string
+    field :desc, :string, default: ""
     field :hp, :integer
     field :initiative, :integer
     field :mp, :integer
     field :name, :string
     field :sp, :integer
     field :type, :string
+    many_to_many :attacks, Dndgame.Attacks.Attack, join_through: "monster_attacks"
 
     timestamps()
   end

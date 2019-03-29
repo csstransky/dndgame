@@ -5,13 +5,15 @@ defmodule Dndgame.Races.Race do
   schema "races" do
     field :cha_bonus, :integer
     field :con_bonus, :integer
-    field :desc, :string
+    field :desc, :string, default: ""
     field :dex_bonus, :integer
     field :int_bonus, :integer
     field :name, :string
     field :size, :string
     field :str_bonus, :integer
     field :wis_bonus, :integer
+    field :prof_array, {:array, :string}
+    field :save_array, {:array, :string}
 
     timestamps()
   end

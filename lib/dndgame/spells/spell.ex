@@ -3,7 +3,7 @@ defmodule Dndgame.Spells.Spell do
   import Ecto.Changeset
 
   schema "spells" do
-    field :desc, :string
+    field :desc, :string, default: ""
     field :dice, :string
     field :dice_bonus, :integer
     field :level_req, :integer
@@ -11,6 +11,7 @@ defmodule Dndgame.Spells.Spell do
     field :name, :string
     field :target, :string
     field :type, :string
+    many_to_many :classes, Dndgame.Classes.Class, join_through: "class_spells"
 
     timestamps()
   end

@@ -12,9 +12,10 @@ defmodule Dndgame.Repo.Migrations.CreateRaces do
       add :wis_bonus, :integer
       add :cha_bonus, :integer
       add :size, :string
+      add :prof_array, {:array, :string}
+      add :save_array, {:array, :string}
 
       timestamps()
     end
-
   end
 end
