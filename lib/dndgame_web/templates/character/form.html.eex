@@ -7,6 +7,7 @@
   <% end %>
 
 <div class="row">
+  <div class="col">
   <table class="table">
     <tr>
       <td> <Strong> Name </Strong> </td>
@@ -39,58 +40,77 @@
       <%= error_tag f, :initiative %> </td>
     </tr>
   </table>
+  </div>
+  <div class="col">
+    <%= select f, :race_id, Dndgame.Races.select_races() %>
+    <%= select f, :class_id, Dndgame.Classes.select_classes() %>
+  </div>
 </div>
 
 
   <div class="row" id="attrs">
-    <h2><u> Stats</u></h2>
-    <table class="table table-hover table-sm">
-      <thead>
-        <th scope="col-sm-8"> Skill </th>
-        <th scope="col-sm-8"> Value </th>
-      </thead>
-      <tbody>
-        <tr>
-          <td> <Strong> Dexterity </Strong> </td>
-          <td> <a id="dex2">0 </a>
-            <%= hidden_input f, :dex, id: "dex" %>
-            <%= error_tag f, :dex %> </td>
-       </tr>
-       <tr>
-         <td> <Strong> Charisma </Strong> </td>
-         <td> <a id="cha2"> 0 </a>
-           <%= hidden_input f, :cha, id: "cha" %>
-           <%= error_tag f, :cha %> </td>
-       </tr>
-       <tr>
-          <td> <Strong> Constitution </Strong> </td>
-          <td> <a id="con2"> 0 </a>
-            <%= hidden_input f, :con, id: "con" %>
-            <%= error_tag f, :con %> </td>
-       </tr>
-       <tr>
-         <td> <Strong> Intelligence </Strong> </td>
-         <td> <a id="int2"> 0 </a>
-          <%= hidden_input f, :int, id: "int" %>
-          <%= error_tag f, :int %> </td>
-       </tr>
-       <tr>
-         <td> <Strong> Strength </Strong> </td>
-         <td> <a id="str2"> 0 </a>
-           <%= hidden_input f, :str, id: "str" %>
-           <%= error_tag f, :str %> </td>
-       </tr>
-       <tr>
-         <td> <Strong> Wisdom </Strong> </td>
-         <td> <a id="wis2"> 0 </a>
-          <%= hidden_input f, :wis, id: "wis" %>
-         <%= error_tag f, :wis %> </td>
-       </tr>
-      </tbody>
-    </table>
+    <div class="col-md-8">
+      <div class="row">
+        <h2><u> Stats</u></h2> &nbsp; &nbsp; <button type="button" 
+          class="btn btn-primary" onClick="stats()" > Roll </button>
+      </div>
+    <div class="row">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <th class="col-xs-1"> Skill </th>
+          <th class="col-xs-1"> Value </th>
+        </thead>
+        <tbody>
+          <tr onMouseOver="desc('dex')">
+            <td> <Strong> Dexterity </Strong> </td>
+            <td > <a id="dex2">0 </a>
+              <%= hidden_input f, :dex, id: "dex" %>
+              <%= error_tag f, :dex %> </td>
+          </tr>
+          <tr onMouseOver="desc('cha')">
+            <td> <Strong> Charisma </Strong> </td>
+            <td> <a id="cha2"> 0 </a>
+              <%= hidden_input f, :cha, id: "cha" %>
+              <%= error_tag f, :cha %> </td>
+          </tr>
+          <tr onMouseOver="desc('con')">
+            <td> <Strong> Constitution </Strong> </td>
+            <td> <a id="con2"> 0 </a>
+              <%= hidden_input f, :con, id: "con" %>
+              <%= error_tag f, :con %> </td>
+          </tr>
+          <tr onMouseOver="desc('int')">
+            <td> <Strong> Intelligence </Strong> </td>
+            <td> <a id="int2"> 0 </a>
+              <%= hidden_input f, :int, id: "int" %>
+              <%= error_tag f, :int %> </td>
+          </tr>
+          <tr onMouseOver="desc('str')">
+            <td> <Strong> Strength </Strong> </td>
+            <td> <a id="str2"> 0 </a>
+              <%= hidden_input f, :str, id: "str" %>
+              <%= error_tag f, :str %> </td>
+          </tr>
+          <tr onMouseOver="desc('wis')">
+            <td> <Strong> Wisdom </Strong> </td>
+            <td> <a id="wis2"> 0 </a>
+              <%= hidden_input f, :wis, id: "wis" %>
+              <%= error_tag f, :wis %> </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    <div class="col"></div>
+    <div class="col">
+      <div class="row">
+        <h3 id="skill-desc-title"></h3>
+        <p id="skill-desc"></p>
+      </div>
+    </div>
   </div>
-  <button type="button" class="btn btn-primary" onClick="stats()" > Roll </button>
-  <div>
+
+ <div>
     <%= submit "Save", class: "btn btn-success"%>
   </div>
 <% end %>
@@ -117,6 +137,35 @@ function stats() {
   document.getElementById("str2").innerHTML = stats[4];
   document.getElementById("wis").value = stats[5];
   document.getElementById("wis2").innerHTML = stats[5];
+} 
+
+function desc(skill) {
+  switch(skill) {
+    case "dex":
+      document.getElementById("skill-desc-title").innerHTML = "Dexterity";
+      document.getElementById("skill-desc").innerHTML = "Desc for dex";
+      break;
+    case "cha":
+      document.getElementById("skill-desc-title").innerHTML = "Charisma";
+      document.getElementById("skill-desc").innerHTML = "Desc for cha";
+      break;
+    case "con":
+      document.getElementById("skill-desc-title").innerHTML = "Constitution";
+      document.getElementById("skill-desc").innerHTML = "Desc for con";
+      break;
+    case "int":
+      document.getElementById("skill-desc-title").innerHTML = "Intelligence";
+      document.getElementById("skill-desc").innerHTML = "Desc for int";
+      break;
+    case "str":
+      document.getElementById("skill-desc-title").innerHTML = "Strength";
+      document.getElementById("skill-desc").innerHTML = "Desc for str";
+      break;
+    case "wis":
+      document.getElementById("skill-desc-title").innerHTML = "Wisdom";
+      document.getElementById("skill-desc").innerHTML = "Desc for wis";
+      break;
+  }
 } 
 </script>
 

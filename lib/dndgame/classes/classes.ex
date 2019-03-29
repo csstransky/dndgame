@@ -21,6 +21,12 @@ defmodule Dndgame.Classes do
     Repo.all(Class)
   end
 
+  def select_classes do
+    Repo.all(Class)
+    |> Enum.map(&{&1.name, &1.id})
+
+  end
+
   @doc """
   Gets a single class.
 
