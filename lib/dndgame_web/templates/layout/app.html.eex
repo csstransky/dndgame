@@ -22,7 +22,7 @@
               <a class="nav-link" href="/users">Users</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/characterss">Characterss</a>
+              <a class="nav-link" href="/characters">Characters</a>
             </li>
             <%= if @current_user do %>
               <li class="nav-item">
