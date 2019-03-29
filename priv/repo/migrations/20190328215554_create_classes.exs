@@ -10,6 +10,7 @@ defmodule Dndgame.Repo.Migrations.CreateClasses do
       add :save_array, {:array, :string}
       add :weapon_prof_array, {:array, :string}
       add :armor_prof_array, {:array, :string}
+      add :ability_modifier, :string
 
       timestamps()
     end

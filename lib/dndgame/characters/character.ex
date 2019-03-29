@@ -6,11 +6,10 @@ defmodule Dndgame.Characters.Character do
 
   schema "characters" do
     #TODO: make functions for all the commented out stuff
-    #field :ac, :integer
     field :cha, :integer
     field :con, :integer
     field :dex, :integer
-    field :exp, :integer
+    field :exp, :integer, default: 0
     #field :hp, :integer
     #field :initiative, :integer
     field :int, :integer
