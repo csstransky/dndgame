@@ -47,7 +47,7 @@ wizard_wpns = ["Dagger", "Quarterstaff", "Darts", "Sling"]
 wizard_armor = ["Mage Armor"]
 Repo.insert!(%Class{name: "Wizard", hit_die: 6, prof_array: wizard_profs,
                     save_array: wizard_saves, weapon_prof_array: wizard_wpns,
-                    armor_prof_array: wizard_armor})
+                    armor_prof_array: wizard_armor}, ability_modifier: "INT")
 Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Wizard"),
                               skill: Skills.get_skill_by_name("Short Rest")})
 Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
