@@ -56,6 +56,21 @@ $(function () {
     $('#time-start-text').text(current_date);
   });
 
+  $('#race_select').click((ev) => {
+    $.ajax({
+      method: "GET",
+      url: "/ajax/v1/races/" + $('#race_select').val(),
+      dataType: "json",
+      success: (resp) => {
+        console.log(resp);
+        $('#HELLFIRE').text(resp.data.name);
+      },
+      error: (resp) => {
+        console.log(resp)
+      }
+    });
+  });
+
   $('#time-delete-button').click((ev) => {
     let time_block_id = $(ev.target).data('time-block-id')
     let time_block_path_delete = $(ev.target).data('delete-path');

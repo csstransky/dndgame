@@ -228,5 +228,6 @@ defmodule Dndgame.Characters do
 
   def get_char_armors(armors, race, class) do
     Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
+    Enum.map(armors, &{&1.name, &1.id})
   end
 end
