@@ -16,9 +16,8 @@
     </tr>
     <tr>
       <td> <Strong> Class </Strong> </td>
-      <td> <%= select f, :race_id, Dndgame.Races.select_races(), class: "form-control" %> </td>
-
-
+      <td> <%= select f, :race_id, Dndgame.Races.select_races(), class: "form-control", id: "race_select" %> </td>
+      <td> <%= #TODO: I will add something that'll show off race here%></td>
     </tr>
     <tr>
       <td> <Strong> Race </Strong> </td>
@@ -173,5 +172,9 @@ function desc(skill) {
       document.getElementById("skill-desc").innerHTML = "Desc for wis";
       break;
   }
+}
+
+function print_race() {
+  inspect(document.getElementById("race_select").innerHTML)
 }
 </script>

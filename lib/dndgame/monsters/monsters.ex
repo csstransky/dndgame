@@ -35,7 +35,11 @@ defmodule Dndgame.Monsters do
       ** (Ecto.NoResultsError)
 
   """
-  def get_monster!(id), do: Repo.get!(Monster, id)
+  def get_monster!(id) do
+    preloads = [:attacks]
+    Repo.get!(Monster, id)
+    |> Repo.preload(preloads)
+  end
 
   def get_monster_by_name(name) do
     Repo.get_by(Monster, name: name)

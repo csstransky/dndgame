@@ -10,16 +10,10 @@ defmodule Dndgame.Characters.Character do
     field :con, :integer
     field :dex, :integer
     field :exp, :integer, default: 0
-    #field :hp, :integer
-    #field :initiative, :integer
     field :int, :integer
-    #field :level, :integer
-    #field :mp, :integer
     field :name, :string
-    #field :sp, :integer
     field :str, :integer
     field :wis, :integer
-    #field :prof_bonus, :integer
     #field :prof_array, {:array, :string}
     #field :save_array, {:array, :string}
     #field :weapon_prof_array, {:array, :string}

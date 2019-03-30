@@ -41,7 +41,11 @@ defmodule Dndgame.Classes do
       ** (Ecto.NoResultsError)
 
   """
-  def get_class!(id), do: Repo.get!(Class, id)
+  def get_class!(id) do
+    preloads = [:skills, :spells]
+    Repo.get!(Class, id)
+    |> Repo.preload(preloads)
+  end
 
   def get_class_by_name(name) do
     Repo.get_by(Class, name: name)

@@ -201,4 +201,28 @@ defmodule Dndgame.Characters do
   def get_prof_bonus(character) do
     ceil(get_level(character) / 4) + 1
   end
+
+  def get_profs(character) do
+    class = character.class
+    race = character.race
+    Enum.uniq(race.prof_array ++ class.prof_array)
+  end
+
+  def get_saves(character) do
+    class = character.class
+    race = character.race
+    Enum.uniq(race.save_array ++ class.save_array)
+  end
+
+  def get_weapon_profs(character) do
+    class = character.class
+    race = character.race
+    Enum.uniq(race.weapon_prof_array ++ class.weapon_prof_array)
+  end
+
+  def get_armor_profs(character) do
+    class = character.class
+    race = character.race
+    Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
+  end
 end

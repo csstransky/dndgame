@@ -72,6 +72,34 @@
     <%= @character.wis %>
   </li>
 
+  <li>
+    <strong>Profs:</strong>
+    <%= for prof <- Dndgame.Characters.get_profs(@character) do %>
+      <p><%= prof %></p>
+    <% end %>
+  </li>
+
+  <li>
+    <strong>Saves:</strong>
+    <%= for save <- Dndgame.Characters.get_saves(@character) do %>
+      <p><%= save %></p>
+    <% end %>
+  </li>
+
+  <li>
+    <strong>Weapon Profs:</strong>
+    <%= for weapon_prof <- Dndgame.Characters.get_weapon_profs(@character) do %>
+      <p><%= weapon_prof %></p>
+    <% end %>
+  </li>
+
+  <li>
+    <strong>Armor Profs:</strong>
+    <%= for armor_prof <- Dndgame.Characters.get_armor_profs(@character) do %>
+      <p><%= armor_prof %></p>
+    <% end %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.character_path(@conn, :edit, @character) %></span>

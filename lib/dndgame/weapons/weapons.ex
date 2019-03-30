@@ -35,7 +35,11 @@ defmodule Dndgame.Weapons do
       ** (Ecto.NoResultsError)
 
   """
-  def get_weapon!(id), do: Repo.get!(Weapon, id)
+  def get_weapon!(id) do
+    preloads = [:attack]
+    Repo.get!(Weapon, id)
+    |> Repo.preload(preloads)
+  end
 
   def get_weapon_by_name(name) do
     Repo.get_by(Weapon, name: name)

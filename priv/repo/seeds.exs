@@ -66,3 +66,10 @@ Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
                 class: Classes.get_class_by_name("Wizard"),
                 race: Races.get_race_by_name("Elf"),
                 user: Users.get_user_by_email("Cristian")})
+                elf_profs = ["Perception"]
+                elf_wpns = ["Longsword", "Shortsword", "Shortbow", "Longbow"]
+
+dwarf_pros = []
+dwarf_wpns = []
+Repo.insert!(%Race{name: "Dwarf", dex_bonus: 2, int_bonus: 1, size: "medium",
+                prof_array: elf_profs, weapon_prof_array: elf_wpns})
