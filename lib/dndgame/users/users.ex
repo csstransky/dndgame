@@ -21,12 +21,6 @@ defmodule Dndgame.Users do
     Repo.all(User)
   end
 
-  def list_manager_underlings(manager_id) do
-    query = from u in User,
-             where: u.manager_id == ^manager_id,
-             select: u
-    Repo.all(query)
-  end
 
   @doc """
   Gets a single user.
@@ -46,8 +40,7 @@ defmodule Dndgame.Users do
 
   def get_user(id) do
     Repo.one from u in User,
-      where: u.id == ^id,
-      preload: [:manager]
+      where: u.id == ^id
   end
 
 
@@ -69,14 +62,6 @@ defmodule Dndgame.Users do
     user.id
   end
 
-  def user_id_to_manager_name(manager_id) do
-    if manager_id == nil do
-      "No Manager Assigned"
-    else
-      manager = Dndgame.Users.get_user!(manager_id)
-      manager.name
-    end
-  end
 
   @doc """
   Creates a user.
