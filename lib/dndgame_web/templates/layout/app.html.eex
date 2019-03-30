@@ -25,6 +25,14 @@
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= render @view_module, @view_template, assigns %>
     </main>
+
+     <%= if @current_user do %>
+                <p class="my-3">
+                  User: <%= @current_user.email %> |
+                  <%= link("Logout", to: Routes.session_path(@conn, :delete),
+                    method: :delete) %>
+                </p>
+                <% end %>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

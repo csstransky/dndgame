@@ -7,6 +7,7 @@ defmodule DndgameWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Dndgame.Plugs.FetchSession
   end
 
   pipeline :api do
@@ -35,7 +36,7 @@ defmodule DndgameWeb.Router do
   # end
 
   # puts the current user into the conn in order to be used in views
-  defp assign_current_user(conn, _) do
-    assign(conn, :current_user, get_session(conn, :current_user))
-  end
+  # defp assign_current_user(conn, _) do
+  #  assign(conn, :current_user, get_session(conn, :current_user))
+  # end
 end

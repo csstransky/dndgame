@@ -48,9 +48,9 @@ config :dndgame, DndgameWeb.Endpoint,
 
 # OAuth config
 config :dndgame, Google,
-       client_id: System.get_env("GOOGLE_CLIENT_ID"),
-       client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
-       redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
+       client_id: "312318876104-a1ol9qsfm74tasi8maou3532h1vnrjso.apps.googleusercontent.com",
+       client_secret: "OmhjrolQK7i6EwnwV5WUZqUb",
+       redirect_uri: "http://localhost:4000/"
 
 
 # Watch static and templates for browser reloading.

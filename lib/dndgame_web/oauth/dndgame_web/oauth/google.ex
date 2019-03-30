@@ -11,6 +11,7 @@ defmodule Google do
     [strategy: Google,
       site: "https://accounts.google.com",
       authorize_url: "/o/oauth2/auth",
+      redirect_uri: "http://localhost:4000/",
       token_url: "/o/oauth2/token"]
   end
 
@@ -26,8 +27,8 @@ defmodule Google do
     OAuth2.Client.authorize_url!(client(), params)
   end
 
-  def get_token!(params \\ [], _headers \\ []) do
-    OAuth2.Client.get_token!(client(), params)
+  def get_token!(params \\ [], headers \\ []) do
+    OAuth2.Client.get_token!(client(), Keyword.merge(params, client_secret: client().client_secret))
   end
 
   # Strategy Callbacks

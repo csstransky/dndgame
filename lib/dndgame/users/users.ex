@@ -46,8 +46,7 @@ defmodule Dndgame.Users do
 
   def get_user(id) do
     Repo.one from u in User,
-      where: u.id == ^id,
-      preload: [:manager]
+      where: u.id == ^id
   end
 
 

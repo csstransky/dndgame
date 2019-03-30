@@ -36,6 +36,7 @@ defmodule DndgameWeb.AuthController do
     # Request the user's data with the access token
     user = get_user!(provider, client)
 
+
     User.insert_or_update(user)
 
     # Store the token in the "database"
@@ -56,13 +57,16 @@ defmodule DndgameWeb.AuthController do
   defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
   defp authorize_url!(_), do: raise "No matching provider available"
 
-  defp get_token!("google", code),   do: Google.get_token!(code: code)
+  defp get_token!("google", code)  do
+    Google.get_token!(code: code)
+  end
   defp get_token!(_, _), do: raise "No matching provider available"
 
 
   defp get_user!("google", client) do
-    {:ok, %{body: user}} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-    %{name: user["name"], avatar: user["picture"], token: client.token.access_token}
+    IO.inspect(client)
+    %{body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
+    %{name: user["name"], avatar: user["picture"]}
   end
 
 end
