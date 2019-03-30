@@ -22,6 +22,6 @@ defmodule Dndgame.Classes.Class do
   def changeset(class, attrs) do
     class
     |> cast(attrs, [:name, :desc, :hit_die])
-    |> validate_required([:name, :desc, :hit_die])
+    |> validate_required([:name, :desc, :hit_die, :ability_modifier])
   end
 end

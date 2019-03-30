@@ -21,13 +21,6 @@ import _ from "lodash";
 // import socket from "./socket"
 
 $(function () {
-  // IMPORTANT TODO: I am a bunch of example code, you can use
-  // me as a template, but make sure to delete me in the future
-  $('#time-start-button').click((ev) => {
-    var current_date =  new Date(Date.now());
-    $('#time-start-text').text(current_date);
-  });
-
   $('#race_select').click((ev) => {
     $.ajax({
       method: "GET",
@@ -35,77 +28,39 @@ $(function () {
       dataType: "json",
       success: (resp) => {
         update_armors();
-        console.log(resp);
+        update_weapons();
         $('#HELLFIRE').text(show_race(resp.data));
       },
       error: (resp) => {
         console.log(resp)
       }
     });
+  });
+  $('#class_select').click((ev) => {
+    $.ajax({
+      method: "GET",
+      url: "/ajax/v1/classes/" + $('#class_select').val(),
+      dataType: "json",
+      success: (resp) => {
+        update_armors();
+        update_weapons();
+        console.log(resp);
+        $('#HELLFIRE').text(show_class(resp.data));
+      },
+      error: (resp) => {
+        console.log(resp)
+      }
+    });
   })
-
-  $('#time-delete-button').click((ev) => {
-    let time_block_id = $(ev.target).data('time-block-id')
-    let time_block_path_delete = $(ev.target).data('delete-path');
-
-    let text = JSON.stringify({
-      id: time_block_id,
-    });
-
-    $.ajax(time_block_path_delete, {
-      method: "post",
-      dataType: "json",
-      contentType: "application/json; charset=UTF-8",
-      data: text,
-      success: (resp) => {
-        console.log(resp);
-        location.reload();
-      },
-      error: (resp) => {
-        console.log(resp)
-      }
-    });
-  });
-
-  $('.time-update-button').click((ev) => {
-    let task_id = $(ev.target).data('task-id');
-    let time_block_id = $(ev.target).data('time-block-id')
-    let row = $(ev.target).closest(".time-block-edit");
-    let time_start = $(row.find("#time-block-start")).val();
-    let time_end = $(row.find("#time-block-end")).val();
-    let time_block_path_update = $(ev.target).data('update-path');
-
-    console.log("je")
-    let text = JSON.stringify({
-      id: time_block_id,
-      time_block: {
-        time_start: time_start,
-        time_end: time_end,
-        task_id: task_id,
-      },
-    });
-
-    $.ajax(time_block_path_update, {
-      method: "put",
-      dataType: "json",
-      contentType: "application/json; charset=UTF-8",
-      data: text,
-      success: (resp) => {
-        $('.time-update-button').text("Time Updated");
-        console.log(resp);
-      },
-      error: (resp) => {
-        console.log(resp)
-      }
-    });
-  });
 });
 
 // TODO, fix this to get the rid parameters into
 function update_armors() {
   let race_id = $('#race_select').val()
   let class_id = $('#class_select').val()
-  let url = "/ajax/v1/select_armors/?race_id=" + race_id +"&class_id=" + class_id
+  let strength = $('#str').val()
+  let url = "/ajax/v1/select_armors/?race_id="
+    + race_id +"&class_id=" + class_id + "&str=" + strength;
   $.ajax({
     method: "GET",
     url: url,
@@ -119,7 +74,30 @@ function update_armors() {
           text: armor.name
         }));
       });
-    console.log(resp.data);
+    },
+    error: (resp) => {
+      console.log(resp)
+    }
+  });
+}
+
+function update_weapons() {
+  let race_id = $('#race_select').val()
+  let class_id = $('#class_select').val()
+  let url = "/ajax/v1/select_weapons/?race_id=" + race_id +"&class_id=" + class_id
+  $.ajax({
+    method: "GET",
+    url: url,
+    dataType: "json",
+    success: (resp) => {
+      $('#weapon_select').empty()
+      let weapon_list = resp.data;
+      $.each(weapon_list, function (index, weapon) {
+        $('#weapon_select').append($('<option/>', {
+          value: weapon.id,
+          text: weapon.name
+        }));
+      });
     },
     error: (resp) => {
       console.log(resp)
@@ -152,6 +130,25 @@ function show_race(race) {
     + wis_bonus
     + cha_bonus
     + size
+    + saves
+    + profs
+    + weapon_profs
+    + armor_profs;
+}
+
+function show_class(dnd_class) {
+  let name = dnd_class.name;
+  let desc = dnd_class.desc === "" ? "" : "\nDesc: " + dnd_class.desc;
+  let ability_modifier = "\nAbility Modifier: " + dnd_class.ability_modifier;
+  let hit_die = "\nHit Die: 1d" + dnd_class.hit_die
+  let saves = dnd_class.save_array === [] ? "" : "\nSaves: " + dnd_class.save_array;
+  let profs = dnd_class.prof_array === [] ? "" : "\nProfs: " + dnd_class.prof_array;
+  let weapon_profs = dnd_class.weapon_prof_array === [] ? "" : "\nWeapons: " + dnd_class.weapon_prof_array;
+  let armor_profs = dnd_class.armor_prof_array === [] ? "" : "\nArmors: " + dnd_class.armor_prof_array
+  return name
+    + desc
+    + ability_modifier
+    + hit_die
     + saves
     + profs
     + weapon_profs

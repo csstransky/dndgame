@@ -3,18 +3,12 @@ defmodule Dndgame.Repo.Migrations.CreateCharacters do
 
   def change do
     create table(:characters) do
-      add :ac, :integer
       add :cha, :integer
       add :con, :integer
       add :dex, :integer
       add :exp, :integer
-      add :hp, :integer
-      add :initiative, :integer
       add :int, :integer
-      add :level, :integer
-      add :mp, :integer
       add :name, :string
-      add :sp, :integer
       add :str, :integer
       add :wis, :integer
       add :prof_bonus, :integer

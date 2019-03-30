@@ -106,11 +106,15 @@ defmodule Dndgame.Armors do
     Armor.changeset(armor, %{})
   end
 
-  def get_select_armors(armors, race, class) do
+  def get_select_armors(armors, race, class, str) do
+    total_str = str + race.str_bonus
+    IO.inspect(total_str)
     armor_profs = Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
-    IO.inspect(armor_profs)
     armors
-    |> Enum.filter(fn armor -> is_selectable_armor(armor, armor_profs) end)
+    |> Enum.filter(fn armor ->
+      is_selectable_armor(armor, armor_profs)
+      && total_str >= armor.str_minimum
+    end)
   end
 
   def is_selectable_armor(armor, armor_profs) do
