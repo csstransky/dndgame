@@ -58,7 +58,9 @@ $(function () {
 function update_armors() {
   let race_id = $('#race_select').val()
   let class_id = $('#class_select').val()
-  let url = "/ajax/v1/select_armors/?race_id=" + race_id +"&class_id=" + class_id
+  let strength = $('#str').val()
+  let url = "/ajax/v1/select_armors/?race_id="
+    + race_id +"&class_id=" + class_id + "&str=" + strength;
   $.ajax({
     method: "GET",
     url: url,

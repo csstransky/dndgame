@@ -80,6 +80,8 @@ Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
 ###### ARMORS ######
 Repo.insert!(%Armor{name: "Mage Armor", base: 13, armor_category: "Special"})
 Repo.insert!(%Armor{name: "Leather", base: 11, armor_category: "Light"})
+Repo.insert!(%Armor{name: "Plate", base: 18, armor_category: "Heavy",
+            max_dex_bonus: 0, stealth_disadvantage: true, str_minimum: 15})
 
 ###### ATTACKS ######
 Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", target: "enemy",
