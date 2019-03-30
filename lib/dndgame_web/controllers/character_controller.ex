@@ -10,8 +10,15 @@ defmodule DndgameWeb.CharacterController do
   end
 
   def new(conn, _params) do
+    # Better to have 1 query from the database for weapons, then a bunch
+    # whenever the classes switch
+    armors = Dndgame.Armors.list_armors()
+    weapons = Dndgame.Weapons.list_weapons()
+    races = Dndgame.Races.list_races()
+    classes = Dndgame.Classes.list_classes()
     changeset = Characters.change_character(%Character{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, armors: armors,
+              weapons: weapons, races: races, classes: classes)
   end
 
   def create(conn, %{"character" => character_params}) do

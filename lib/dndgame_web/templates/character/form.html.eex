@@ -15,13 +15,36 @@
       <%= error_tag f, :name %> </td>
     </tr>
     <tr>
-      <td> <Strong> Class </Strong> </td>
-      <td> <%= select f, :race_id, Dndgame.Races.select_races(), class: "form-control", id: "race_select" %> </td>
-      <td> <%= #TODO: I will add something that'll show off race here%></td>
+      <td> <Strong> Race </Strong> </td>
+      <td> <%= select f, :race_id, Enum.map(@races, fn race -> {race.name, race.id} end), class: "form-control", id: "race_select"%> </td>
+      <td>
+        <div id="HELLFIRE">
+          <%= for race <- @races do %>
+            <%= race.name %>
+          <% end %>
+          <br/>
+          <%= #TODO: I will add something that'll show off race here
+              Dndgame.Races.get_race!(1).name
+          %>
+          <%= input_name f, :race_id %>
+          <%= input_value f, :race_id %>
+          <%= input_id f, :race_id %>
+          <br/>
+          <%= Dndgame.Races.get_race!(1).size %>
+          <br/>
+          <%= Dndgame.Races.get_race!(1).con_bonus %>
+          <br/>
+          <%= Dndgame.Races.get_race!(1).weapon_prof_array %>
+        </div>
+      </td>
     </tr>
     <tr>
-      <td> <Strong> Race </Strong> </td>
-      <td> <%= select f, :class_id, Dndgame.Classes.select_classes(), class: "form-control" %> </td>
+      <td> <Strong> Class </Strong> </td>
+      <td> <%= select f, :class_id, Enum.map(@classes, fn class -> {class.name, class.id} end), class: "form-control" %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Armor </Strong> </td>
+      <td> <%= select f, :armor_id, Dndgame.Characters.get_char_armors(@armors, Dndgame.Races.get_race!(1), Dndgame.Classes.get_class!(1)), class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor Class </Strong> </td>
@@ -123,58 +146,81 @@
 </div>
 
 <script>
-function stats() {
-  let stats = [];
-  let i;
-  for(i = 0; i < 6; i++) {
-    // gen a random number [3, 18]
-    let stat = Math.floor((Math.random() * 16) + 3);
-    stats.push(stat);
-  }
-  document.getElementById("dex").value = stats[0];
-  document.getElementById("dex2").innerHTML = stats[0];
-  document.getElementById("cha").value = stats[1];
-  document.getElementById("cha2").innerHTML = stats[1];
-  document.getElementById("con").value = stats[2];
-  document.getElementById("con2").innerHTML = stats[2];
-  document.getElementById("int").value = stats[3];
-  document.getElementById("int2").innerHTML = stats[3];
-  document.getElementById("str").value = stats[4];
-  document.getElementById("str2").innerHTML = stats[4];
-  document.getElementById("wis").value = stats[5];
-  document.getElementById("wis2").innerHTML = stats[5];
-}
 
-function desc(skill) {
-  switch(skill) {
-    case "dex":
-      document.getElementById("skill-desc-title").innerHTML = "Dexterity";
-      document.getElementById("skill-desc").innerHTML = "Desc for dex";
-      break;
-    case "cha":
-      document.getElementById("skill-desc-title").innerHTML = "Charisma";
-      document.getElementById("skill-desc").innerHTML = "Desc for cha";
-      break;
-    case "con":
-      document.getElementById("skill-desc-title").innerHTML = "Constitution";
-      document.getElementById("skill-desc").innerHTML = "Desc for con";
-      break;
-    case "int":
-      document.getElementById("skill-desc-title").innerHTML = "Intelligence";
-      document.getElementById("skill-desc").innerHTML = "Desc for int";
-      break;
-    case "str":
-      document.getElementById("skill-desc-title").innerHTML = "Strength";
-      document.getElementById("skill-desc").innerHTML = "Desc for str";
-      break;
-    case "wis":
-      document.getElementById("skill-desc-title").innerHTML = "Wisdom";
-      document.getElementById("skill-desc").innerHTML = "Desc for wis";
-      break;
-  }
-}
+  let race_select = document.getElementById("race_select");
+  race_select.addEventListener("click",
+    function() {
 
-function print_race() {
-  inspect(document.getElementById("race_select").innerHTML)
-}
+
+      switch(parseInt(race_select.value)) {
+        case 2:
+          html = "<%= Enum.at(@races, 1).name %>"
+          document.getElementById("HELLFIRE").innerHTML = html
+        case 1:
+          html = "<%= Enum.at(@races, 0).name %>"
+          document.getElementById("HELLFIRE").innerHTML = html
+      }
+    }
+  );
+  race_select.addEventListener("changed",
+    function() {
+      // TODO I'm not sure this guy does anything
+      document.getElementById("HELLFIRE").innerHTML = "d"
+    }
+  );
+
+  function stats() {
+    let stats = [];
+    let i;
+    for(i = 0; i < 6; i++) {
+      // gen a random number [3, 18]
+      let stat = Math.floor((Math.random() * 16) + 3);
+      stats.push(stat);
+    }
+    document.getElementById("dex").value = stats[0];
+    document.getElementById("dex2").innerHTML = stats[0];
+    document.getElementById("cha").value = stats[1];
+    document.getElementById("cha2").innerHTML = stats[1];
+    document.getElementById("con").value = stats[2];
+    document.getElementById("con2").innerHTML = stats[2];
+    document.getElementById("int").value = stats[3];
+    document.getElementById("int2").innerHTML = stats[3];
+    document.getElementById("str").value = stats[4];
+    document.getElementById("str2").innerHTML = stats[4];
+    document.getElementById("wis").value = stats[5];
+    document.getElementById("wis2").innerHTML = stats[5];
+  }
+
+  function desc(skill) {
+    switch(skill) {
+      case "dex":
+        document.getElementById("skill-desc-title").innerHTML = "Dexterity";
+        document.getElementById("skill-desc").innerHTML = "Desc for dex";
+        break;
+      case "cha":
+        document.getElementById("skill-desc-title").innerHTML = "Charisma";
+        document.getElementById("skill-desc").innerHTML = "Desc for cha";
+        break;
+      case "con":
+        document.getElementById("skill-desc-title").innerHTML = "Constitution";
+        document.getElementById("skill-desc").innerHTML = "Desc for con";
+        break;
+      case "int":
+        document.getElementById("skill-desc-title").innerHTML = "Intelligence";
+        document.getElementById("skill-desc").innerHTML = "Desc for int";
+        break;
+      case "str":
+        document.getElementById("skill-desc-title").innerHTML = "Strength";
+        document.getElementById("skill-desc").innerHTML = "Desc for str";
+        break;
+      case "wis":
+        document.getElementById("skill-desc-title").innerHTML = "Wisdom";
+        document.getElementById("skill-desc").innerHTML = "Desc for wis";
+        break;
+    }
+  }
+
+  function print_race() {
+    inspect(document.getElementById("race_select").innerHTML)
+  }
 </script>

@@ -198,31 +198,35 @@ defmodule Dndgame.Characters do
     floor((stat - 10) / 2)
   end
 
-  def get_prof_bonus(character) do
+  def get_prof_bonus(%Character{} = character) do
     ceil(get_level(character) / 4) + 1
   end
 
-  def get_profs(character) do
+  def get_profs(%Character{} = character) do
     class = character.class
     race = character.race
     Enum.uniq(race.prof_array ++ class.prof_array)
   end
 
-  def get_saves(character) do
+  def get_saves(%Character{} = character) do
     class = character.class
     race = character.race
     Enum.uniq(race.save_array ++ class.save_array)
   end
 
-  def get_weapon_profs(character) do
+  def get_weapon_profs(%Character{} = character) do
     class = character.class
     race = character.race
     Enum.uniq(race.weapon_prof_array ++ class.weapon_prof_array)
   end
 
-  def get_armor_profs(character) do
+  def get_armor_profs(%Character{} = character) do
     class = character.class
     race = character.race
+    Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
+  end
+
+  def get_char_armors(armors, race, class) do
     Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
   end
 end

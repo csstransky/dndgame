@@ -19,6 +19,7 @@ defmodule Dndgame.Weapons do
   """
   def list_weapons do
     Repo.all(Weapon)
+    |> Repo.preload([:attack])
   end
 
   @doc """

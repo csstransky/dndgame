@@ -33,6 +33,7 @@ alias Dndgame.Users
 
 pwhash = Argon2.hash_pwd_salt("password")
 
+# TODO: Find a way to use seperate files, instead of one big mess
 ##### RACES ######
 dwarf_armrs = ["Light", "Medium"]
 dwarf_wpns = ["Battleaxe", "Handaxe", "Light Hammer", "Warhammer"]
@@ -75,8 +76,6 @@ Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Wizard"),
                               skill: Skills.get_skill_by_name("Short Rest")})
 Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Magic Missle")})
-
-
 
 ###### ARMORS ######
 Repo.insert!(%Armor{name: "Mage Armor", base: 13, dex_bonus: true,
