@@ -3,8 +3,8 @@ defmodule Dndgame.Attacks.Attack do
   import Ecto.Changeset
 
   schema "attacks" do
-    field :attack_bonus, :integer
-    field :damage_bonus, :integer
+    field :attack_bonus, :integer, default: 0
+    field :damage_bonus, :integer, default: 0
     field :damage_dice, :string
     field :desc, :string, default: ""
     field :name, :string
@@ -18,7 +18,6 @@ defmodule Dndgame.Attacks.Attack do
 
   @doc false
   def changeset(attack, attrs) do
-    IO.inspect("SCREAMING EAGLES")
     attack
     |> cast(attrs, [:name, :desc, :attack_bonus, :type, :damage_dice, :damage_bonus, :target])
     |> validate_required([:name, :desc, :attack_bonus, :type, :damage_dice, :damage_bonus, :target])

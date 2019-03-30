@@ -28,6 +28,7 @@ $(function () {
       dataType: "json",
       success: (resp) => {
         update_armors();
+        update_weapons();
         $('#HELLFIRE').text(show_race(resp.data));
       },
       error: (resp) => {
@@ -42,6 +43,7 @@ $(function () {
       dataType: "json",
       success: (resp) => {
         update_armors();
+        update_weapons();
         console.log(resp);
         $('#HELLFIRE').text(show_class(resp.data));
       },
@@ -68,6 +70,30 @@ function update_armors() {
         $('#armor_select').append($('<option/>', {
           value: armor.id,
           text: armor.name
+        }));
+      });
+    },
+    error: (resp) => {
+      console.log(resp)
+    }
+  });
+}
+
+function update_weapons() {
+  let race_id = $('#race_select').val()
+  let class_id = $('#class_select').val()
+  let url = "/ajax/v1/select_weapons/?race_id=" + race_id +"&class_id=" + class_id
+  $.ajax({
+    method: "GET",
+    url: url,
+    dataType: "json",
+    success: (resp) => {
+      $('#weapon_select').empty()
+      let weapon_list = resp.data;
+      $.each(weapon_list, function (index, weapon) {
+        $('#weapon_select').append($('<option/>', {
+          value: weapon.id,
+          text: weapon.name
         }));
       });
     },

@@ -108,7 +108,6 @@ defmodule Dndgame.Armors do
 
   def get_select_armors(armors, race, class) do
     armor_profs = Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
-    IO.inspect(armor_profs)
     armors
     |> Enum.filter(fn armor -> is_selectable_armor(armor, armor_profs) end)
   end

@@ -82,12 +82,16 @@ Repo.insert!(%Armor{name: "Mage Armor", base: 13, armor_category: "Special"})
 Repo.insert!(%Armor{name: "Leather", base: 11, armor_category: "Light"})
 
 ###### ATTACKS ######
-Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", damage_bonus: 0,
-                    attack_bonus: 0, target: "enemy", type: "normal"})
+Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", target: "enemy",
+                      type: "normal"})
+Repo.insert!(%Attack{name: "Cleave", damage_dice: "1d8", target: "enemy",
+                      type: "normal"})
 
 ###### WEAPONS ######
 Repo.insert!(%Weapon{name: "Dagger", weapon_category: "Simple",
                     attack: Attacks.get_attack_by_name("Pierce")})
+Repo.insert!(%Weapon{name: "Battleaxe", weapon_category: "Martial",
+                    attack: Attacks.get_attack_by_name("Cleave")})
 
 ###### USERS ######
 Repo.insert!(%User{email: "Cristian", admin: true, password_hash: pwhash})

@@ -11,7 +11,6 @@ defmodule DndgameWeb.ClassView do
   end
 
   def render("class.json", %{class: class}) do
-    IO.inspect(class)
     %{id: class.id,
       name: class.name,
       desc: class.desc,

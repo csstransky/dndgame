@@ -110,4 +110,19 @@ defmodule Dndgame.Weapons do
   def change_weapon(%Weapon{} = weapon) do
     Weapon.changeset(weapon, %{})
   end
+
+  def get_select_weapons(weapons, race, class) do
+    weapon_profs = Enum.uniq(race.weapon_prof_array ++ class.weapon_prof_array)
+    weapons
+    |> Enum.filter(fn weapon -> is_selectable_weapon(weapon, weapon_profs) end)
+  end
+
+  def is_selectable_weapon(weapon, weapon_profs) do
+    weapon_name = String.downcase(weapon.name)
+    weapon_category = String.downcase(weapon.weapon_category)
+    weapon_profs = weapon_profs
+    |> Enum.map(fn weapon_prof -> String.downcase(weapon_prof) end)
+    Enum.member?(weapon_profs, weapon_name)
+    || Enum.member?(weapon_profs, weapon_category)
+  end
 end

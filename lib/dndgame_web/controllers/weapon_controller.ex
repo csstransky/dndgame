@@ -7,8 +7,12 @@ defmodule DndgameWeb.WeaponController do
   action_fallback DndgameWeb.FallbackController
 
   def index(conn, _params) do
-    weapons = Weapons.list_weapons()
-    render(conn, "index.json", weapons: weapons)
+    if conn.request_path == "/ajax/v1/select_weapons/" do
+      select_weapons(conn, conn.params)
+    else
+      weapons = Weapons.list_weapons()
+      render(conn, "index.json", weapons: weapons)
+    end
   end
 
   def create(conn, %{"weapon" => weapon_params}) do
@@ -39,5 +43,13 @@ defmodule DndgameWeb.WeaponController do
     with {:ok, %Weapon{}} <- Weapons.delete_weapon(weapon) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def select_weapons(conn, %{"race_id" => race_id, "class_id" => class_id}) do
+    weapons = Weapons.list_weapons()
+    class = Dndgame.Classes.get_class!(class_id)
+    race = Dndgame.Races.get_race!(race_id)
+    select_weapons = Dndgame.Weapons.get_select_weapons(weapons, race, class)
+    render(conn, "index.json", weapons: select_weapons)
   end
 end
