@@ -23,6 +23,15 @@ defmodule Dndgame.Characters do
     |> Repo.preload(preloads)
   end
 
+
+  def get_class(character) do
+    Dndgame.Classes.get_class!(character.class_id).name
+  end
+  
+  def get_race(character) do
+    Dndgame.Races.get_race!(character.race_id).name
+  end
+
   @doc """
   Gets a single character.
 

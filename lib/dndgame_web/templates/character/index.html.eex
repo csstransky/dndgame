@@ -1,52 +1,38 @@
-<h1>Listing Characters</h1>
 
-<table>
+<%= if @current_user == nil do %>
+  <h6> Please log in to see your characters. </h6>
+
+<% else %>
+<h1>Listing Characters</h1>
+<table class="table">
   <thead>
     <tr>
-      <th>Ac</th>
-      <th>Cha</th>
-      <th>Con</th>
-      <th>Dex</th>
-      <th>Exp</th>
-      <th>Hp</th>
-      <th>Initiative</th>
-      <th>Int</th>
-      <th>Level</th>
-      <th>Mp</th>
       <th>Name</th>
-      <th>Sp</th>
-      <th>Str</th>
-      <th>Wis</th>
-
-      <th></th>
+      <th>Class</th>
+      <th>Race</th>
+      <th>Level</th>
     </tr>
   </thead>
   <tbody>
 <%= for character <- @characters do %>
+    <%= if character.user_id == @current_user.id do %>
     <tr>
-      <td><%= Dndgame.Characters.get_ac(character) %></td>
-      <td><%= character.cha %></td>
-      <td><%= character.con %></td>
-      <td><%= character.dex %></td>
-      <td><%= character.exp %></td>
-      <td><%= Dndgame.Characters.get_hp(character) %></td>
-      <td><%= Dndgame.Characters.get_initiative(character) %></td>
-      <td><%= character.int %></td>
-      <td><%= Dndgame.Characters.get_level(character) %></td>
-      <td><%= Dndgame.Characters.get_mp(character) %></td>
       <td><%= character.name %></td>
-      <td><%= Dndgame.Characters.get_sp(character) %></td>
-      <td><%= character.str %></td>
-      <td><%= character.wis %></td>
-
+      <td><%= Dndgame.Characters.get_class(character) %></td>
+      <td><%= Dndgame.Characters.get_race(character) %></td>
+      <td><%= Dndgame.Characters.get_level(character) %></td>
       <td>
-        <%= link "Show", to: Routes.character_path(@conn, :show, character) %>
-        <%= link "Edit", to: Routes.character_path(@conn, :edit, character) %>
+        <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
+      </td>
+      <td>
         <%= link "Delete", to: Routes.character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"] %>
       </td>
     </tr>
-<% end %>
+  <% end  %>
+  <% end %>
+
   </tbody>
 </table>
 
 <span><%= link "New Character", to: Routes.character_path(@conn, :new) %></span>
+<% end %>

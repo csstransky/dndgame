@@ -1,106 +1,88 @@
-<h1>Show Character</h1>
+<h5><%= @character.name %>'s Info</h5>
+<table>
+<tr>
+<td>
+<div class="card border-info mb-3" style="width: 18rem; height: 22rem;">
+  <div class="card-header">
+    <h5><Strong>About</Strong></h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text"><u>Health Points</u>: <%= Dndgame.Characters.get_hp(@character) %></p>
+    <p class="card-text"><u>Mana Points</u>: <%= Dndgame.Characters.get_mp(@character) %></p>
+    <p class="card-text"><u>Spirit Points</u>: <%= Dndgame.Characters.get_sp(@character) %></p>
+    <p class="card-text"><u>Armor Class</u>: <%= Dndgame.Characters.get_ac(@character) %></p>
+    <p class="card-text"><u>Level</u>: <%= Dndgame.Characters.get_level(@character) %></p>
+    <p class="card-text"><u>Experience</u>: <%= @character.exp %></p>
+    <p class="card-text"><u>Initiative</u>: <%= Dndgame.Characters.get_initiative(@character) %></p>
+  </div>
+</div>
+</td>
 
-<ul>
-
-  <li>
-    <strong>Ac:</strong>
-    <%= Dndgame.Characters.get_ac(@character) %>
-  </li>
-
-  <li>
-    <strong>Cha:</strong>
-    <%= @character.cha %>
-  </li>
-
-  <li>
-    <strong>Con:</strong>
-    <%= @character.con %>
-  </li>
-
-  <li>
-    <strong>Dex:</strong>
-    <%= @character.dex %>
-  </li>
-
-  <li>
-    <strong>Exp:</strong>
-    <%= @character.exp %>
-  </li>
-
-  <li>
-    <strong>Hp:</strong>
-    <%= Dndgame.Characters.get_hp(@character) %>
-  </li>
-
-  <li>
-    <strong>Initiative:</strong>
-    <%= Dndgame.Characters.get_initiative(@character) %>
-  </li>
-
-  <li>
-    <strong>Int:</strong>
-    <%= @character.int %>
-  </li>
-
-  <li>
-    <strong>Level:</strong>
-    <%= Dndgame.Characters.get_level(@character) %>
-  </li>
-
-  <li>
-    <strong>Mp:</strong>
-    <%= Dndgame.Characters.get_mp(@character) %>
-  </li>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @character.name %>
-  </li>
-
-  <li>
-    <strong>Sp:</strong>
-    <%= Dndgame.Characters.get_sp(@character) %>
-  </li>
-
-  <li>
-    <strong>Str:</strong>
-    <%= @character.str %>
-  </li>
-
-  <li>
-    <strong>Wis:</strong>
-    <%= @character.wis %>
-  </li>
-
-  <li>
-    <strong>Profs:</strong>
-    <%= for prof <- Dndgame.Characters.get_profs(@character) do %>
-      <p><%= prof %></p>
-    <% end %>
-  </li>
-
-  <li>
-    <strong>Saves:</strong>
+<td>
+<div class="card border-info mb-3" style="width: 18rem; height: 22rem;">
+  <div class="card-header">
+    <h5><Strong>Skills</Strong></h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text"><u>Charisma</u>: <%= @character.cha %></p>
+    <p class="card-text"><u>Constitution</u>: <%= @character.con %></p>
+    <p class="card-text"><u>Dexterity</u>: <%= @character.dex %></p>
+    <p class="card-text"><u>Intelligence</u>: <%= @character.int %></p>
+   <p class="card-text"><u>Strength</u>: <%= @character.str %></p>
+   <p class="card-text"><u>Wisdom</u>: <%= @character.wis %></p>
+  </div>
+</div>
+</td>
+<td>
+<div class="card border-info mb-3" style="width: 18rem; height: 22rem;">
+  <div class="card-header">
+    <h5><Strong>Saves</Strong></h5>
+  </div>
+  <div class="card-body">
     <%= for save <- Dndgame.Characters.get_saves(@character) do %>
-      <p><%= save %></p>
+      <p><u><%= save %></u></p>
     <% end %>
-  </li>
-
-  <li>
-    <strong>Weapon Profs:</strong>
-    <%= for weapon_prof <- Dndgame.Characters.get_weapon_profs(@character) do %>
-      <p><%= weapon_prof %></p>
+  </div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div class="card border-info mb-3" style="width: 18rem; height: 25rem;">
+  <div class="card-header">
+    <h5><Strong>Weapon Proficiencies</Strong></h5>
+  </div>
+  <div class="card-body">
+   <%= for weapon_prof <- Dndgame.Characters.get_weapon_profs(@character) do %>
+      <p><u><%= weapon_prof %></u></p>
     <% end %>
-  </li>
+  </div>
+</div>
+</td>
+<td>
+<div class="card border-info mb-3" style="width: 18rem; height: 25rem;">
+  <div class="card-header">
+    <h5><Strong>Proficiencies</Strong></h5>
+  </div>
+  <div class="card-body">
+     <%= for prof <- Dndgame.Characters.get_profs(@character) do %>
+      <p><u><%= prof %></u></p>
+    <% end %>
+  </div>
+</div>
+</td>
 
-  <li>
-    <strong>Armor Profs:</strong>
+<td>
+<div class="card border-info mb-3" style="width: 18rem; height: 25rem;">
+  <div class="card-header">
+    <h5><Strong>Armor Proficiencies</Strong></h5>
+  </div>
+  <div class="card-body">
     <%= for armor_prof <- Dndgame.Characters.get_armor_profs(@character) do %>
-      <p><%= armor_prof %></p>
+      <p><u><%= armor_prof %></u></p>
     <% end %>
-  </li>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.character_path(@conn, :edit, @character) %></span>
+  </div>
+</div>
+</td>
+</tr>
 <span><%= link "Back", to: Routes.character_path(@conn, :index) %></span>

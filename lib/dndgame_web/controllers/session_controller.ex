@@ -1,7 +1,7 @@
 defmodule DndgameWeb.SessionController do
   use DndgameWeb, :controller
 
-  def create(conn, %{"email" => email}) do
+  def create(conn, %{"name" => email}) do
     user = Dndgame.Users.get_user_by_email(email)
     if user do
       conn
