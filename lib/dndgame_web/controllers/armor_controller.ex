@@ -40,4 +40,11 @@ defmodule DndgameWeb.ArmorController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def select_armors(conn, %{"race_id" => race_id, "class_id" => class_id}) do
+    armors = Armors.list_armors()
+    class = Dndgame.Classes.get_class!(class_id)
+    race = Dndgame.Races.get_race!(race_id)
+    render(conn, "select_armors.json", armors: armors, class: class, race: race)
+  end
 end

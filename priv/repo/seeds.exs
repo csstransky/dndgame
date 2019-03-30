@@ -78,8 +78,8 @@ Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Magic Missle")})
 
 ###### ARMORS ######
-Repo.insert!(%Armor{name: "Mage Armor", base: 13, dex_bonus: true,
-                    armor_category: "Special"})
+Repo.insert!(%Armor{name: "Mage Armor", base: 13, armor_category: "Special"})
+Repo.insert!(%Armor{name: "Leather", base: 11, armor_category: "Light"})
 
 ###### ATTACKS ######
 Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", damage_bonus: 0,

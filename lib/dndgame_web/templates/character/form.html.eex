@@ -44,7 +44,7 @@
     </tr>
     <tr>
       <td> <Strong> Armor </Strong> </td>
-      <td> <%= select f, :armor_id, Dndgame.Characters.get_char_armors(@armors, Dndgame.Races.get_race!(1), Dndgame.Classes.get_class!(1)), class: "form-control" %> </td>
+      <td> <%= select f, :armor_id, Dndgame.Armors.get_select_armors(@armors, Dndgame.Races.get_race!(1), Dndgame.Classes.get_class!(1)), class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor Class </Strong> </td>

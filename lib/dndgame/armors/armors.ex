@@ -105,4 +105,21 @@ defmodule Dndgame.Armors do
   def change_armor(%Armor{} = armor) do
     Armor.changeset(armor, %{})
   end
+
+  def get_select_armors(armors, race, class) do
+    armor_profs = Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
+    IO.inspect(armor_profs)
+    armors = armors
+    |> Enum.filter(fn armor -> is_selectable_armor(armor, armor_profs) end)
+    Enum.map(armors, &{&1.name, &1.id})
+  end
+
+  def is_selectable_armor(armor, armor_profs) do
+    armor_name = String.downcase(armor.name)
+    armor_category = String.downcase(armor.armor_category)
+    armor_profs = armor_profs
+    |> Enum.map(fn armor_prof -> String.downcase(armor_prof) end)
+    Enum.member?(armor_profs, armor_name)
+    || Enum.member?(armor_profs, armor_category)
+  end
 end

@@ -7,7 +7,7 @@ defmodule Dndgame.Repo.Migrations.CreateArmors do
       add :desc, :text
       add :armor_category, :string
       add :base, :integer
-      add :dex_bonus, :boolean, default: false, null: false
+      add :max_dex_bonus, :integer, default: 99, null: false
       add :str_minimum, :integer
       add :stealth_disadvantage, :boolean, default: false, null: false
 

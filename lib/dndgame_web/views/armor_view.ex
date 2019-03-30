@@ -20,4 +20,9 @@ defmodule DndgameWeb.ArmorView do
       str_minimum: armor.str_minimum,
       stealth_disadvantage: armor.stealth_disadvantage}
   end
+
+  def render("select_armors.json", %{armors: armors, race: race, class: class}) do
+    select_armors = Dndgame.Armors.get_select_armors(armors, race, class)
+    %{data: render_many(armors, ArmorView, "armor.json")}
+  end
 end
