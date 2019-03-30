@@ -11,9 +11,16 @@ defmodule DndgameWeb.ClassView do
   end
 
   def render("class.json", %{class: class}) do
+    IO.inspect(class)
     %{id: class.id,
       name: class.name,
       desc: class.desc,
-      hit_die: class.hit_die}
+      ability_modifier: class.ability_modifier,
+      hit_die: class.hit_die,
+      prof_array: class.prof_array,
+      save_array: class.save_array,
+      weapon_prof_array: class.weapon_prof_array,
+      armor_prof_array: class.armor_prof_array,
+    }
   end
 end

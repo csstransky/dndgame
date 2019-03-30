@@ -34,7 +34,7 @@
     </tr>
     <tr>
       <td> <Strong> Armor </Strong> </td>
-      <td> <%= select f, :armor_id, [], id: "armor_select", class: "form-control" %> </td>
+      <td> <%= select f, :armor_id, Enum.map(@armors, fn armor -> {armor.name, armor.id} end), id: "armor_select", class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor Class </Strong> </td>

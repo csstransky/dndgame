@@ -59,9 +59,9 @@ barbarian_profs = ["Athletics", "Intimidation"]
 barbarian_saves = ["STR", "CON"]
 barbarian_wpns = ["Simple", "Martial"]
 barbarian_armor = ["Light", "Medium"]
-Repo.insert!(%Class{name: "Barbarian", hit_die: 12, prof_array: barbarian_profs,
+Repo.insert!(%Class{name: "Barbarian", hit_die: 12, ability_modifier: "STR", prof_array: barbarian_profs,
                     save_array: barbarian_saves, weapon_prof_array: barbarian_wpns,
-                    armor_prof_array: barbarian_armor}, ability_modifier: "STR")
+                    armor_prof_array: barbarian_armor})
 Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Barbarian"),
                               skill: Skills.get_skill_by_name("Double Attack")})
 
@@ -69,9 +69,9 @@ wizard_profs = ["Medicine", "Arcana"]
 wizard_saves = ["INT", "WIS"]
 wizard_wpns = ["Dagger", "Quarterstaff", "Darts", "Sling"]
 wizard_armor = ["Mage Armor"]
-Repo.insert!(%Class{name: "Wizard", hit_die: 6, prof_array: wizard_profs,
+Repo.insert!(%Class{name: "Wizard", hit_die: 6, ability_modifier: "INT", prof_array: wizard_profs,
                     save_array: wizard_saves, weapon_prof_array: wizard_wpns,
-                    armor_prof_array: wizard_armor}, ability_modifier: "INT")
+                    armor_prof_array: wizard_armor})
 Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Wizard"),
                               skill: Skills.get_skill_by_name("Short Rest")})
 Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
