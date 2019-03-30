@@ -16,35 +16,25 @@
     </tr>
     <tr>
       <td> <Strong> Race </Strong> </td>
-      <td> <%= select f, :race_id, Enum.map(@races, fn race -> {race.name, race.id} end), class: "form-control", id: "race_select"%> </td>
+      <td> <%= select f, :race_id, Enum.map(@races, fn race -> {race.name, race.id} end), id: "race_select", class: "form-control"%> </td>
       <td>
         <div id="HELLFIRE">
-          <%= for race <- @races do %>
-            <%= race.name %>
-          <% end %>
-          <br/>
-          <%= #TODO: I will add something that'll show off race here
-              Dndgame.Races.get_race!(1).name
-          %>
-          <%= input_name f, :race_id %>
-          <%= input_value f, :race_id %>
-          <%= input_id f, :race_id %>
-          <br/>
-          <%= Dndgame.Races.get_race!(1).size %>
-          <br/>
-          <%= Dndgame.Races.get_race!(1).con_bonus %>
-          <br/>
-          <%= Dndgame.Races.get_race!(1).weapon_prof_array %>
+
+          <%= #TODO: I will add something that'll show off race here %>
         </div>
       </td>
     </tr>
     <tr>
       <td> <Strong> Class </Strong> </td>
-      <td> <%= select f, :class_id, Enum.map(@classes, fn class -> {class.name, class.id} end), class: "form-control" %> </td>
+      <td> <%= select f, :class_id, Enum.map(@classes, fn class -> {class.name, class.id} end), id: "class_select", class: "form-control" %> </td>
+    </tr>
+    <tr>
+      <td> <Strong> Weapons </Strong> </td>
+      <td> <%= select f, :weapon_id, Enum.map(@weapons, fn weapon -> {weapon.name, weapon.id} end), id: "weapon_select", class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor </Strong> </td>
-      <td> <%= select f, :armor_id, Dndgame.Armors.get_select_armors(@armors, Dndgame.Races.get_race!(1), Dndgame.Classes.get_class!(1)), class: "form-control" %> </td>
+      <td> <%= select f, :armor_id, [], id: "armor_select", class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor Class </Strong> </td>

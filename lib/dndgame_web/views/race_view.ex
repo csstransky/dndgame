@@ -20,6 +20,11 @@ defmodule DndgameWeb.RaceView do
       int_bonus: race.int_bonus,
       wis_bonus: race.wis_bonus,
       cha_bonus: race.cha_bonus,
-      size: race.size}
+      size: race.size,
+      prof_array: race.prof_array,
+      save_array: race.save_array,
+      weapon_prof_array: race.weapon_prof_array,
+      armor_prof_array: race.armor_prof_array, 
+    }
   end
 end

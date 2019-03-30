@@ -86,7 +86,7 @@ Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", damage_bonus: 0,
                     attack_bonus: 0, target: "enemy", type: "normal"})
 
 ###### WEAPONS ######
-Repo.insert!(%Weapon{name: "Dagger", weapon_category: "simple",
+Repo.insert!(%Weapon{name: "Dagger", weapon_category: "Simple",
                     attack: Attacks.get_attack_by_name("Pierce")})
 
 ###### USERS ######

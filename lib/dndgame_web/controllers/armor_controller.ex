@@ -7,8 +7,12 @@ defmodule DndgameWeb.ArmorController do
   action_fallback DndgameWeb.FallbackController
 
   def index(conn, _params) do
-    armors = Armors.list_armors()
-    render(conn, "index.json", armors: armors)
+    if conn.request_path == "/ajax/v1/select_armors/" do
+      select_armors(conn, conn.params)
+    else
+      armors = Armors.list_armors()
+      render(conn, "index.json", armors: armors)
+    end
   end
 
   def create(conn, %{"armor" => armor_params}) do
@@ -45,6 +49,7 @@ defmodule DndgameWeb.ArmorController do
     armors = Armors.list_armors()
     class = Dndgame.Classes.get_class!(class_id)
     race = Dndgame.Races.get_race!(race_id)
-    render(conn, "select_armors.json", armors: armors, class: class, race: race)
+    select_armors = Dndgame.Armors.get_select_armors(armors, race, class)
+    render(conn, "index.json", armors: select_armors)
   end
 end

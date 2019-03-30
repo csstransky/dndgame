@@ -114,10 +114,11 @@ defmodule Dndgame.Characters do
       #field :ac, :integer
   def get_ac(%Character{} = character) do
     armor = character.armor
-    if (armor.dex_bonus) do
-      armor.base + get_stat_modifier(character.dex)
+    dex_mod = get_stat_modifier(character.dex)
+    if (armor.max_dex_bonus < dex_mod) do
+      armor.base + armor.max_dex_bonus
     else
-      armor.base
+      armor.base + dex_mod
     end
   end
 
@@ -224,10 +225,5 @@ defmodule Dndgame.Characters do
     class = character.class
     race = character.race
     Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
-  end
-
-  def get_char_armors(armors, race, class) do
-    Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
-    Enum.map(armors, &{&1.name, &1.id})
   end
 end
