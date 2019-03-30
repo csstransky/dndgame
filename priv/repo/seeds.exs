@@ -69,7 +69,19 @@ Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
                 elf_profs = ["Perception"]
                 elf_wpns = ["Longsword", "Shortsword", "Shortbow", "Longbow"]
 
-dwarf_pros = []
-dwarf_wpns = []
-Repo.insert!(%Race{name: "Dwarf", dex_bonus: 2, int_bonus: 1, size: "medium",
-                prof_array: elf_profs, weapon_prof_array: elf_wpns})
+dwarf_armrs = ["Light", "Medium"]
+dwarf_wpns = ["Battleaxe", "Handaxe", "Light Hammer", "Warhammer"]
+Repo.insert!(%Race{name: "Dwarf", con_bonus: 2, wis_bonus: 1, size: "medium",
+                armor_prof_array: dwarf_armrs, weapon_prof_array: dwarf_wpns})
+
+Repo.insert!(%Skill{name: "Double Attack", level_req: 1, type: "damage",
+              dice: "1d6", sp_cost: 1, target: "enemy"})
+barbarian_profs = ["Athletics", "Intimidation"]
+barbarian_saves = ["STR", "CON"]
+barbarian_wpns = ["Simple", "Martial"]
+barbarian_armor = ["Light", "Medium"]
+Repo.insert!(%Class{name: "Barbarian", hit_die: 12, prof_array: barbarian_profs,
+                    save_array: barbarian_saves, weapon_prof_array: barbarian_wpns,
+                    armor_prof_array: barbarian_armor}, ability_modifier: "STR")
+Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Barbarian"),
+                              skill: Skills.get_skill_by_name("Double Attack")})
