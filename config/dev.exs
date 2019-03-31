@@ -49,6 +49,7 @@ config :dndgame, DndgameWeb.Endpoint,
 
 
 
+
 # Watch static and templates for browser reloading.
 config :dndgame, DndgameWeb.Endpoint,
   live_reload: [

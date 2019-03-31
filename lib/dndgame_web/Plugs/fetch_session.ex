@@ -4,7 +4,9 @@ defmodule Dndgame.Plugs.FetchSession do
   def init(args), do: args
 
   def call(conn, _args) do
-    user = Dndgame.Users.get_user(get_session(conn, :current_user) || -1)
+    user = Dndgame.Users.get_user(get_session(conn, :user_id) || -1)
+    IO.inspect("fetch session")
+    IO.inspect(user)
     if user do
       assign(conn, :current_user, user)
     else

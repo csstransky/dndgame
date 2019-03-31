@@ -6,7 +6,6 @@ defmodule Dndgame.Repo.Migrations.CreateUsers do
       add :email, :string, null: false
       add :password_hash, :string, null: true
       add :admin, :boolean, default: false, null: false
-      add :token, :string, null: true
 
       timestamps()
     end

@@ -9,25 +9,18 @@
 
   <p>- Or -</p>
 
-  <div></div>
-  <div>
-  <form>
-  <span>
-    <label>Email</label>
-    <input name="username" placeholder="Email" autocomplete="email" required="" type="email" value="">
- </span>
- </div>
-  <div>
- <span>
-    <label>Password</label>
-    <input name="password" placeholder="Password" type="password" value="">
- </span>
- </div>
- <div>
-    <button type="submit">Log in</button>
- </div>
+  <%= form_for @conn, Routes.session_path(@conn, :create),
+                       [class: "form-inline"], fn f -> %>
+                <%= text_input(f, :email, class: "form-control col-4",
+                  placeholder: "email") %>
+                <%= password_input(f, :password, class: "form-control col-4",
+                  placeholder: "pass") %>
+                <%= submit "Login", class: "btn btn-secondary" %>
+                <% end %>
  <div style="margin-bottom: 0px; text-align: left;">
-    <span style="float: right;">NOT A MEMBER? <a href="/signup">SIGN UP</a></span>
+    <span style="float: right;">NOT A MEMBER?
+    <p><%= link "Register", to: Routes.user_path(@conn, :new) %></p>
+    </span>
  </div><div style="margin-bottom: 0px;"></div>
  </form>
  </div>

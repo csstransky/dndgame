@@ -12,7 +12,14 @@
       <section class="container">
         <nav role="navigation">
           <ul>
-            <li><a href="/login">Login</a></li>
+           <%= if @current_user do %>
+                      <p class="my-3">
+                        User: <%= @current_user.email %> |
+                        <%= link("Logout", to: Routes.session_path(@conn, :delete),
+                          method: :delete) %>
+                    <% else %>
+                    <li><a href="/login">Login</a></li>
+            <% end %>
           </ul>
         </nav>
         <a href="/" class="phx-logo">

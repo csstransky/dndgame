@@ -5,4 +5,8 @@ defmodule DndgameWeb.LoginController do
   def login(conn, _params) do
     render(conn, "login.html")
   end
+
+  def signup(conn, _params) do
+    render(conn, "new.html")
+  end
 end

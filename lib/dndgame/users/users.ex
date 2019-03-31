@@ -57,6 +57,10 @@ defmodule Dndgame.Users do
     Repo.get_by(User, name: name)
   end
 
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+  end
+
   def id_to_name(id) do
     if id == nil do
       "nil"
@@ -95,6 +99,7 @@ defmodule Dndgame.Users do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> IO.inspect()
     |> Repo.insert()
   end
 
