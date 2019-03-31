@@ -147,20 +147,76 @@ Repo.insert!(%Armor{name: "Breastplate", base: 14, armor_category: "Medium",
             max_dex_bonus: 2})
 
 ###### ATTACKS ######
-Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d4", target: "enemy",
+Repo.insert!(%Attack{name: "Stab", damage_dice: "1d4", target: "enemy",
                       type: "pierce"})
+Repo.insert!(%Attack{name: "Pierce", damage_dice: "1d6", target: "enemy",
+                      type: "pierce"})
+Repo.insert!(%Attack{name: "Perforate", damage_dice: "1d8", target: "enemy",
+                      type: "pierce"})
+Repo.insert!(%Attack{name: "Impale", damage_dice: "1d10", target: "enemy",
+                      type: "pierce"})
+
+Repo.insert!(%Attack{name: "Slice", damage_dice: "1d4", target: "enemy",
+                      type: "slash"})
+Repo.insert!(%Attack{name: "Slash", damage_dice: "1d6", target: "enemy",
+                      type: "slash"})
+Repo.insert!(%Attack{name: "Chop", damage_dice: "1d6", target: "enemy",
+                      type: "slash"})
 Repo.insert!(%Attack{name: "Cleave", damage_dice: "1d8", target: "enemy",
                       type: "slash"})
 Repo.insert!(%Attack{name: "Lunge", damage_dice: "1d10", target: "enemy",
                       type: "slash"})
 
+Repo.insert!(%Attack{name: "Strike", damage_dice: "1d4", target: "enemy",
+                      type: "bludgeon"})
+Repo.insert!(%Attack{name: "Smash", damage_dice: "1d6", target: "enemy",
+                      type: "bludgeon"})
+Repo.insert!(%Attack{name: "Crush", damage_dice: "1d8", target: "enemy",
+                      type: "bludgeon"})
+Repo.insert!(%Attack{name: "Wreck", damage_dice: "1d10", target: "enemy",
+                      type: "bludgeon"})
+
+Repo.insert!(%Attack{name: "Fling", damage_dice: "1d4", target: "enemy",
+                      type: "bludgeon"})
+Repo.insert!(%Attack{name: "Dart", damage_dice: "1d4", target: "enemy",
+                      type: "pierce"})
+Repo.insert!(%Attack{name: "Shoot", damage_dice: "1d6", target: "enemy",
+                      type: "pierce"})
+Repo.insert!(%Attack{name: "Loose", damage_dice: "1d8", target: "enemy",
+                      type: "pierce"})
+
 ###### WEAPONS ######
 Repo.insert!(%Weapon{name: "Dagger", weapon_category: "Simple",
-                    attack: Attacks.get_attack_by_name("Pierce")})
+                    attack: Attacks.get_attack_by_name("Stab")})
 Repo.insert!(%Weapon{name: "Battleaxe", weapon_category: "Martial",
                     attack: Attacks.get_attack_by_name("Cleave")})
 Repo.insert!(%Weapon{name: "Halberd", weapon_category: "Martial",
                     attack: Attacks.get_attack_by_name("Lunge")})
+Repo.insert!(%Weapon{name: "Handaxe", weapon_category: "Simple",
+                    attack: Attacks.get_attack_by_name("Chop")})
+Repo.insert!(%Weapon{name: "Quarterstaff", weapon_category: "Simple",
+                    attack: Attacks.get_attack_by_name("Smash")})
+Repo.insert!(%Weapon{name: "Light Hammer", weapon_category: "Simple",
+                    attack: Attacks.get_attack_by_name("Strike")})
+Repo.insert!(%Weapon{name: "Warhammer", weapon_category: "Martial",
+                    attack: Attacks.get_attack_by_name("Crush")})
+Repo.insert!(%Weapon{name: "Longsword", weapon_category: "Martial",
+                    attack: Attacks.get_attack_by_name("Cleave")})
+Repo.insert!(%Weapon{name: "Shortsword", weapon_category: "Martial",
+                    attack: Attacks.get_attack_by_name("Pierce")})
+Repo.insert!(%Weapon{name: "Rapier", weapon_category: "Martial",
+                    attack: Attacks.get_attack_by_name("Perforate")})
+Repo.insert!(%Weapon{name: "Shortbow", weapon_category: "Simple", #1d6
+                    attack: Attacks.get_attack_by_name("Shoot")})
+Repo.insert!(%Weapon{name: "Darts", weapon_category: "Simple",
+                    attack: Attacks.get_attack_by_name("Dart")})
+Repo.insert!(%Weapon{name: "Sling", weapon_category: "Simple",
+                    attack: Attacks.get_attack_by_name("Fling")})
+Repo.insert!(%Weapon{name: "Longbow", weapon_category: "Martial", # 1d8
+                    attack: Attacks.get_attack_by_name("Loose")})
+Repo.insert!(%Weapon{name: "Hand Crossbow", weapon_category: "Martial",
+                    attack: Attacks.get_attack_by_name("Shoot")})
+
 
 ###### USERS ######
 Repo.insert!(%User{email: "Cristian", admin: true, password_hash: pwhash})
