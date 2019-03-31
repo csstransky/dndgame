@@ -34,7 +34,8 @@ $(function () {
         update_armors();
         update_weapons();
         update_stats();
-        $('#HELLFIRE').text(show_race(resp.data));
+        $('#HELLFIRE').empty()
+        $('#HELLFIRE').append(show_race(resp.data));
       },
       error: (resp) => {
         console.log(resp)
@@ -51,7 +52,8 @@ $(function () {
         update_armors();
         update_weapons();
         update_stats();
-        $('#HELLFIRE').text(show_class(resp.data));
+        $('#HELLFIRE').empty()
+        $('#HELLFIRE').append(show_class(resp.data));
       },
       error: (resp) => {
         console.log(resp)
@@ -66,7 +68,8 @@ $(function () {
       dataType: "json",
       success: (resp) => {
         update_stats();
-        $('#HELLFIRE').text(resp.data.name);
+        $('#HELLFIRE').empty()
+        $('#HELLFIRE').append(show_armor(resp.data));
       },
       error: (resp) => {
         console.log(resp)
@@ -81,7 +84,8 @@ $(function () {
       dataType: "json",
       success: (resp) => {
         update_stats();
-        $('#HELLFIRE').text(resp.data.name);
+        $('#HELLFIRE').empty()
+        $('#HELLFIRE').append(show_weapon(resp.data));
       },
       error: (resp) => {
         console.log(resp)
@@ -174,19 +178,19 @@ function update_weapons() {
 // TODO: Bach, you'll probably want to mess with this and IDs to make it look just
 //right
 function show_race(race) {
-  let name = race.name;
-  let desc = race.desc === "" ? "" : "\nDesc: " + race.desc;
-  let str_bonus = race.str_bonus === 0 ? "" : "\nSTR Bonus: " + race.str_bonus;
-  let dex_bonus = race.dex_bonus === 0 ? "" : "\nDEX Bonus: " + race.dex_bonus;
-  let int_bonus = race.int_bonus === 0 ? "" : "\nINT Bonus: " + race.int_bonus;
-  let con_bonus = race.con_bonus === 0 ? "" : "\nCON Bonus: " + race.con_bonus;
-  let wis_bonus = race.wis_bonus === 0 ? "" : "\nWIS Bonus: " + race.wis_bonus;
-  let cha_bonus = race.cha_bonus === 0 ? "" : "\nCHA Bonus: " + race.cha_bonus;
-  let size = "\n" + race.size
-  let saves = race.save_array === [] ? "" : "\nSaves: " + race.save_array;
-  let profs = race.prof_array === [] ? "" : "\nProfs: " + race.prof_array;
-  let weapon_profs = race.weapon_prof_array === [] ? "" : "\nWeapons: " + race.weapon_prof_array;
-  let armor_profs = race.armor_prof_array === [] ? "" : "\nArmors: " + race.armor_prof_array
+  let name = "<h2><u>" + race.name + "</u></h2>";
+  let desc = race.desc === "" ? "" : "<b>Desc:</b> " + race.desc;
+  let str_bonus = race.str_bonus === 0 ? "" : "<b>STR Bonus:</b> " + race.str_bonus + "</br>";
+  let dex_bonus = race.dex_bonus === 0 ? "" : "<b>DEX Bonus:</b> " + race.dex_bonus + "</br>";
+  let int_bonus = race.int_bonus === 0 ? "" : "<b>INT Bonus:</b> " + race.int_bonus + "</br>";
+  let con_bonus = race.con_bonus === 0 ? "" : "<b>CON Bonus:</b> " + race.con_bonus + "</br>";
+  let wis_bonus = race.wis_bonus === 0 ? "" : "<b>WIS Bonus:</b> " + race.wis_bonus + "</br>";
+  let cha_bonus = race.cha_bonus === 0 ? "" : "<b>CHA Bonus:</b> " + race.cha_bonus + "</br>";
+  let size = race.size === 0 ? "<b>Size:</b> Medium<br/>" : "<b>Size:</b> Small<br/>"
+  let saves = race.save_array.length === 0 ? "" : "<b>Saves:</b> " + show_list(race.save_array) + "<br/>";
+  let profs = race.prof_array.length === 0 ? "" : "<b>Profs:</b> " + show_list(race.prof_array) + "<br/>";
+  let weapon_profs = race.weapon_prof_array.length === 0? "" : "<b>Weapons:</b> " + show_list(race.weapon_prof_array) + "<br/>";
+  let armor_profs = race.armor_prof_array.length === 0 ? "" : "<b>Armors:</b> " + show_list(race.armor_prof_array) + "<br/>";
   return name
     + desc
     + str_bonus
@@ -203,14 +207,16 @@ function show_race(race) {
 }
 
 function show_class(dnd_class) {
-  let name = dnd_class.name;
-  let desc = dnd_class.desc === "" ? "" : "\nDesc: " + dnd_class.desc;
-  let ability_modifier = "\nAbility Modifier: " + dnd_class.ability_modifier;
-  let hit_die = "\nHit Die: 1d" + dnd_class.hit_die
-  let saves = dnd_class.save_array === [] ? "" : "\nSaves: " + dnd_class.save_array;
-  let profs = dnd_class.prof_array === [] ? "" : "\nProfs: " + dnd_class.prof_array;
-  let weapon_profs = dnd_class.weapon_prof_array === [] ? "" : "\nWeapons: " + dnd_class.weapon_prof_array;
-  let armor_profs = dnd_class.armor_prof_array === [] ? "" : "\nArmors: " + dnd_class.armor_prof_array
+  let name = "<h2><u>" + dnd_class.name + "</u></h2>";
+  let desc = dnd_class.desc === "" ? "" : "<b>Desc:</b> " + dnd_class.desc + "<br/>";
+  let ability_modifier = "<b>Ability Modifier:</b> " + dnd_class.ability_modifier + "<br/>";
+  let hit_die = "<b>Hit Die:</b> 1d" + dnd_class.hit_die + "<br/>";
+  let saves = dnd_class.save_array.length === 0 ? "" : "<b>Saves:</b> " + show_list(dnd_class.save_array) + "<br/>";
+  let profs = dnd_class.prof_array.length === 0 ? "" : "<b>Profs:</b> " + show_list(dnd_class.prof_array) + "<br/>";
+  let weapon_profs = dnd_class.weapon_prof_array.length === 0 ? "" : "<b>Weapons:</b> " + show_list(dnd_class.weapon_prof_array) + "<br/>";
+  let armor_profs = dnd_class.armor_prof_array.length === 0 ? "" : "<b>Armors:</b> " + show_list(dnd_class.armor_prof_array) + "<br/>";
+  let skills = dnd_class.skills.length === 0 ? "" : "<b>Skills:</b> " + show_abilities(dnd_class.skills) + "<br/>";
+  let spells = dnd_class.spells.length === 0 ? "" : "<b>Spells:</b> " + show_abilities(dnd_class.spells) + "<br/>";
   return name
     + desc
     + ability_modifier
@@ -218,9 +224,50 @@ function show_class(dnd_class) {
     + saves
     + profs
     + weapon_profs
-    + armor_profs + dnd_class.skills;
+    + armor_profs
+    + skills
+    + spells;
 }
 
-function get_stat_modifier(stat) {
-  return Math.floor((stat - 10) / 2)
+function show_weapon(weapon) {
+  let name = "<h2><u>" + weapon.name + "</u></h2>";
+  let desc = weapon.desc === "" ? "" : "<b>Desc:</b> " + weapon.desc + "<br/>";
+  let category = "<b>Category:</b> " + weapon.weapon_category + "<br/>";
+  let dmg_die = "<b>Damage Dice:</b> " + weapon.attack.damage_dice + "<br/>";
+  let dmg_type = "<b>Damage Type:</b> " + weapon.attack.type + "<br/>";
+  return name
+    + desc
+    + category
+    + dmg_die
+    + dmg_type;
+}
+
+function show_armor(armor) {
+  console.log(armor)
+  let name = "<h2><u>" + armor.name + "</u></h2>";
+  let desc = armor.desc === "" ? "" : "<b>Desc:</b> " + armor.desc + "<br/>";
+  let category = "<b>Category:</b> " + armor.armor_category + "<br/>";
+  let base = "<b>Base AC:</b> " + armor.base + "<br/>";
+  let dex_bonus = armor.max_dex_bonus > 90 ? "<b>Max DEX Bonus:</b> No Limit<br/>" : "<b>Max DEX Bonus:</b> " + armor.max_dex_bonus + "<br/>"
+  let stealth_disadvantage = armor.stealth_disadvantage ? "<b>Stealth Disadvantage:</b> Yes<br/>" : "<b>Stealth Disadvantage:</b> No<br/>"
+  let str_min = armor.str_minimum ? "<b>STR Minimum:</b> " + armor.str_minimum + "<br/>" : ""
+  return name
+    + desc
+    + category
+    + base
+    + dex_bonus
+    + stealth_disadvantage;
+}
+
+function show_list(string_array) {
+  let list = "";
+  for (var ii in string_array) {
+    list += "<br/>+ " + string_array[ii];
+  }
+  return list;
+}
+
+function show_abilities(ability_array) {
+  let ability_names = ability_array.map(ability => ability.name);
+  return show_list(ability_names);
 }

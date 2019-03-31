@@ -8,7 +8,7 @@ defmodule Dndgame.Classes.Class do
     field :name, :string
     field :prof_array, {:array, :string}
     field :save_array, {:array, :string}
-    field :weapon_prof_array, {:array, :string}
+    field :weapon_prof_array, {:array, :string}, default: []
     field :armor_prof_array, {:array, :string}, default: []
     field :ability_modifier, :string
     many_to_many :skills, Dndgame.Skills.Skill, join_through: "class_skills"

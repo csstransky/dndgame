@@ -26,6 +26,7 @@
               <thead>
                 <th class="col-xs-1"> Skill </th>
                 <th class="col-xs-1"> Value </th>
+                <th class"col-xs-1"> Mod </th>
               </thead>
               <tbody>
                 <tr onMouseOver="desc('str')">
@@ -33,36 +34,42 @@
                   <td> <a id="str2"> 0 </a>
                     <%= hidden_input f, :str, id: "str", value: "0" %>
                     <%= error_tag f, :str %> </td>
+                  <td><a id="str_mod"></a></td>
                 </tr>
                 <tr onMouseOver="desc('dex')">
                   <td> <Strong> Dexterity </Strong> </td>
                   <td > <a id="dex2">0</a>
                     <%= hidden_input f, :dex, id: "dex", value: "0" %>
                     <%= error_tag f, :dex %> </td>
+                  <td><a id="dex_mod"></a></td>
                 </tr>
                 <tr onMouseOver="desc('int')">
                   <td> <Strong> Intelligence </Strong> </td>
                   <td> <a id="int2"> 0 </a>
                     <%= hidden_input f, :int, id: "int", value: "0"  %>
                     <%= error_tag f, :int %> </td>
+                  <td><a id="int_mod"></a></td>
                 </tr>
                 <tr onMouseOver="desc('con')">
                   <td> <Strong> Constitution </Strong> </td>
                   <td> <a id="con2"> 0 </a>
                     <%= hidden_input f, :con, id: "con", value: "0" %>
                     <%= error_tag f, :con %> </td>
+                    <td><a id="con_mod"></a></td>
                 </tr>
                 <tr onMouseOver="desc('wis')">
                   <td> <Strong> Wisdom </Strong> </td>
                   <td> <a id="wis2"> 0 </a>
                     <%= hidden_input f, :wis, id: "wis", value: "0" %>
                     <%= error_tag f, :wis %> </td>
+                    <td><a id="wis_mod"></a></td>
                 </tr>
                 <tr onMouseOver="desc('cha')">
                   <td> <Strong> Charisma </Strong> </td>
                   <td> <a id="cha2"> 0 </a>
                     <%= hidden_input f, :cha, id: "cha", value: "0" %>
                     <%= error_tag f, :cha %> </td>
+                    <td><a id="cha_mod"></a></td>
                 </tr>
               </tbody>
             </table>
@@ -159,43 +166,53 @@
       }
       document.getElementById("dex").value = stats[0];
       document.getElementById("dex2").innerHTML = stats[0];
+      document.getElementById("dex_mod").innerHTML = get_stat_mod(stats[0]);
       document.getElementById("cha").value = stats[1];
       document.getElementById("cha2").innerHTML = stats[1];
+      document.getElementById("cha_mod").innerHTML = get_stat_mod(stats[1]);
       document.getElementById("con").value = stats[2];
       document.getElementById("con2").innerHTML = stats[2];
+      document.getElementById("con_mod").innerHTML = get_stat_mod(stats[2]);
       document.getElementById("int").value = stats[3];
       document.getElementById("int2").innerHTML = stats[3];
+      document.getElementById("int_mod").innerHTML = get_stat_mod(stats[3]);
       document.getElementById("str").value = stats[4];
       document.getElementById("str2").innerHTML = stats[4];
+      document.getElementById("str_mod").innerHTML = get_stat_mod(stats[4]);
       document.getElementById("wis").value = stats[5];
       document.getElementById("wis2").innerHTML = stats[5];
+      document.getElementById("wis_mod").innerHTML = get_stat_mod(stats[5]);
+    }
+
+    function get_stat_mod(stat) {
+      return Math.floor((stat - 10) / 2);
     }
 
     function desc(skill) {
       switch(skill) {
         case "dex":
           document.getElementById("skill-desc-title").innerHTML = "Dexterity";
-          document.getElementById("skill-desc").innerHTML = "Desc for dex";
+          document.getElementById("skill-desc").innerHTML = "Dexterity measures agility, reflexes, and balance.<br/><br/>A Dexterity check can model any attempt to move nimbly, quickly, or quietly, or to keep from falling on tricky footing. The Acrobatics, Sleight of Hand, and Stealth skills reflect aptitude in certain kinds of Dexterity checks.<br/><br/>Main stat used for Rogues.";
           break;
         case "cha":
           document.getElementById("skill-desc-title").innerHTML = "Charisma";
-          document.getElementById("skill-desc").innerHTML = "Desc for cha";
+          document.getElementById("skill-desc").innerHTML = "Charisma measures your ability to interact effectively with others. It includes such factors as confidence and eloquence, and it can represent a charming or commanding personality.<br/><br/>A Charisma check might arise when you try to influence or entertain others, when you try to make an impression or tell a convincing lie, or when you are navigating a tricky social situation. The Deception, Intimidation, Performance, and Persuasion skills reflect aptitude in certain kinds of Charisma checks. ";
           break;
         case "con":
           document.getElementById("skill-desc-title").innerHTML = "Constitution";
-          document.getElementById("skill-desc").innerHTML = "Desc for con";
+          document.getElementById("skill-desc").innerHTML = "Constitution measures health, stamina, and vital force.<br/><br/>Constitution checks are uncommon, and no skills apply to Constitution checks, because the endurance this ability represents is largely passive rather than involving a specific effort on the part of a character or monster. A Constitution check can model your attempt to push beyond normal limits, however.<br/><br/>Main stat used for Health Points and Health Recovery.";
           break;
         case "int":
           document.getElementById("skill-desc-title").innerHTML = "Intelligence";
-          document.getElementById("skill-desc").innerHTML = "Desc for int";
+          document.getElementById("skill-desc").innerHTML = "Intelligence measures mental acuity, accuracy of recall, and the ability to reason.<br/><br/>An Intelligence check comes into play when you need to draw on logic, education, memory, or deductive reasoning. The Arcana, History, Investigation, Nature, and Religion skills reflect aptitude in certain kinds of Intelligence checks.<br/><br/>Main stat used for Wizards.";
           break;
         case "str":
           document.getElementById("skill-desc-title").innerHTML = "Strength";
-          document.getElementById("skill-desc").innerHTML = "Desc for str";
+          document.getElementById("skill-desc").innerHTML = "Strength measures bodily power, athletic training, and the extent to which you can exert raw physical force.<br/><br/>A Strength check can model any attempt to lift, push, pull, or break something, to force your body through a space, or to otherwise apply brute force to a situation. The Athletics skill reflects aptitude in certain kinds of Strength checks.<br/><br/>Main stat used for Barbarians.";
           break;
         case "wis":
           document.getElementById("skill-desc-title").innerHTML = "Wisdom";
-          document.getElementById("skill-desc").innerHTML = "Desc for wis";
+          document.getElementById("skill-desc").innerHTML = "Wisdom reflects how attuned you are to the world around you and represents perceptiveness and intuition.<br/><br/>A Wisdom check might reflect an effort to read body language, understand someone’s feelings, notice things about the environment, or care for an injured person. The Animal Handling, Insight, Medicine, Perception, and Survival skills reflect aptitude in certain kinds of Wisdom checks.<br/><br/>Main stat used for Clerics.";
           break;
       }
     }

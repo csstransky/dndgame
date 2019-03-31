@@ -24,7 +24,7 @@ defmodule DndgameWeb.RaceView do
       prof_array: race.prof_array,
       save_array: race.save_array,
       weapon_prof_array: race.weapon_prof_array,
-      armor_prof_array: race.armor_prof_array, 
+      armor_prof_array: race.armor_prof_array,
     }
   end
 end

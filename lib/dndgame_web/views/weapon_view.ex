@@ -14,6 +14,8 @@ defmodule DndgameWeb.WeaponView do
     %{id: weapon.id,
       name: weapon.name,
       desc: weapon.desc,
-      weapon_category: weapon.weapon_category}
+      weapon_category: weapon.weapon_category,
+      attack: DndgameWeb.AttackView.render("attack.json", %{attack: weapon.attack}),
+    }
   end
 end
