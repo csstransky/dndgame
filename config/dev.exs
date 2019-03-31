@@ -48,8 +48,8 @@ config :dndgame, DndgameWeb.Endpoint,
 
 # OAuth config
 config :dndgame, Google,
-       client_id: "312318876104-a1ol9qsfm74tasi8maou3532h1vnrjso.apps.googleusercontent.com",
-       client_secret: "OmhjrolQK7i6EwnwV5WUZqUb",
+       client_id: "x",
+       client_secret: "x",
        redirect_uri: "http://localhost:4000/"
 
 

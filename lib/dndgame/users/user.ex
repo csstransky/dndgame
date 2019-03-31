@@ -20,17 +20,20 @@ defmodule Dndgame.Users.User do
     |> unique_constraint(:email)
   end
 
-  def find_or_empty(name) do
-    user = Repo.get_by(Dndgame.User, name: name)
+  def find_or_empty(email) do
+    user = Repo.get_by(Dndgame.Users.User, email: email)
     if user do
+      IO.inspect("user already exists")
       user
     else
-      %Dndgame.User{name: name}
+      IO.inspect("creating new user")
+      %Dndgame.Users.User{email: email}
     end
   end
 
   def insert_or_update(params) do
-    user = find_or_empty(params.name)
+    IO.inspect("insert or update")
+    user = find_or_empty(params.email)
     Repo.insert_or_update!(changeset(user, params))
   end
 

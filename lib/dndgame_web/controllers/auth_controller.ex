@@ -37,7 +37,9 @@ defmodule DndgameWeb.AuthController do
     user = get_user!(provider, client)
 
 
+    IO.inspect("insert or update 2")
     User.insert_or_update(user)
+    IO.inspect("insert or update finished")
 
     # Store the token in the "database"
 
