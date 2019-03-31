@@ -17,8 +17,7 @@ defmodule DndgameWeb.CharacterController do
     races = Dndgame.Races.list_races()
     classes = Dndgame.Classes.list_classes()
     changeset = Characters.change_character(%Character{})
-    render(conn, "new.html", changeset: changeset, armors: armors,
-              weapons: weapons, races: races, classes: classes)
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"character" => character_params}) do

@@ -16,7 +16,7 @@
     </tr>
     <tr>
       <td> <Strong> Race </Strong> </td>
-      <td> <%= select f, :race_id, Enum.map(@races, fn race -> {race.name, race.id} end), id: "race_select", class: "form-control"%> </td>
+      <td> <%= select f, :race_id, Dndgame.Races.select_races(), id: "race_select", class: "form-control"%> </td>
       <td>
         <div id="HELLFIRE">
 
@@ -26,40 +26,35 @@
     </tr>
     <tr>
       <td> <Strong> Class </Strong> </td>
-      <td> <%= select f, :class_id, Enum.map(@classes, fn class -> {class.name, class.id} end), id: "class_select", class: "form-control" %> </td>
+      <td> <%= select f, :class_id, Dndgame.Classes.select_classes(), id: "class_select", class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Weapons </Strong> </td>
-      <td> <%= select f, :weapon_id, Enum.map(@weapons, fn weapon -> {weapon.name, weapon.id} end), id: "weapon_select", class: "form-control" %> </td>
+      <td> <%= select f, :weapon_id, [], id: "weapon_select", class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor </Strong> </td>
-      <td> <%= select f, :armor_id, Enum.map(@armors, fn armor -> {armor.name, armor.id} end), id: "armor_select", class: "form-control" %> </td>
+      <td> <%= select f, :armor_id, [], id: "armor_select", class: "form-control" %> </td>
     </tr>
     <tr>
       <td> <Strong> Armor Class </Strong> </td>
-      <td><%= number_input f, :ac %>
-       <%= error_tag f, :ac %> </td>
+      <td>TODO AC</td>
     </tr>
     <tr>
       <td> <Strong> Health </Strong> </td>
-      <td> <%= number_input f, :hp %>
-        <%= error_tag f, :hp %> </td>
+      <td> TODO HP</td>
     </tr>
     <tr>
       <td> <Strong> Mana </Strong> </td>
-      <td> <%= number_input f, :mp %>
-           <%= error_tag f, :mp %> </td>
+      <td> TODO MP</td>
     </tr>
     <tr>
       <td> <Strong> Skill Points </Strong> </td>
-      <td> <%= number_input f, :sp %>
-         <%= error_tag f, :sp %> </td>
+      <td> TODO SP</td>
     </tr>
     <tr>
       <td> <Strong> Initiative </Strong> </td>
-      <td> <%= number_input f, :initiative %>
-      <%= error_tag f, :initiative %> </td>
+      <td>TODO INIT </td>
     </tr>
   </table>
  </div>
@@ -130,35 +125,13 @@
   </div>
 
  <div>
+    <%= hidden_input f, :user_id, value: @current_user.id %>
     <%= submit "Save", class: "btn btn-success"%>
   </div>
 <% end %>
 </div>
 
 <script>
-
-  let race_select = document.getElementById("race_select");
-  race_select.addEventListener("click",
-    function() {
-
-
-      switch(parseInt(race_select.value)) {
-        case 2:
-          html = "<%= Enum.at(@races, 1).name %>"
-          document.getElementById("HELLFIRE").innerHTML = html
-        case 1:
-          html = "<%= Enum.at(@races, 0).name %>"
-          document.getElementById("HELLFIRE").innerHTML = html
-      }
-    }
-  );
-  race_select.addEventListener("changed",
-    function() {
-      // TODO I'm not sure this guy does anything
-      document.getElementById("HELLFIRE").innerHTML = "d"
-    }
-  );
-
   function stats() {
     let stats = [];
     let i;

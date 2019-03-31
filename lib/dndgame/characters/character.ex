@@ -22,6 +22,8 @@ defmodule Dndgame.Characters.Character do
 
   @doc false
   def changeset(character, attrs) do
+    IO.inspect("CAN YOU SEE ME")
+    IO.inspect(attrs)
     character
     |> cast(attrs, [:cha, :con, :dex, :exp, :int, :name, :str, :wis, :class_id, :armor_id, :weapon_id, :race_id, :user_id])
     |> validate_required([:cha, :con, :dex, :exp, :int, :name, :str, :wis, :class_id, :armor_id, :weapon_id, :race_id, :user_id])
