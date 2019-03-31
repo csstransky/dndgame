@@ -11,7 +11,7 @@ defmodule Dndgame.Repo.Migrations.CreateRaces do
       add :int_bonus, :integer
       add :wis_bonus, :integer
       add :cha_bonus, :integer
-      add :size, :string
+      add :size, :integer
       add :prof_array, {:array, :string}
       add :save_array, {:array, :string}
       add :weapon_prof_array, {:array, :string}

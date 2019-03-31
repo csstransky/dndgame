@@ -9,7 +9,8 @@ defmodule Dndgame.Races.Race do
     field :dex_bonus, :integer, default: 0
     field :int_bonus, :integer, default: 0
     field :name, :string
-    field :size, :string
+    # Size = 0 is medium, size = -1 is small, size 1 is large, etc
+    field :size, :integer, default: 0
     field :str_bonus, :integer, default: 0
     field :wis_bonus, :integer, default: 0
     field :prof_array, {:array, :string}, default: []

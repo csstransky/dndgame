@@ -27,7 +27,7 @@ defmodule Dndgame.Characters do
   def get_class(character) do
     Dndgame.Classes.get_class!(character.class_id).name
   end
-  
+
   def get_race(character) do
     Dndgame.Races.get_race!(character.race_id).name
   end
@@ -145,7 +145,7 @@ defmodule Dndgame.Characters do
     level = get_level(character)
     prof_bonus = get_prof_bonus(character)
     cond do
-      class_name == "barbarian" ->
+      class_name == "barbarian" || class_name == "rogue" ->
         0
       class_name == "paladin" ->
         floor((level + prof_bonus + 1) / 2)
@@ -162,7 +162,7 @@ defmodule Dndgame.Characters do
     cond do
       class_name == "wizard" ->
         ceil((level + prof_bonus + 1) / 4)
-      class_name == "Paladin" ->
+      class_name == "paladin" ->
         ceil((level + prof_bonus + 1) / 2)
       true ->
         level + prof_bonus + 1

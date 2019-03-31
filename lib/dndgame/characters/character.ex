@@ -2,10 +2,7 @@ defmodule Dndgame.Characters.Character do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Dndgame.Characters
-
   schema "characters" do
-    #TODO: make functions for all the commented out stuff
     field :cha, :integer
     field :con, :integer
     field :dex, :integer
@@ -14,10 +11,6 @@ defmodule Dndgame.Characters.Character do
     field :name, :string
     field :str, :integer
     field :wis, :integer
-    #field :prof_array, {:array, :string}
-    #field :save_array, {:array, :string}
-    #field :weapon_prof_array, {:array, :string}
-    #field :armor_prof_array, {:array, :string}
     belongs_to :weapon, Dndgame.Weapons.Weapon
     belongs_to :armor, Dndgame.Armors.Armor
     belongs_to :race, Dndgame.Races.Race

@@ -37,13 +37,22 @@ pwhash = Argon2.hash_pwd_salt("password")
 ##### RACES ######
 dwarf_armrs = ["Light", "Medium"]
 dwarf_wpns = ["Battleaxe", "Handaxe", "Light Hammer", "Warhammer"]
-Repo.insert!(%Race{name: "Dwarf", con_bonus: 2, wis_bonus: 1, size: "medium",
+Repo.insert!(%Race{name: "Dwarf", con_bonus: 2, wis_bonus: 1, size: 0,
                 armor_prof_array: dwarf_armrs, weapon_prof_array: dwarf_wpns})
 
 elf_profs = ["Perception"]
 elf_wpns = ["Longsword", "Shortsword", "Shortbow", "Longbow"]
-Repo.insert!(%Race{name: "Elf", dex_bonus: 2, int_bonus: 1, size: "medium",
+Repo.insert!(%Race{name: "Elf", dex_bonus: 2, int_bonus: 1, size: 0,
                   prof_array: elf_profs, weapon_prof_array: elf_wpns})
+
+gnome_saves = ["INT", "WIS", "CHA"]
+Repo.insert!(%Race{name: "Gnome", int_bonus: 2, cha_bonus: 1, size: -1,
+                save_array: gnome_saves})
+
+Repo.insert!(%Race{name: "Human", str_bonus: 1, dex_bonus: 1, int_bonus: 1,
+                  con_bonus: 1, wis_bonus: 1, cha_bonus: 1, size: 0})
+
+
 
 ###### SPELLS ######
 Repo.insert!(%Spell{name: "Fire Bolt", dice: "1d10",
@@ -64,8 +73,12 @@ Repo.insert!(%Skill{name: "Rage", level_req: 1, type: "buff", sp_cost: 2,
               target: "self", buff_stat: "STR", dice: "4d1"})
 Repo.insert!(%Skill{name: "Turn Undead", level_req: 1, type: "run_away",
               sp_cost: 1, target: "enemies", buff_stat: "WIS", dice: "save"})
+Repo.insert!(%Skill{name: "Sneak Attack", level_req: 1, type: "damage",
+              sp_cost: 2, target: "enemy", dice: "2d6"})
+Repo.insert!(%Skill{name: "Hide", level_req: 1, type: "buff",
+              sp_cost: 1, target: "self", buff_stat: "DEX", dice: "4d1"})
 
-###### CLASSES #######
+###### CLASSES #######https:https://www.dndbeyond.com/races/gnome//www.dndbeyond.com/races/gnome
 barbarian_profs = ["Athletics", "Intimidation"]
 barbarian_saves = ["STR", "CON"]
 barbarian_wpns = ["Simple", "Martial"]
@@ -77,6 +90,18 @@ Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Barbarian"),
                               skill: Skills.get_skill_by_name("Double Attack")})
 Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Barbarian"),
                               skill: Skills.get_skill_by_name("Rage")})
+
+rogue_profs = ["Acrobatics", "Perception", "Stealth", "Sleight of Hand"]
+rogue_saves = ["DEX", "INT"]
+rogue_wpns = ["Simple", "Hand Crossbow", "Longsword", "Rapier", "Shortsword"]
+rogue_armor = ["Light"]
+Repo.insert!(%Class{name: "Rogue", hit_die: 8, ability_modifier: "DEX", prof_array: rogue_profs,
+                    save_array: rogue_saves, weapon_prof_array: rogue_wpns,
+                    armor_prof_array: rogue_armor})
+Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Rogue"),
+                            skill: Skills.get_skill_by_name("Hide")})
+Repo.insert!(%Classes.Skills{class: Classes.get_class_by_name("Rogue"),
+                            skill: Skills.get_skill_by_name("Sneak Attack")})
 
 wizard_profs = ["Medicine", "Arcana"]
 wizard_saves = ["INT", "WIS"]
@@ -109,7 +134,7 @@ Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Cleric"),
 ###### ARMORS ######
 Repo.insert!(%Armor{name: "Mage Armor", base: 13, armor_category: "Special"})
 Repo.insert!(%Armor{name: "Leather", base: 11, armor_category: "Light"})
-Repo.insert!(%Armor{name: "Breatplate", base: 12, armor_category: "Light"})
+Repo.insert!(%Armor{name: "Studded Leather", base: 12, armor_category: "Light"})
 Repo.insert!(%Armor{name: "Plate", base: 18, armor_category: "Heavy",
             max_dex_bonus: 0, stealth_disadvantage: true, str_minimum: 15})
 Repo.insert!(%Armor{name: "Chain Mail", base: 16, armor_category: "Heavy",
@@ -118,7 +143,7 @@ Repo.insert!(%Armor{name: "Ring Mail", base: 14, armor_category: "Heavy",
             max_dex_bonus: 0, stealth_disadvantage: true})
 Repo.insert!(%Armor{name: "Half Plate", base: 15, armor_category: "Medium",
             max_dex_bonus: 2, stealth_disadvantage: true})
-Repo.insert!(%Armor{name: "Breatplate", base: 14, armor_category: "Medium",
+Repo.insert!(%Armor{name: "Breastplate", base: 14, armor_category: "Medium",
             max_dex_bonus: 2})
 
 ###### ATTACKS ######
@@ -147,5 +172,3 @@ Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
                 class: Classes.get_class_by_name("Wizard"),
                 race: Races.get_race_by_name("Elf"),
                 user: Users.get_user_by_email("Cristian")})
-                elf_profs = ["Perception"]
-                elf_wpns = ["Longsword", "Shortsword", "Shortbow", "Longbow"]
