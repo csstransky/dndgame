@@ -21,11 +21,14 @@ defmodule Dndgame.Users do
     Repo.all(User)
   end
 
-  def list_manager_underlings(manager_id) do
-    query = from u in User,
-             where: u.manager_id == ^manager_id,
-             select: u
-    Repo.all(query)
+
+  @doc """
+  Authenticates a user.
+  Returns {:ok, user} on success, or {:error, msg} on failure.
+  """
+  def authenticate_user(name, password) do
+    Repo.get_by(User, name: name)
+    |> Argon2.check_pass(password)
   end
 
   @doc """

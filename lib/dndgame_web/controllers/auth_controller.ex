@@ -2,7 +2,9 @@
 
 defmodule DndgameWeb.AuthController do
   use DndgameWeb, :controller
-  alias Dndgame.User
+
+  alias Dndgame.Users
+  alias Dndgame.Users.User
 
   def index(conn, _params) do
     render(conn, "index.html")
@@ -13,6 +15,7 @@ defmodule DndgameWeb.AuthController do
   based on the chosen strategy.
   """
   def index2(conn, %{"provider" => provider}) do
+    IO.inspect("running authorize_url and redirecting")
     redirect conn, external: authorize_url!(provider)
   end
 
@@ -30,6 +33,7 @@ defmodule DndgameWeb.AuthController do
   access protected resources on behalf of the user.
   """
   def callback(conn, %{"provider" => provider, "code" => code}) do
+    IO.inspect("starting callback")
     # Exchange an auth code for an access token
     client = get_token!(provider, code)
 
@@ -67,8 +71,8 @@ defmodule DndgameWeb.AuthController do
 
   defp get_user!("google", client) do
     IO.inspect(client)
-    %{body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-    %{name: user["name"], avatar: user["picture"]}
+    %{body: user, status_code: status} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
+    %{email: user["email"], domain: user["hd"], email_verified: user["email_verified"], avatar: user["picture"]}
   end
 
 end

@@ -46,11 +46,7 @@ config :dndgame, DndgameWeb.Endpoint,
 # different ports.
 
 
-# OAuth config
-config :dndgame, Google,
-       client_id: "x",
-       client_secret: "x",
-       redirect_uri: "http://localhost:4000/"
+
 
 
 # Watch static and templates for browser reloading.
