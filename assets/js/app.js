@@ -218,7 +218,7 @@ function show_class(dnd_class) {
     + saves
     + profs
     + weapon_profs
-    + armor_profs;
+    + armor_profs + dnd_class.skills;
 }
 
 function get_stat_modifier(stat) {

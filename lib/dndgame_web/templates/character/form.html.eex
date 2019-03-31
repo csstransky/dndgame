@@ -28,23 +28,17 @@
                 <th class="col-xs-1"> Value </th>
               </thead>
               <tbody>
+                <tr onMouseOver="desc('str')">
+                  <td> <Strong> Strength </Strong> </td>
+                  <td> <a id="str2"> 0 </a>
+                    <%= hidden_input f, :str, id: "str", value: "0" %>
+                    <%= error_tag f, :str %> </td>
+                </tr>
                 <tr onMouseOver="desc('dex')">
                   <td> <Strong> Dexterity </Strong> </td>
                   <td > <a id="dex2">0</a>
                     <%= hidden_input f, :dex, id: "dex", value: "0" %>
                     <%= error_tag f, :dex %> </td>
-                </tr>
-                <tr onMouseOver="desc('cha')">
-                  <td> <Strong> Charisma </Strong> </td>
-                  <td> <a id="cha2"> 0 </a>
-                    <%= hidden_input f, :cha, id: "cha", value: "0" %>
-                    <%= error_tag f, :cha %> </td>
-                </tr>
-                <tr onMouseOver="desc('con')">
-                  <td> <Strong> Constitution </Strong> </td>
-                  <td> <a id="con2"> 0 </a>
-                    <%= hidden_input f, :con, id: "con", value: "0" %>
-                    <%= error_tag f, :con %> </td>
                 </tr>
                 <tr onMouseOver="desc('int')">
                   <td> <Strong> Intelligence </Strong> </td>
@@ -52,17 +46,23 @@
                     <%= hidden_input f, :int, id: "int", value: "0"  %>
                     <%= error_tag f, :int %> </td>
                 </tr>
-                <tr onMouseOver="desc('str')">
-                  <td> <Strong> Strength </Strong> </td>
-                  <td> <a id="str2"> 0 </a>
-                    <%= hidden_input f, :str, id: "str", value: "0" %>
-                    <%= error_tag f, :str %> </td>
+                <tr onMouseOver="desc('con')">
+                  <td> <Strong> Constitution </Strong> </td>
+                  <td> <a id="con2"> 0 </a>
+                    <%= hidden_input f, :con, id: "con", value: "0" %>
+                    <%= error_tag f, :con %> </td>
                 </tr>
                 <tr onMouseOver="desc('wis')">
                   <td> <Strong> Wisdom </Strong> </td>
                   <td> <a id="wis2"> 0 </a>
                     <%= hidden_input f, :wis, id: "wis", value: "0" %>
                     <%= error_tag f, :wis %> </td>
+                </tr>
+                <tr onMouseOver="desc('cha')">
+                  <td> <Strong> Charisma </Strong> </td>
+                  <td> <a id="cha2"> 0 </a>
+                    <%= hidden_input f, :cha, id: "cha", value: "0" %>
+                    <%= error_tag f, :cha %> </td>
                 </tr>
               </tbody>
             </table>
@@ -110,11 +110,11 @@
                 <td><div id="ac"></div></td>
               </tr>
               <tr>
-                <td> <Strong> Health </Strong> </td>
+                <td> <Strong> Health Points</Strong> </td>
                 <td><div id="hp"></div></td>
               </tr>
               <tr>
-                <td> <Strong> Mana </Strong> </td>
+                <td> <Strong> Mana Points</Strong> </td>
                 <td><div id="mp"></div></td>
               </tr>
               <tr>

@@ -20,6 +20,14 @@ defmodule DndgameWeb.ClassView do
       save_array: class.save_array,
       weapon_prof_array: class.weapon_prof_array,
       armor_prof_array: class.armor_prof_array,
+      skills: Enum.map(class.skills,
+        fn skill ->
+          DndgameWeb.SkillView.render("skill.json", %{skill: skill})
+        end),
+      spells: Enum.map(class.spells,
+        fn spell ->
+          DndgameWeb.SpellView.render("spell.json", %{spell: spell})
+        end),
     }
   end
 end

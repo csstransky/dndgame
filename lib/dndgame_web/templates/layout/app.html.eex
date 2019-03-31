@@ -24,11 +24,6 @@
             <li class="nav-item">
               <a class="nav-link" href="/characters">Characters</a>
             </li>
-            <%= if @current_user do %>
-              <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
-              </li>
-            <% end %>
           </ul>
         </div>
         <div class="col">

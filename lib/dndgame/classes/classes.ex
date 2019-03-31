@@ -18,7 +18,9 @@ defmodule Dndgame.Classes do
 
   """
   def list_classes do
+    preloads = [:skills, :spells]
     Repo.all(Class)
+    |> Repo.preload(preloads)
   end
 
   def select_classes do
