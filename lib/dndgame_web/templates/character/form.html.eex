@@ -67,7 +67,7 @@
               </tbody>
             </table>
             &nbsp; &nbsp; <button type="button"
-             class="btn btn-primary" onClick="stats()" > Roll </button>
+             class="btn btn-primary" onClick="stats()" id="roll"> Roll </button>
           </div>
         </div>
         <div class="card card-primary">
@@ -107,23 +107,23 @@
               </tr>
               <tr>
                 <td> <Strong> Armor Class </Strong> </td>
-                <td><div id="AC">TODO AC</div></td>
+                <td><div id="ac"></div></td>
               </tr>
               <tr>
                 <td> <Strong> Health </Strong> </td>
-                <td><div id="HP"> TODO HP</div></td>
+                <td><div id="hp"></div></td>
               </tr>
               <tr>
                 <td> <Strong> Mana </Strong> </td>
-                <td><div id="MP">TODO MP</div></td>
+                <td><div id="mp"></div></td>
               </tr>
               <tr>
                 <td> <Strong> Skill Points </Strong> </td>
-                <td><div id="SP">TODO SP</div></td>
+                <td><div id="sp"></div></td>
               </tr>
               <tr>
                 <td> <Strong> Initiative </Strong> </td>
-                <td><div id="Initiative">TODO INIT</div></td>
+                <td><div id="initiative"></div></td>
               </tr>
             </table>
           </div>
@@ -142,10 +142,12 @@
       </div>
     </div>
   </div>
+  &nbsp; &nbsp;
   <div class="row">
     <%= hidden_input f, :user_id, value: @current_user.id %>
-    <%= submit "Save", class: "btn btn-success"%>
+    <%= submit "Save", class: "btn btn-success btn-lg btn-block"%>
   </div>
+  &nbsp; &nbsp;
   <script>
     function stats() {
       let stats = [];

@@ -21,6 +21,10 @@ import _ from "lodash";
 // import socket from "./socket"
 
 $(function () {
+  $('#roll').click((ev) => {
+    update_stats();
+  });
+
   $('#race_select').click((ev) => {
     $.ajax({
       method: "GET",
@@ -29,6 +33,7 @@ $(function () {
       success: (resp) => {
         update_armors();
         update_weapons();
+        update_stats();
         $('#HELLFIRE').text(show_race(resp.data));
       },
       error: (resp) => {
@@ -36,6 +41,7 @@ $(function () {
       }
     });
   });
+
   $('#class_select').click((ev) => {
     $.ajax({
       method: "GET",
@@ -44,7 +50,7 @@ $(function () {
       success: (resp) => {
         update_armors();
         update_weapons();
-        console.log(resp);
+        update_stats();
         $('#HELLFIRE').text(show_class(resp.data));
       },
       error: (resp) => {
@@ -52,16 +58,30 @@ $(function () {
       }
     });
   });
+
   $('#armor_select').click((ev) => {
     $.ajax({
       method: "GET",
-      url: "/ajax/v1/armor/" + $('#armor_select').val(),
+      url: "/ajax/v1/armors/" + $('#armor_select').val(),
       dataType: "json",
       success: (resp) => {
-        update_armors();
-        update_weapons();
-        console.log(resp);
-        $('#HELLFIRE').text(resp.data);
+        update_stats();
+        $('#HELLFIRE').text(resp.data.name);
+      },
+      error: (resp) => {
+        console.log(resp)
+      }
+    });
+  });
+
+  $('#weapon_select').click((ev) => {
+    $.ajax({
+      method: "GET",
+      url: "/ajax/v1/weapons/" + $('#weapon_select').val(),
+      dataType: "json",
+      success: (resp) => {
+        update_stats();
+        $('#HELLFIRE').text(resp.data.name);
       },
       error: (resp) => {
         console.log(resp)
@@ -69,6 +89,36 @@ $(function () {
     });
   });
 });
+
+function update_stats() {
+  let race_id = $('#race_select').val()
+  let class_id = $('#class_select').val()
+  let armor_id = $('#armor_select').val()
+  let weapon_id = $('#weapon_select').val()
+  let dex = $('#dex').val()
+  let con = $('#con').val()
+  let url = "/ajax/v1/stats/?race_id=" + race_id
+    + "&class_id=" + class_id
+    + "&dex=" + dex
+    + "&con=" + con
+    + "&armor_id=" + armor_id
+    + "&weapon_id=" + weapon_id;
+  $.ajax({
+    method: "GET",
+    url: url,
+    dataType: "json",
+    success: (resp) => {
+      $('#hp').text(resp.data.hp)
+      $('#mp').text(resp.data.mp)
+      $('#sp').text(resp.data.sp)
+      $('#ac').text(resp.data.ac)
+      $('#initiative').text(resp.data.initiative)
+    },
+    error: (resp) => {
+      console.log(resp)
+    }
+  });
+}
 
 // TODO, fix this to get the rid parameters into
 function update_armors() {
@@ -169,4 +219,8 @@ function show_class(dnd_class) {
     + profs
     + weapon_profs
     + armor_profs;
+}
+
+function get_stat_modifier(stat) {
+  return Math.floor((stat - 10) / 2)
 }

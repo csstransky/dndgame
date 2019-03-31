@@ -2,4 +2,6 @@
 
 <%= render "form.html", Map.put(assigns, :action, Routes.character_path(@conn, :create)) %>
 
-<span><%= link "Back", to: Routes.character_path(@conn, :index) %></span>
+<div class="row">
+  <%= link "Back", to: Routes.character_path(@conn, :index), class: "btn btn-danger" %>
+</div>

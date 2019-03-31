@@ -121,7 +121,7 @@ defmodule Dndgame.Characters do
 
 
       #field :ac, :integer
-  def get_ac(%Character{} = character) do
+  def get_ac(character) do
     armor = character.armor
     dex_mod = get_stat_modifier(character.dex)
     if (armor.max_dex_bonus < dex_mod) do
@@ -131,7 +131,7 @@ defmodule Dndgame.Characters do
     end
   end
 
-  def get_hp(%Character{} = character) do
+  def get_hp(character) do
     class = character.class
     level = get_level(character)
     hit_die = class.hit_die
@@ -140,7 +140,7 @@ defmodule Dndgame.Characters do
   end
 
   # TODO More attractive way to do this?
-  def get_mp(%Character{} = character) do
+  def get_mp(character) do
     class_name = String.downcase(character.class.name)
     level = get_level(character)
     prof_bonus = get_prof_bonus(character)
@@ -155,7 +155,7 @@ defmodule Dndgame.Characters do
   end
 
   # TODO This is also kinda inefficent
-  def get_sp(%Character{} = character) do
+  def get_sp(character) do
     class_name = String.downcase(character.class.name)
     level = get_level(character)
     prof_bonus = get_prof_bonus(character)
@@ -169,12 +169,12 @@ defmodule Dndgame.Characters do
     end
   end
 
-  def get_initiative(%Character{} = character) do
+  def get_initiative(character) do
     # TODO I feel like something is missing
     get_stat_modifier(character.dex)
   end
 
-  def get_level(%Character{} = character) do
+  def get_level(character) do
     # Apparently through a bunch of playtesting, Wizards specifically made
     # leveling up easier on some spots (like 10 to 11), so there actually isn't
     # a mathematical way to calculate for level with exp.
@@ -208,7 +208,7 @@ defmodule Dndgame.Characters do
     floor((stat - 10) / 2)
   end
 
-  def get_prof_bonus(%Character{} = character) do
+  def get_prof_bonus(character) do
     ceil(get_level(character) / 4) + 1
   end
 

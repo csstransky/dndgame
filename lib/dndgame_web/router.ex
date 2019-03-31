@@ -37,11 +37,12 @@ defmodule DndgameWeb.Router do
         resources "/skills", SkillController, except: [:new, :edit]
         resources "/spells", SpellController, except: [:new, :edit]
         resources "/weapons", WeaponController, except: [:new, :edit]
-        resources "/select_weapons", WeaponController, except: [:new, :edit]        
+        resources "/select_weapons", WeaponController, except: [:new, :edit]
         resources "/armors", ArmorController, except: [:new, :edit]
         resources "/select_armors", ArmorController, except: [:new, :edit]
         resources "/classes", ClassController, except: [:new, :edit]
         resources "/attacks", AttackController, except: [:new, :edit]
+        resources "/stats", StatsController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
