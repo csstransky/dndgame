@@ -51,7 +51,23 @@ $(function () {
         console.log(resp)
       }
     });
-  })
+  });
+  $('#armor_select').click((ev) => {
+    $.ajax({
+      method: "GET",
+      url: "/ajax/v1/armor/" + $('#armor_select').val(),
+      dataType: "json",
+      success: (resp) => {
+        update_armors();
+        update_weapons();
+        console.log(resp);
+        $('#HELLFIRE').text(resp.data);
+      },
+      error: (resp) => {
+        console.log(resp)
+      }
+    });
+  });
 });
 
 // TODO, fix this to get the rid parameters into
