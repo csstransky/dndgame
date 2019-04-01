@@ -47,6 +47,18 @@ config :dndgame, DndgameWeb.Endpoint,
 
 
 
+# OAuth config
+config :dndgame, Google,
+       client_id: System.get_env("GOOGLE_CLIENT_ID"),
+       client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
+       redirect_uri: "http://localhost:4000/auth/google/callback"
+
+
+config :darkskyx, api_key: System.get_env("DARKSKY_API_KEY"),
+       defaults: [
+        units: "us",
+        lang: "en"
+       ]
 
 
 

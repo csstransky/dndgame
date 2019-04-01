@@ -5,7 +5,7 @@ defmodule Dndgame.Plugs.FetchSession do
 
   def call(conn, _args) do
     user = Dndgame.Users.get_user(get_session(conn, :user_id) || -1)
-    IO.inspect("fetch session")
+    IO.inspect(Darkskyx.forecast(41.032, -94.234))
     IO.inspect(user)
     if user do
       assign(conn, :current_user, user)
