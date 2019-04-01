@@ -5,26 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dndgame · Phoenix Framework</title>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_url(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
+    <div class="container">
+      <nav class="navbar navbar-expand-sm navbar-light bg-white">
+        <div class="col">
+          <a class="navbar-brand" href="/">Characters Tracker</a>
+        </div>
+        <div class="col">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/users">Users</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/characters">Characters</a>
+            </li>
           </ul>
-        </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
-    </header>
-    <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= render @view_module, @view_template, assigns %>
-    </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+        </div>
+        <div class="col">
+          <%= if @current_user do %>
+            <p class="my-3">
+              User: <%= @current_user.email %> |
+              <%= link("Logout", to: Routes.session_path(@conn, :delete),
+                method: :delete) %>
+            </p>
+          <% else %>
+            <%= form_for @conn, Routes.session_path(@conn, :create),
+                    [class: "form-inline"], fn f -> %>
+              <%= text_input f, :name, class: "form-control" %>
+              <%= submit "Login", class: "btn btn-success" %>
+              <%= link "Register", to: Routes.user_path(@conn, :new), class: "btn btn-light" %>
+            <% end %>
+          <% end %>
+        </div>
+      </nav>
+
+      <div class="row">
+        <div class="col-12">
+          <%= if get_flash(@conn, :info) do %>
+            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+          <% end %>
+          <%= if get_flash(@conn, :error) do %>
+            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-8">
+          <%= render @view_module, @view_template, assigns %>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="<%= Routes.static_url(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

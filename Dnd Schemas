@@ -1,0 +1,71 @@
+User
++ Email: String
++ Password_Hash: String
++ Token: String
+
+Character
++ Name: String
++ HP: int
++ Mana: int
++ Class: reference Class
++ User: reference User
++ STR: int
++ DEX: int
+
+Class 
++ Name: String
+// Need to add anything else?
+
+Monster
++ Name: String
++ Desc: String
++ Health: int
++ STR: int
++ DEX: int
+
+Weapon
++ Name: String 
++ Desc: String
++ Attack: reference Attack
+
+Attack
++ Name: String
++ Desc: String
++ Attack_Bonus: int
++ Damage: (range_min, range_top) // tuple
++ Damage_Bonus: int
+
+Item
++ Name: String
++ Desc: String
+// Add more attrs.
+
+Skill
++ Name: String
++ Desc: String
+// Add more attrs.
+
+Spell
++ Name: String
++ Desc: String
+// Add more attrs.
+
+Monster_has_attack (join table)
++ Monster_id
++ Attack_id
+
+Character_has_item (join table)
++ Character_id
++ Item_id
+
+Character_has_skill (join table)
++ Character_id
++ Skill_id
+
+Character_has_spell (join table)
++ Character_id
++ Spell_id
+
+
+
+
