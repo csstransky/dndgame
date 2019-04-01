@@ -1,0 +1,144 @@
+User
++ Email: String
++ Password_Hash: String
++ Token: String // We'll ask Bryce, but is this really a string?
+
+Character
++ Name: String
++ STR: int
++ DEX: int
++ CON: int
++ INT: int
++ WIS: int
++ CHA: int
+// I don't know if this helps, but I want saves and profiencies to be loaded from class
+// and race so that you don't have to go fishing for it with a DB query\
++ Initiative: int
++ HP: int
++ AC: int
++ MP: int
++ SP: int
++ level: int
++ exp: int
++ Weapon: has_one Weapon
++ Armor: has_one Armor
++ Race: has_one Race
++ Class: has_one Class
++ User: belongs_to User
+
+
+Race
++ Name: String
++ Desc: String
++ STR_Bonus: int
++ DEX_Bonus: int
++ CON_Bonus: int
++ INT_Bonus: int
++ WIS_Bonus: int
++ CHA_Bonus: int
++ Size: string
+
+Class
++ Name: String
++ Desc: String
++ hit_die: (range_min, range_top)\\
++ skills: has_many
++ spells: has_many
+
+// Does it make sense to actually combine spells and skils?
+Skill
++ Name: String
++ Desc: String
++ level_req: int
++ type: string ("damage", "buff", "debuff", "heal", "rest") // I think I'm going to replace "damge" with //  //"fire", "ice", etc instead
++ sp_cost: int
++ dice: (range_min, range_top)
++ dice_bonus: int
++ target: string ("member", "enemy", "party", "enemies")
+
+Spell
++ Name: String
++ Desc: String
++ level_req: int
++ type: string ("damage", "buff", "debuff", "heal", "rest"
++ mp_cost: int
++ dice: (range_min, range_top)
++ dice_bonus: int
++ target: string ("member", "enemy", "party", "enemies")
+
+
+Weapon
++ Name: String
++ Desc: String
++ Attack: has_one Attack
++ weapon_category: String
+
+Attack
++ Name: String
++ Desc: String
++ Attack_Bonus: int
++ type: string // "fire", "ice"
++ Damage_Dice: (range_min, range_top) // tuple
++ Damage_Bonus: int
++ target: string ("member", "enemy", "party", "enemies")
+
+Armor
++ Name: String
++ Desc: String
++ armor_category: String // "light", "heavy"
++ base: int
++ dex_bonus: Boolean
++ STR_minimum: int
++ stealth_disadvantage: Boolean
+
+Monster
++ Name: string
++ Desc: string
++ HP: int
++ Saves: [String] // ["STR", "CON"]\
++ Prof_Bonus: int
++ Initiative: int
++ HP: int
++ AC: int
++ MP: int
++ SP: int
++ Type: String // "fire", "ice"
++ Attacks: has_many ??
+
+Monster_has_attack (join table)
++ Monster_id
++ Attack_id
+
+Character_has_item (join table)
++ Character_id
++ Item_id
+
+Character_has_skill (join table)
++ Character_id
++ Skill_id
+
+Character_has_spell (join table)
++ Character_id
++ Spell_id
+
+=======================
+Starting stuff for now:
+=======================
+Classes:
+Barbarian
+Wizard
+Cleric
+Rogue
+
+Races:
+Human
+Gnome
+Elf
+Dwarf
+Dragonborn
+
+
+# For splitting die:
+dice = "2d6"
+String.split(dice, "d")
+Output : ["2", "5"]

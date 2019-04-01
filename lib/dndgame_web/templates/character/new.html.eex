@@ -1,0 +1,7 @@
+<h1><u>Create your hero!</u></h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.character_path(@conn, :create)) %>
+
+<div class="row">
+  <%= link "Back", to: Routes.character_path(@conn, :index), class: "btn btn-danger" %>
+</div>

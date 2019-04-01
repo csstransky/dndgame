@@ -6,8 +6,7 @@
     <strong>Email:</strong>
     <%= @user.email %>
   </li>
-
-
+    
   <li>
     <strong>Admin:</strong>
     <%= @user.admin %>

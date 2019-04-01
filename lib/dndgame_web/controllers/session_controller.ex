@@ -18,6 +18,7 @@ defmodule DndgameWeb.SessionController do
     end
   end
 
+
   def get_and_auth_user(email, password) do
     user = Dndgame.Users.get_user_by_email(email)
     case Argon2.check_pass(user, password) do
@@ -25,7 +26,7 @@ defmodule DndgameWeb.SessionController do
       _else       -> nil
     end
   end
-
+  
   def delete(conn, _params) do
     conn
     |> delete_session(:user_id)
