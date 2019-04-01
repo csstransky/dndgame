@@ -61,12 +61,4 @@ defmodule Dndgame.Users.User do
       %Dndgame.Users.User{email: email}
     end
   end
-
-  def insert_or_update(params) do
-    IO.inspect("insert or update")
-    user = find_or_empty(params.email)
-    Repo.insert_or_update!(changeset(user, params))
-  end
-
-
 end

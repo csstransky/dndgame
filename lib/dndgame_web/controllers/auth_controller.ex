@@ -42,7 +42,7 @@ defmodule DndgameWeb.AuthController do
 
 
     IO.inspect("insert or update 2")
-    User.insert_or_update(user)
+    insert_or_update(user)
     IO.inspect("insert or update finished")
 
     # Store the token in the "database"
@@ -58,6 +58,12 @@ defmodule DndgameWeb.AuthController do
     |> put_session(:current_user, user)
     |> put_session(:access_token, client.token.access_token)
     |> redirect(to: "/")
+  end
+
+  def insert_or_update(params) do
+    IO.inspect("insert or update")
+    user = find_or_empty(params.email)
+    Repo.insert_or_update!(changeset(user, params))
   end
 
   defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
