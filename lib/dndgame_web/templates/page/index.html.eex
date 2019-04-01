@@ -1,1 +1,6 @@
+<section class="phx-hero">
+  <h1><%= gettext "Welcome to %{name}!", name: "Dndgame" %></h1>
+  <p>A web-based replacement<br/>for all your D&D needs.</p>
+</section>
 <p>This is the index of our dnd game, I'll be more attractive in the future</p>
+

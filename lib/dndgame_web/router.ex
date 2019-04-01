@@ -25,6 +25,9 @@ defmodule DndgameWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/signup", UserController, :new
+    get "/login", LoginController, :login
+    resources "/sessions", SessionController, only: [:create, :delete], singleton: true
     resources "/users", UserController
     resources "/characters", CharacterController
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
@@ -45,8 +48,21 @@ defmodule DndgameWeb.Router do
         resources "/stats", StatsController, except: [:new, :edit]
   end
 
+  scope "/auth", DndgameWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :index2
+    get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", DndgameWeb do
   #   pipe_through :api
+  # end
+
+  # puts the current user into the conn in order to be used in views
+  # defp assign_current_user(conn, _) do
+  #  assign(conn, :current_user, get_session(conn, :current_user))
   # end
 end

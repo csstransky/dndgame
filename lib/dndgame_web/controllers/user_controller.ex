@@ -15,13 +15,18 @@ defmodule DndgameWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+    IO.inspect("create user method called")
+    IO.inspect(user_params)
     case Users.create_user(user_params) do
       {:ok, user} ->
+        IO.inspect("create user executed successfully")
         conn
         |> put_flash(:info, "User created successfully.")
+        |> put_session(:user_id, user.id)
         |> redirect(to: Routes.user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect("error in create user method")
         render(conn, "new.html", changeset: changeset)
     end
   end
