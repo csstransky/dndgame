@@ -49,16 +49,4 @@ defmodule Dndgame.Users.User do
   end
 
   def put_pass_hash(changeset), do: changeset
-
-
-  def find_or_empty(email) do
-    user = Repo.get_by(Dndgame.Users.User, email: email)
-    if user do
-      IO.inspect("user already exists")
-      user
-    else
-      IO.inspect("creating new user")
-      %Dndgame.Users.User{email: email}
-    end
-  end
 end

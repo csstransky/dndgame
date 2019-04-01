@@ -63,7 +63,18 @@ defmodule DndgameWeb.AuthController do
   def insert_or_update(params) do
     IO.inspect("insert or update")
     user = find_or_empty(params.email)
-    Repo.insert_or_update!(changeset(user, params))
+    Repo.insert_or_update!(Dndgame.Users.User.changeset(user, params))
+  end
+
+  def find_or_empty(email) do
+    user = Repo.get_by(Dndgame.Users.User, email: email)
+    if user do
+      IO.inspect("user already exists")
+      user
+    else
+      IO.inspect("creating new user")
+      %Dndgame.Users.User{email: email}
+    end
   end
 
   defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
