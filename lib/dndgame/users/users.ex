@@ -21,11 +21,13 @@ defmodule Dndgame.Users do
     Repo.all(User)
   end
 
-  def list_manager_underlings(manager_id) do
-    query = from u in User,
-             where: u.manager_id == ^manager_id,
-             select: u
-    Repo.all(query)
+  @doc """
+  Authenticates a user.
+  Returns {:ok, user} on success, or {:error, msg} on failure.
+  """
+  def authenticate_user(name, password) do
+    Repo.get_by(User, name: name)
+    |> Argon2.check_pass(password)
   end
 
   @doc """
@@ -46,13 +48,16 @@ defmodule Dndgame.Users do
 
   def get_user(id) do
     Repo.one from u in User,
-      where: u.id == ^id,
-      preload: [:manager]
+      where: u.id == ^id
   end
 
 
-  def get_user_by_name(name) do
-    Repo.get_by(User, name: name)
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+  end
+
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
   end
 
   def id_to_name(id) do
@@ -60,22 +65,13 @@ defmodule Dndgame.Users do
       "nil"
     else
       user = get_user!(id)
-      user.name
+      user.email
     end
   end
 
-  def name_to_id(name) do
-    user = get_user_by_name(name)
+  def email_to_id(email) do
+    user = get_user_by_email(email)
     user.id
-  end
-
-  def user_id_to_manager_name(manager_id) do
-    if manager_id == nil do
-      "No Manager Assigned"
-    else
-      manager = Dndgame.Users.get_user!(manager_id)
-      manager.name
-    end
   end
 
   @doc """
@@ -93,6 +89,7 @@ defmodule Dndgame.Users do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> IO.inspect()
     |> Repo.insert()
   end
 

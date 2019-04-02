@@ -50,3 +50,9 @@ npm-debug.log
 .idea/
 /.id*
 *.iml
+
+# Ignore swap files
+*swp
+
+*.profile
+*profile

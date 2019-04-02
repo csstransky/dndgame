@@ -5,7 +5,7 @@ defmodule Dndgame.MixProject do
     [
       app: :dndgame,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.8.0",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -20,7 +20,8 @@ defmodule Dndgame.MixProject do
   def application do
     [
       mod: {Dndgame.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :oauth2, :darkskyx]
+
     ]
   end
 
@@ -46,6 +47,8 @@ defmodule Dndgame.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:distillery, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
+      {:oauth2, "~> 1.0"},
+      {:darkskyx, "~> 0.1.5"}
     ]
   end
 
