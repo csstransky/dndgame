@@ -11,7 +11,7 @@ defmodule Dndgame.Application do
       # Start the Ecto repository
       # Dndgame.Repo,
       # Start the endpoint when the application starts
-      DndgameWeb.Endpoint
+      DndgameWeb.Endpoint,
       # Starts a worker by calling: Dndgame.Worker.start_link(arg)
       # {Dndgame.Worker, arg},
       Dndgame.GameSup,
