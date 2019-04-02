@@ -4,16 +4,17 @@
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
-
-  <%= label f, :email %>
-  <%= text_input f, :email %>
-  <%= error_tag f, :email %>
-
-  <%= label f, :password %>
-  <%= text_input f, :password %>
-  <%= error_tag f, :password %>
-
+  <table>
+    <tr> <td> <Strong> Email: &nbsp;&nbsp; </Strong> </td>
+         <td>  <%= email_input f, :email %>
+               <%= error_tag f, :email %> </td>
+    </tr>
+    <tr> <td> <Strong> Password: &nbsp;&nbsp; </Strong> </td>
+         <td> <%= password_input f, :password %>
+              <%= error_tag f, :password %> </td>
+    </tr>
+  </table> <br>
   <div>
-    <%= submit "Save" %>
+    <%= submit "Create Account" %>
   </div>
 <% end %>
