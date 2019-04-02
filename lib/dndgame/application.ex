@@ -9,7 +9,7 @@ defmodule Dndgame.Application do
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
-      # Dndgame.Repo,
+      Dndgame.Repo,
       # Start the endpoint when the application starts
       DndgameWeb.Endpoint,
       # Starts a worker by calling: Dndgame.Worker.start_link(arg)
