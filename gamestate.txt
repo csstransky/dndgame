@@ -2,17 +2,25 @@ gamestate "userName" + render {
     playerPosn: {
         x: int
         y: int
-        direction: string
+        direction: int // 0 up, 1 right, 2 down, 3 left
     }
     otherCharacters: [posn]
     party: [characters]
     monsters: [monster] // empty when not in battle
     boss: posn
     turn: string // name of player's turn
-		isLevelUp: boolean // flag to show a level screen or not
-		isBossDead: boolean // flag to show that main boss has been defeated
+		isLevelUp: [boolean] // flag to show a level screen or not
+		isBossDead: string // name of person who killed boss
 		isGameOver: boolean // flag to show a gameover screen
-}
+    orderArray: [string] // filled at battle by initiative
+    orderIndex: int // who's turn it is
+    currentMenu: String // "main", "spell", "skill", "daeth"
+    menuIndex: int 0-3
+    characterAction: String
+    monsterAction: String
+
+
+}boolean // flag to show that main boss has been defeated
 gamestate "userName" + logic {
     battleParty: [characters] // copies party array when enter into battle
     otherCharacters: [posn]
@@ -51,6 +59,8 @@ character {
     weapon_attack_name: string
 
     armor_name: string
+    deathSaves: int
+    deathFails: int
 }
 
 monster {
@@ -67,9 +77,25 @@ Boston: 42.361145, -71.057083
 Death Valley: 	36.4622, -116.867
 Greenland: 69.869007, -41.954900
 
+7, -41.9549007, -41.9549007, -41.954900
 
-Everest: 27.986065, 86.922623
+
+7, -41.954900
+
+Everest: 27.986065, 86.927, -41.954900
+2623
 Dasht-e Loot, Iran: 30.60500001, 59.0677777878
 
 	1554245660
   1554246646
+
+
+Server Calls:
+
+walk (int 0-3) //document
+attack (enemyId \\ 1)
+use_skill (skill.name, enemyId \\ 1)
+use_spell(spell.name, enemyId \\ 1)
+run
+death_save
+enemy_attack
