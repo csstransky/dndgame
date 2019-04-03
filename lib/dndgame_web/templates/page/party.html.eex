@@ -33,6 +33,11 @@
     <% end %>
     </tbody>
   </table>
+  <%= if @error do %>
+    <div class="alert alert-danger">
+      <%= @error %>
+    </div>
+  <% end %>
   <h2>Choose Your Party</h2>
   <%= form_for @conn, "/game", fn form -> %>
     <ul class="list-group">
@@ -46,6 +51,8 @@
        Party Member 3. <%= select form, :party_id_3, Enum.map(@characters, fn user -> {user.name, user.id} end), prompt: "", class: "form-control" %>
      </li>
     </ul>
+    <br/>
+    <br/>
     <%= hidden_input form, :user_id, value: @current_user.id %>
     <%= hidden_input form, :world_name, value: @world_name%>
     <%= submit "Join Game TODO make me attractive" %>

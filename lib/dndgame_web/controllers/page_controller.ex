@@ -6,24 +6,23 @@ defmodule DndgameWeb.PageController do
     "party_id_1" => party_id_1,
     "party_id_2" => party_id_2,
     "party_id_3" => party_id_3}) do
-    IO.inspect(conn)
-    if (party_id_1 == party_id_2 && party_id_1 != "")
-      || (party_id_1 == party_id_3 && party_id_1 != "")
-      || (party_id_2 == party_id_3 && party_id_2 != "") do
-        IO.inspect("What up my dude")
-    end
-    IO.inspect(party_id_1)
-    IO.inspect(party_id_2)
-    IO.inspect(party_id_3)
-    IO.inspect(world_name)
     gameName = world_name
     playerName = user_id
-    render conn, "game.html", gameName: gameName, playerName: playerName
+    cond do
+      is_id_dups?(party_id_1, party_id_2, party_id_3) ->
+        error = "You cannot choose the same character more than once."
+        party(conn, %{"user_id" => user_id, "world_name" => world_name}, error)
+      is_character_selected?(party_id_1, party_id_2, party_id_3) ->
+        error = "You must select a character for your party."
+        party(conn, %{"user_id" => user_id, "world_name" => world_name}, error)
+      true ->
+        render conn, "game.html", gameName: gameName, playerName: playerName
+    end
   end
 
-  def party(conn, %{"user_id" => user_id, "world_name" => world_name}) do
+  def party(conn, %{"user_id" => user_id, "world_name" => world_name}, error \\ nil) do
     characters = Dndgame.Characters.list_user_characters(user_id)
-    render conn, "party.html", characters: characters, world_name: world_name
+    render conn, "party.html", characters: characters, world_name: world_name, error: error
   end
 
   def worlds(conn, _params) do
@@ -34,5 +33,13 @@ defmodule DndgameWeb.PageController do
     render(conn, "index.html")
   end
 
+  def is_id_dups?(party_id_1, party_id_2, party_id_3) do
+    (party_id_1 == party_id_2 && party_id_1 != "")
+      || (party_id_1 == party_id_3 && party_id_1 != "")
+      || (party_id_2 == party_id_3 && party_id_2 != "")
+  end
 
+  def is_character_selected?(party_id_1, party_id_2, party_id_3) do
+    party_id_1 == "" && party_id_2 == "" && party_id_3 == ""
+  end
 end

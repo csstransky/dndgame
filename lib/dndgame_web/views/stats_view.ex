@@ -5,12 +5,10 @@ defmodule DndgameWeb.StatsView do
   alias Dndgame.Characters
 
   def render("show.json", %{character: character}) do
-    IO.inspect("HERE COMES THE WIND")
     %{data: render_one(character, StatsView, "stats.json")}
   end
 
   def render("stats.json", %{character: character}) do
-    IO.inspect("ANOTHER STEP TO THE EDGE")
     %{data:
       %{
         hp: Characters.get_hp(character),

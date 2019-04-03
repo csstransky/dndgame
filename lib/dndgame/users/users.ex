@@ -89,7 +89,6 @@ defmodule Dndgame.Users do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
-    |> IO.inspect()
     |> Repo.insert()
   end
 
