@@ -1,3 +1,11 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import _ from "lodash";
+
+export default function breakout_pong_init(game, channel) {
+    ReactDOM.render(<Dndgame channel={channel} />, game);
+  ReactDOM.render(<Dndgame channel={channel}/>, game);
+}
 
 componentDidMount() {
     this.draw_canvas();
