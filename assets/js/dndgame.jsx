@@ -69,10 +69,6 @@ class Dndgame extends React.Component {
       .receive("error", resp => {
         console.log("Unable to join", resp);
       });
-
-    this.channel.on("update", resp => {
-      this.setState(resp)
-    });
   }
 
   componentDidMount() {
