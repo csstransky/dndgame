@@ -1,10 +1,10 @@
-gamestate {
-    player posn: {
+gamestate "userName" + render {
+    playerPosn: {
         x: int
         y: int
         direction: string
     }
-    other_characters: [player_posn]
+    otherCharacters: [posn]
     party: [characters]
     monsters: [monster] // empty when not in battle
     boss: posn
@@ -12,6 +12,15 @@ gamestate {
 		isLevelUp: boolean // flag to show a level screen or not
 		isBossDead: boolean // flag to show that main boss has been defeated
 		isGameOver: boolean // flag to show a gameover screen
+}
+gamestate "userName" + logic {
+    battleParty: [characters] // copies party array when enter into battle
+    otherCharacters: [posn]
+    party: [characters]
+    battleParty: [characters] // copies party array when enter into battle
+    monsters: [monster] // empty when not in battle
+    boss: posn
+    turn: string // name of player's turn
 }
 
 posn {
@@ -29,7 +38,7 @@ character {
 
     level: int
     exp: int
-    initiatiave: int
+    initiative: int
 
     str: int
     dex: int
@@ -45,9 +54,9 @@ character {
 }
 
 monster {
-    monster_name: string
-    monster_attack: string
-    monster_hit: int
+  name: string
+  attack: string
+  hit: int
 }
 
 https://latitude.to/articles-by-country/us/united-states/78/north-america
