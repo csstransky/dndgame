@@ -30,7 +30,9 @@ defmodule DndgameWeb.Router do
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
     resources "/users", UserController
     # TODO: Maybe make this a "POST" instead of "get" in the future
-    get "/game", PageController, :game
+    post "/game", PageController, :game
+    post "/party", PageController, :party
+    get "/worlds", PageController, :worlds
     resources "/characters", CharacterController
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
   end

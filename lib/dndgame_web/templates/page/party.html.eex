@@ -1,0 +1,60 @@
+
+<%= if @current_user == nil do %>
+  <h6> Please log in to see your characters. </h6>
+<% else %>
+  <h4>Listing Characters</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Name</th>
+        <th>Race</th>
+        <th>Class</th>
+        <th>HP</th>
+        <th>MP</th>
+        <th>SP</th>
+        <th>Weapon</th>
+        <th>Armor</th>
+      </tr>
+    </thead>
+    <tbody>
+  <%= for character <- @characters do %>
+      <tr>
+        <td><%= Dndgame.Characters.get_level(character) %></td>
+        <td><%= character.name %></td>
+        <td><%= Dndgame.Characters.get_race(character) %></td>
+        <td><%= Dndgame.Characters.get_class(character) %></td>
+        <td><%= Dndgame.Characters.get_hp(character) %></td>
+        <td><%= Dndgame.Characters.get_mp(character) %></td>
+        <td><%= Dndgame.Characters.get_sp(character) %></td>
+        <td><%= character.weapon.name %></td>
+        <td><%= character.armor.name %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= if @error do %>
+    <div class="alert alert-danger">
+      <%= @error %>
+    </div>
+  <% end %>
+  <h2>Choose Your Party</h2>
+  <%= form_for @conn, "/game", fn form -> %>
+    <ul class="list-group">
+     <li class="list-group-item">
+       Party Member 1. <%= select form, :party_id_1, Enum.map(@characters, fn user -> {user.name, user.id} end), prompt: "", class: "form-control" %>
+     </li>
+     <li class="list-group-item">
+       Party Member 2. <%= select form, :party_id_2, Enum.map(@characters, fn user -> {user.name, user.id} end), prompt: "", class: "form-control" %>
+     </li>
+     <li class="list-group-item">
+       Party Member 3. <%= select form, :party_id_3, Enum.map(@characters, fn user -> {user.name, user.id} end), prompt: "", class: "form-control" %>
+     </li>
+    </ul>
+    <br/>
+    <br/>
+    <%= hidden_input form, :user_id, value: @current_user.id %>
+    <%= hidden_input form, :world_name, value: @world_name%>
+    <%= submit "Join Game TODO make me attractive" %>
+   <% end %>
+<% end %>

@@ -2,27 +2,25 @@
   <p>Login Page</p>
   <div>
 
-            <a class="btn btn-primary btn-lg" href="<%= Routes.auth_path(@conn, :index2, "google") %>">
-              <i class="fa fa-google"></i>
-              Sign in with Google
-            </a>
+    <a class="btn btn-primary btn-lg" href="<%= Routes.auth_path(@conn, :index2, "google") %>">
+      <i class="fa fa-google"></i>
+      Sign in with Google
+    </a>
 
-  <p>- Or -</p>
+    <p>- Or -</p>
 
-  <%= form_for @conn, Routes.session_path(@conn, :create),
-                       [class: "form-inline"], fn f -> %>
-                <%= text_input(f, :email, class: "form-control col-4",
-                  placeholder: "email") %>
-                <%= password_input(f, :password, class: "form-control col-4",
-                  placeholder: "pass") %>
-                <%= submit "Login", class: "btn btn-secondary" %>
-                <% end %>
- <div style="margin-bottom: 0px; text-align: left;">
-    <span style="float: right;">NOT A MEMBER?
-    <p><%= link "Register", to: Routes.user_path(@conn, :new) %></p>
-    </span>
- </div><div style="margin-bottom: 0px;"></div>
- </form>
- </div>
+    <%= form_for @conn, Routes.session_path(@conn, :create),
+                         [class: "form-inline"], fn f -> %>
+      <%= text_input(f, :email, class: "form-control col-4", placeholder: "email") %>
+      <%= password_input(f, :password, class: "form-control col-4", placeholder: "pass") %>
+      <%= submit "Login", class: "btn btn-secondary" %>
+    <% end %>
+    <br/>
+    <br/>
+    <p>Not a Member? Click
+      <u><%= link "Register", to: Routes.user_path(@conn, :new) %></u>
+      to make an acount.
+    </p>
+    </form>
+  </div>
 </section>
-

@@ -26,7 +26,7 @@ defmodule DndgameWeb.SessionController do
       _else       -> nil
     end
   end
-  
+
   def delete(conn, _params) do
     conn
     |> delete_session(:user_id)
