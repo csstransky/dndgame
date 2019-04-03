@@ -4,11 +4,7 @@ gamestate "userName" + render {
         y: int
         direction: int // 0 up, 1 right, 2 down, 3 left
     }
-    otherCharacters: [posn]
     party: [characters]
-    monsters: [monster] // empty when not in battle
-    boss: posn
-    turn: string // name of player's turn
 		isLevelUp: [boolean] // flag to show a level screen or not
 		isBossDead: string // name of person who killed boss
 		isGameOver: boolean // flag to show a gameover screen
