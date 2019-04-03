@@ -3,6 +3,7 @@ defmodule DndgameWeb.UserSocket do
 
   ## Channels
   # channel "room:*", DndgameWeb.RoomChannel
+  channel "games:*", DndgameWeb.GamesChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

@@ -26,7 +26,13 @@ import dndgame_init from "./dndgame";
 
 $(function () {
   let game = document.getElementById('dndgame');
-  dndgame_init(game, channel);
+  if (game) {
+    gameName = "test"
+    user = "testUser"
+    let channel = socket.channel("games:" + gameName, {user: user});
+    dndgame_init(game, channel);
+  }
+
 
   $('#roll').click((ev) => {
     update_stats();
