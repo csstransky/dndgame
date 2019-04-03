@@ -18,9 +18,18 @@ defmodule Dndgame.Characters do
 
   """
   def list_characters do
-    preloads = [:armor, :weapon, :race, :class, :user]
+    preloads = [:weapon, :armor, :race, :class, :user]
     Repo.all(Character)
     |> Repo.preload(preloads)
+  end
+
+  def list_user_characters(user_id) do
+    preloads = [:weapon, :armor, :race, :class, :user]
+    query = from c in Character,
+         where: c.user_id == ^user_id,
+         select: c,
+         preload: ^preloads
+    Repo.all(query)
   end
 
 

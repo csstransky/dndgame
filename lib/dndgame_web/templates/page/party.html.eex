@@ -20,12 +20,6 @@
       <td><%= Dndgame.Characters.get_class(character) %></td>
       <td><%= Dndgame.Characters.get_race(character) %></td>
       <td><%= Dndgame.Characters.get_level(character) %></td>
-      <td>
-        <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
-      </td>
-      <td>
-        <%= link "Delete", to: Routes.character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"] %>
-      </td>
     </tr>
   <% end %>
 

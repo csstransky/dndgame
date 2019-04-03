@@ -24,19 +24,30 @@
             <li class="nav-item">
               <a class="nav-link" href="/characters">Characters</a>
             </li>
+            <%= if @current_user do %>
+              <li class="nav-item active">
+                <a class="nav-link" href="/worlds">Play!</a>
+              </li>
+            <% end %>
           </ul>
         </div>
         <div class="col">
           <section class="container">
             <nav role="navigation">
               <ul>
-               <%= if @current_user do %>
-                          <p class="my-3">
-                            User: <%= @current_user.email %> |
-                            <%= link("Logout", to: Routes.session_path(@conn, :delete),
-                              method: :delete) %>
-                        <% else %>
-                        <li><a href="/login">Login</a></li>
+                <%= if @current_user do %>
+                  <p class="my-3">
+                    User: <%= @current_user.email %> |
+                    <%= link("Logout", to: Routes.session_path(@conn, :delete),
+                          method: :delete) %>
+                  </p>
+                <% else %>
+                  <li><a href="/login">Login</a></li>
+                  <div style="margin-bottom: 0px; text-align: left;">
+                     <span style="float: right;">NOT A MEMBER?
+                       <p><%= link "Register", to: Routes.user_path(@conn, :new) %></p>
+                     </span>
+                  </div>
                 <% end %>
               </ul>
             </nav>
