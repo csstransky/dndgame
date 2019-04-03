@@ -10,9 +10,6 @@ defmodule DndgameWeb.GamesChannel do
     if authorized?(payload) do
       game = BackupAgent.get(name) || Game.new()
       player = Map.get(payload, "user")
-      game = game
-      |> Dndgame.Game.add_to_lobby(player)
-      |> Dndgame.Game.add_name(name)
       BackupAgent.put(name, game)
       update_players(name, player)
 

@@ -4,8 +4,9 @@ import _ from "lodash";
 
 export default function dndgame_init(game, channel) {
   ReactDOM.render(<Dndgame channel={channel} />, game);
-  ReactDOM.render(<Dndgame channel={channel} />, game);
 }
+let WIDTH = 800;
+let HEIGHT = 600;
 
 class Dndgame extends React.Component {
   constructor(props) {
@@ -71,8 +72,14 @@ class Dndgame extends React.Component {
       });
   }
 
+  got_view(view) {
+    console.log("new view");
+    this.setState(view.game);
+  }
+
   componentDidMount() {
     this.draw_canvas();
+    this.interval = setInterval(() => this.setState(this.draw_canvas()), 50);
   }
 
   componentWillUnmount() {
@@ -127,5 +134,10 @@ class Dndgame extends React.Component {
       ctx.strokeRect(1300, 1100, 400, 400);
       ctx.fillRect(1300, 1100, 1000, 400);
 
+  }
+  render() {
+    return (
+      <canvas id={"canvas"} ref="canvas" tabIndex={-1} width={800} height={600} onClick={console.log(this)}/>
+    )
   }
 }
