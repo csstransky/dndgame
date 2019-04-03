@@ -7,19 +7,19 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Class</th>
-      <th>Race</th>
       <th>Level</th>
+      <th>Name</th>
+      <th>Race</th>
+      <th>Class</th>
     </tr>
   </thead>
   <tbody>
 <%= for character <- @characters do %>
     <tr>
-      <td><%= character.name %></td>
-      <td><%= Dndgame.Characters.get_class(character) %></td>
-      <td><%= Dndgame.Characters.get_race(character) %></td>
       <td><%= Dndgame.Characters.get_level(character) %></td>
+      <td><%= character.name %></td>
+      <td><%= Dndgame.Characters.get_race(character) %></td>
+      <td><%= Dndgame.Characters.get_class(character) %></td>
       <td>
         <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
       </td>
