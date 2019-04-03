@@ -34,7 +34,7 @@
     </tbody>
   </table>
   <h2>Choose Your Party</h2>
-  <%= form_for @conn, "/party", fn form -> %>
+  <%= form_for @conn, "/game", fn form -> %>
     <ul class="list-group">
      <li class="list-group-item">
        Party Member 1. <%= select form, :party_id_1, Enum.map(@characters, fn user -> {user.name, user.id} end), prompt: "", class: "form-control" %>
@@ -46,5 +46,8 @@
        Party Member 3. <%= select form, :party_id_3, Enum.map(@characters, fn user -> {user.name, user.id} end), prompt: "", class: "form-control" %>
      </li>
     </ul>
+    <%= hidden_input form, :user_id, value: @current_user.id %>
+    <%= hidden_input form, :world_name, value: @world_name%>
+    <%= submit "Join Game TODO make me attractive" %>
    <% end %>
 <% end %>
