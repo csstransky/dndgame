@@ -155,14 +155,15 @@ class Dndgame extends React.Component {
       mainMenuCurrentSelection: 2,
       subMenuOptions: [
         "Skill1",
-        "Skill2",
+        "Double Attack",
         "Skill3",
         "Skill4",
       ],
       subMenuCurrentSelection: 0,
-      monsterSelectionIndex: 1,
-      currentMenu: "sub",
+      monsterCurrentSelection: 0,
+      currentMenu: "main",
       headlineText: "White Dragon has used Slash with 20 damage",
+      buildMenuPath: [],
     };
 
 
@@ -204,6 +205,7 @@ class Dndgame extends React.Component {
   }
 
 
+  // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
     //console.log(require('../static/standardWorld.png'));
     let canvas = this.refs.canvas;
@@ -272,7 +274,7 @@ class Dndgame extends React.Component {
 
   };
 
-
+  // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
     // initialize canvas
     let canvas = this.refs.canvas;
@@ -306,13 +308,18 @@ class Dndgame extends React.Component {
     ctx.lineTo(1000, 50);
     ctx.stroke();
 
-    // can't use a "this" within the each, so saving as var out here
+    // can't use a "this" within the each statements, so saving as var out here
+    // not super elegant, and we can factor this out later, but it works decently
+    // and I'm trying to get everything else to work first
     var orderArray = this.state.orderArray;
     var orderIndex = this.state.orderIndex;
     var mainMenuCurrentSelection = this.state.mainMenuCurrentSelection;
     var subMenuOptions = this.state.subMenuOptions;
     var subMenuCurrentSelection = this.state.subMenuCurrentSelection;
     var currentMenu = this.state.currentMenu;
+    var mainMenuOptions = this.state.mainMenuOptions;
+    var monsters = this.state.monsters;
+    var monsterCurrentSelection = this.state.monsterCurrentSelection;
 
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
@@ -347,15 +354,13 @@ class Dndgame extends React.Component {
         }
       }
 
-      // This determines which menu to display
-      // If there are menu items in the subMenuOptions array, it means we must display the subMenuOptions
-      // Otherwise, the top-level battle options are displayed
+      // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
       ctx.font = "30px Helvetica";
       if (orderArray[orderIndex] == value.name) {
         switch (currentMenu) {
           case "main":
             $.each(mainMenuOptions, function (index2, value2) {
-              ctx.fillText(value2 + addSelection("main", 0), ((index * 333) + 5), ((index2 * 40) + 440));
+              ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 5), ((index2 * 40) + 440));
             });
             break;
           case "sub":
@@ -364,7 +369,9 @@ class Dndgame extends React.Component {
             });
             break;
           case "monster":
-            // TODO: just too tired for this rn, coming back later
+            $.each(monsters, function (index2, value2) {
+              ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
+            });
             break;
         }
       }
@@ -379,8 +386,7 @@ class Dndgame extends React.Component {
 
     });
 
-
-    // draw monsters on the center pf the screen
+    // Draw monsters on the screen
     $.each(this.state.monsters, function (index, value) {
       let img = new Image();
       img.addEventListener('load', function() {
@@ -389,7 +395,7 @@ class Dndgame extends React.Component {
       // img.src = require('./images/' + value.name + '.png');
       img.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
       // stack party vertically based on order in array
-      ctx.fillText("HP:" + value.hp, ((index * 333) + 90), 280);
+      ctx.fillText("HP:" + value.hp, ((index * 333) + 110), 280);
     });
 
     // Draw the headline text describing what is happening in the game
@@ -398,35 +404,26 @@ class Dndgame extends React.Component {
   return canvas;
   }
 
-  ///////////////////////////
-  // INTERACTIVE FUNCTIONS //
-  ///////////////////////////
+
+
+
+
+
+
+  /////////////////////////////
+  /// INTERACTIVE FUNCTIONS ///
+  /////////////////////////////
 
   // Receives the keyDown events and sorts based on menu
   onKeyDown(ev) {
     console.log(ev.key);
+
     // First, check if "Enter" key has been received
     if (ev.key == "Enter") {
-      switch (this.state.currentMenu) {
-        case "main":
-          this.channel.push(this.state.mainMenuOptions[this.state.mainMenuCurrentSelection])
-            .receive("ok", resp => {
-              this.setState(resp.game);
-            });
-          break;
-        case "sub":
-          this.channel.push(this.state.subMenuOptions[this.state.subMenuCurrentSelection])
-            .receive("ok", resp => {
-              this.setState(resp.game);
-            });
-        case "monster":
-          this.channel.push(this.state.monsters[this.state.monsterSelectionIndex].monster_name)
-            .receive("ok", resp => {
-              this.setState(resp.game);
-            });
-      }
-      return;
+      this.selectMenu();
     } else {
+
+      // If any other key than enter, check what menu we are in, and increment by one.
       switch (this.state.currentMenu) {
         case "main":
           // Iterate through the current menu selection
@@ -443,18 +440,43 @@ class Dndgame extends React.Component {
           break;
         case "monster":
           this.setState((state, props) => ({
-            monsterSelectionIndex: (state.monsterSelectionIndex + 1) % state.monsters.length,
+            monsterCurrentSelection: (state.monsterCurrentSelection + 1) % state.monsters.length,
           }));
-          console.log(this.state);
           break;
       }
     }
   }
 
-
-
-
-
+  // This is the logic for tracking where in the menu system a player is, using an array to track historical selections
+  // After "enter" is received when in the monster menu, the selected options are collected and sent to the server
+  selectMenu() {
+    console.log(this.state.buildMenuPath);
+    switch (this.state.currentMenu) {
+      case "main":
+        this.setState((state, props) => ({
+          mainMenuCurrentSelection: 0,
+          subMenuCurrentSelection: 0,
+          currentMenu: "sub",
+          buildMenuPath: [state.buildMenuPath.concat[state.mainMenuCurrentSelection]],
+        }));
+        console.log(this.state);
+        break;
+      case "sub":
+        this.setState((state, props) => ({
+          mainMenuCurrentSelection: 0,
+          subMenuCurrentSelection: 0,
+          currentMenu: "monster",
+          buildMenuPath: [state.buildMenuPath.concat[state.subMenuCurrentSelection]],
+        }));
+        break;
+      case "monster":
+        console.log("pushing the final command down the channel...Yay!");
+        this.channel.push([{option: this.state.subMenuCurrentSelection[this.state.buildMenuPath[1]], monster: this.state.monsterCurrentSelection}])
+          .receive("ok", resp => {
+            this.setState(resp.game);
+          });
+    }
+  }
 
 
 
