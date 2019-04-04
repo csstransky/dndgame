@@ -36,6 +36,7 @@ class Dndgame extends React.Component {
           direction: 3,
         },
       ],
+      characterIndex: 0,
       party: [
         {
           name: "char1",
@@ -59,6 +60,18 @@ class Dndgame extends React.Component {
           weapon_attack_name: "shoot",
 
           armor_name: "metal",
+
+          skills: [
+            "skill1",
+            "skill2",
+            "skill3",
+          ],
+
+          spells: [
+            "spell1",
+            "spell2",
+            "spell3",
+          ],
         },
         {
           name: "char2",
@@ -82,6 +95,18 @@ class Dndgame extends React.Component {
           weapon_attack_name: "slash",
 
           armor_name: "shield",
+
+          skills: [
+            "skill1",
+            "skill2",
+            "skill3",
+          ],
+
+          spells: [
+            "spell1",
+            "spell2",
+            "spell3",
+          ],
         },
         {
           name: "char3",
@@ -105,6 +130,18 @@ class Dndgame extends React.Component {
           weapon_attack_name: "shoot",
 
           armor_name: "metal",
+
+          skills: [
+            "skill1",
+            "skill2",
+            "skill3",
+          ],
+
+          spells: [
+            "spell1",
+            "spell2",
+            "spell3",
+          ],
         }
       ],
       monsters: [
@@ -142,8 +179,11 @@ class Dndgame extends React.Component {
       },
       orderArray: [
         "char2",
+        "monster1",
         "char1",
+        "monster2",
         "char3",
+        "monster3",
       ],
       orderIndex: 0,
       mainMenuOptions: [
@@ -152,17 +192,12 @@ class Dndgame extends React.Component {
         "Spell",
         "Run",
       ],
-      mainMenuCurrentSelection: 2,
-      subMenuOptions: [
-        "Skill1",
-        "Double Attack",
-        "Skill3",
-        "Skill4",
-      ],
+      mainMenuCurrentSelection: 0,
+      subMenuOptions: [],
       subMenuCurrentSelection: 0,
       monsterCurrentSelection: 0,
       currentMenu: "main",
-      headlineText: "White Dragon has used Slash with 20 damage",
+      battleAction: "Why does javascript suck so much, shit",
       buildMenuPath: [],
     };
 
@@ -355,7 +390,7 @@ class Dndgame extends React.Component {
       }
 
       // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
-      ctx.font = "30px Helvetica";
+      ctx.font = "25px Helvetica";
       if (orderArray[orderIndex] == value.name) {
         switch (currentMenu) {
           case "main":
@@ -400,7 +435,7 @@ class Dndgame extends React.Component {
 
     // Draw the headline text describing what is happening in the game
     ctx.font = "25px Ariel";
-    ctx.fillText(this.state.headlineText, 20, 40);
+    ctx.fillText(this.state.battleAction, 20, 40);
   return canvas;
   }
 
@@ -450,13 +485,36 @@ class Dndgame extends React.Component {
   // This is the logic for tracking where in the menu system a player is, using an array to track historical selections
   // After "enter" is received when in the monster menu, the selected options are collected and sent to the server
   selectMenu() {
-    console.log(this.state.buildMenuPath);
+
+    // Before running the rest of this function, check if
+    if (this.state.mainMenuCurrentSelection == 3) {
+      this.runFromBattle();
+      return;
+    }
+
+    // This uses the currently selected index and the menu + party to return an array of what the next subMenu contains
+    function buildSubMenu (orderIndex, menuSelection, party) {
+      switch (menuSelection) {
+        case 0:
+          return ["no options"];
+        case 1:
+          return party[orderIndex].skills;
+        case 2:
+          return party[orderIndex].spells;
+        case 3:
+          // There should never be an option 3 down here because of the if statement above, but leaving for testing
+          return ["no options"];
+      }
+    }
+
+    // Depending on the current menu, this switch will generate the next menu and modify the state accordingly
     switch (this.state.currentMenu) {
       case "main":
         this.setState((state, props) => ({
           mainMenuCurrentSelection: 0,
           subMenuCurrentSelection: 0,
           currentMenu: "sub",
+          subMenuOptions: buildSubMenu(state.orderIndex, state.mainMenuCurrentSelection, state.party),
           buildMenuPath: [state.buildMenuPath.concat[state.mainMenuCurrentSelection]],
         }));
         console.log(this.state);
@@ -471,11 +529,20 @@ class Dndgame extends React.Component {
         break;
       case "monster":
         console.log("pushing the final command down the channel...Yay!");
+        console.log([this.state.buildMenuPath]);
         this.channel.push([{option: this.state.subMenuCurrentSelection[this.state.buildMenuPath[1]], monster: this.state.monsterCurrentSelection}])
           .receive("ok", resp => {
             this.setState(resp.game);
           });
     }
+  }
+
+  runFromBattle() {
+    console.log("Player has run from battle, message has been sent through channel");
+    this.channel.push("run")
+      .receive("ok", resp => {
+        this.setState(resp.game);
+      });
   }
 
 
