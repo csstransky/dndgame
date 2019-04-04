@@ -5,11 +5,14 @@ defmodule Dndgame.Game do
   @boss_y 40
   def new(party_id_1, party_id_2, party_id_3) do
     %{
+        # TODO: Fill it with this:
         playerPosn: %{
           x: @starting_x,
           y: @starting_y,
           direction: 0 # 0 up, 1 right, 2 down, 3 left
         },
+        characterPosns: [] # TODO filled with posns from other characters
+        characterIndex: 0
         battleParty: [],
         staticParty: [], # TODO: fill this
         monsters: [], # fills up when character encounters monsters
@@ -17,6 +20,8 @@ defmodule Dndgame.Game do
           x: @boss_x,
           y: @boss_y,
         },
+        # We'll have to grab this from the server state
+
         orderArray: [], # fills up with strings of whose turn it is
         orderIndex: 0, # who's turn it is
 
@@ -24,7 +29,7 @@ defmodule Dndgame.Game do
         isBossDead: "", # name of person who killed boss
         isGameOver: false, # flag to show a gameover screen
 
-        currentMenu: "main",
+        currentMenu: "main", # main, skill, spell, monsterSelect, deathSaves
         menuIndex: 0,
         battleAction: "",
     }

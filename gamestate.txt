@@ -1,30 +1,26 @@
-gamestate "userName" + render {
-    playerPosn: {
-        x: int
-        y: int
-        direction: int // 0 up, 1 right, 2 down, 3 left
-    }
-    party: [characters]
-		isLevelUp: [boolean] // flag to show a level screen or not
-		isBossDead: string // name of person who killed boss
-		isGameOver: boolean // flag to show a gameover screen
-    orderArray: [string] // filled at battle by initiative
-    orderIndex: int // who's turn it is
-    currentMenu: String // "main", "spell", "skill", "daeth"
-    menuIndex: int 0-3
-    characterAction: String
-    monsterAction: String
+gamestate for user_id
+%{
+    characterPosns: [posn] # TODO filled with posns from other characters
+    characterIndex: integer
+    battleParty: [character],
+    staticParty: [character], # TODO: fill this
+    monsters: [monster], # fills up when character encounters monsters
+    boss: %{
+      x: @boss_x,
+      y: @boss_y,
+    },
+    # We'll have to grab this from the server state
 
+    orderArray: [string], # fills up with strings of whose turn it is
+    orderIndex: integer, # who's turn it is
 
-}boolean // flag to show that main boss has been defeated
-gamestate "userName" + logic {
-    battleParty: [characters] // copies party array when enter into battle
-    otherCharacters: [posn]
-    party: [characters]
-    battleParty: [characters] // copies party array when enter into battle
-    monsters: [monster] // empty when not in battle
-    boss: posn
-    turn: string // name of player's turn
+    isLevelUp: [integer,integer,integer], # flag to show a level screen or not
+    isBossDead: string, # name of person who killed boss
+    isGameOver: boolean, # flag to show a gameover screen
+
+    currentMenu: string,
+    menuIndex: int,
+    battleAction: sting,
 }
 
 posn {
