@@ -93,6 +93,6 @@ attack (enemyId \\ 1)
 use_skill (skill.name, enemyId \\ 1)
 use_spell(spell.name, enemyId \\ 1)
 run
-death_save
-enemy_attack(enemyId \\ 0)
-["bryce", "monster0", "monster1"]
+death_save # We won't need the character ID because we know whose turn it is
+enemy_attack(enemyId \\ 0) # enemies are attack individually now
+Example of orderArray: ["bryce", "monster1", "noah", "monster1"]
