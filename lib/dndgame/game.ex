@@ -37,15 +37,12 @@ defmodule Dndgame.Game do
 
   # takes in something like "1d6" and gives the random die roll
   def roll_dice(dieString) do
-<<<<<<< HEAD
     dieString = String.downcase(dieString)
     [numOfDice, numOfSides] = String.split(dieString, "d")
     {numOfDice, _} = Integer.parse(numOfDice)
     {numOfSides, _} = Integer.parse(numOfSides)
     maxRoll = numOfDice * numOfSides
     Enum.random(numOfDice..maxRoll)
-=======
-
   end
 
 
@@ -94,7 +91,7 @@ defmodule Dndgame.Game do
 
   # blank for now, will: clear battleParty, monsters, update xp,
   def end_battle(game) do
->>>>>>> cb17c925dd7a16ec78b697d8f4d4bd60fef85aa5
+    # TODO get this workoing
   end
 
   # roll a death save for character
