@@ -32,6 +32,13 @@ module.exports = (env, options) => ({
         }
       },
       {
+        test: /\.(png|jpe?g|gif)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000
+        }
+      },
+      {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
@@ -39,7 +46,7 @@ module.exports = (env, options) => ({
         test: /\.scss$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
-    ]
+    ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
@@ -49,3 +56,5 @@ module.exports = (env, options) => ({
     new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
   ]
 });
+
+

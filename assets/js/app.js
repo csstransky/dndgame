@@ -26,6 +26,7 @@ import dndgame_init from "./dndgame";
 
 $(function () {
   let game = document.getElementById('dndgame');
+  console.log("getting element")
   if (game) {
     let channel = socket.channel("games:" + "test", {user: "tuck"});
     dndgame_init(game, channel);
