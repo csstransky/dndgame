@@ -93,5 +93,5 @@ attack (enemyId \\ 1)
 use_skill (skill.name, enemyId \\ 1)
 use_spell(spell.name, enemyId \\ 1)
 run
-death_save
+death_save(characterId)
 enemy_attack
