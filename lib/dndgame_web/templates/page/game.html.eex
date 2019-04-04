@@ -7,7 +7,7 @@
   <div class="column">
     <h1>Dndgame Game: <%= @gameName %></h1>
     <h3>Player Name: <%= @playerName %></h3>
-    <div id="root">
+    <div id="dndgame">
       React component loading...
     </div>
   </div>

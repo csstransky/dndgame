@@ -1,7 +1,16 @@
+gamestate for worldName
+%{
+  windSpeed: int # in MPH
+  temperature: int # in F
+  timezone: int # the difference from UTC, Boston = -4
+  playerPosns: [posn]
+  playerCount: int # number of players, serves as index
+}
+
 gamestate for user_id
 %{
-    characterPosns: [posn] # TODO filled with posns from other characters
-    characterIndex: integer
+    playerPosns: [posn] # TODO filled with posns from other characters
+    playerIndex: integer
     battleParty: [character],
     staticParty: [character], # TODO: fill this
     monsters: [monster], # fills up when character encounters monsters
@@ -68,15 +77,9 @@ https://api.darksky.net/forecast/7ab051896e5846a9ed959860db043643/37.8267,-122.4
 Boston: 42.361145, -71.057083
 Death Valley: 	36.4622, -116.867
 Greenland: 69.869007, -41.954900
-
-7, -41.9549007, -41.9549007, -41.954900
-
-
-7, -41.954900
-
-Everest: 27.986065, 86.927, -41.954900
-2623
-Dasht-e Loot, Iran: 30.60500001, 59.0677777878
+Everest: 27.986065, 86.922623
+Dallol, Afar Region, Ethiopia: 14.236499054 40.289665508
+Sydney, Australia: -33.865143, 151.209900
 
 	1554245660
   1554246646

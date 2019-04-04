@@ -7,8 +7,9 @@ defmodule DndgameWeb.GamesChannel do
   intercept ["update_players"]
 
   def join("games:" <> name, payload, socket) do
+    IO.inspect("BRING ME THE CORPSES OF THOSE WHO FOUGHT")
     if authorized?(payload) do
-      game = BackupAgent.get(name) || Game.new()
+      game = BackupAgent.get(name) || Game.new_world(name)
       player = Map.get(payload, "user")
       game = game
       |> Dndgame.Game.add_to_lobby(player)

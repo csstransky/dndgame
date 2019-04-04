@@ -15,12 +15,21 @@ window.jQuery = window.$ = jQuery;
 import "bootstrap";
 import _ from "lodash";
 
+import socket from "./socket";
+console.log(socket)
+
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
 
 $(function () {
+  let gameCanvas = document.getElementById('dndgame');
+  if (gameCanvas) {
+    let channel = socket.channel("games:" + window.gameName, {user: window.playerName});
+    //TODO this should be done: dndgame_init(game, channel); 
+  }
+
   $('#roll').click((ev) => {
     update_stats();
   });
