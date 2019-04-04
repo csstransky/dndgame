@@ -94,4 +94,5 @@ use_skill (skill.name, enemyId \\ 1)
 use_spell(spell.name, enemyId \\ 1)
 run
 death_save
-enemy_attack
+enemy_attack(enemyId \\ 0)
+["bryce", "monster0", "monster1"]
