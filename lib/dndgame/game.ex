@@ -125,6 +125,7 @@ defmodule Dndgame.Game do
 
   def run(game) do
     # TODO: add rolling to decide on running
+    # dexterity check for each player & monster, compare largest of each
     game
     |> Map.put(:battle_party, [])
     |> Map.put(:monsters, [])
@@ -158,13 +159,13 @@ defmodule Dndgame.Game do
     Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
   end
 
-  def get_character(game) do
+  def get_character_battle(game) do
     # get character from game state and spell name
     # use a cond to go through and call a specific function for every skill we use
     turn = game.orderIndex
     turnList = game.orderArray
     characterName = List.at(turnList, turn)
-    
+
     # get character by looping through battleParty
     Enum.each game.battleParty, fn char ->
       if char.name == characterName do
@@ -174,11 +175,28 @@ defmodule Dndgame.Game do
 
     character
   end
-  
+
+  def get_character_static(game) do
+    # get character from game state and spell name
+    # use a cond to go through and call a specific function for every skill we use
+    turn = game.orderIndex
+    turnList = game.orderArray
+    characterName = List.at(turnList, turn)
+
+    # get character by looping through battleParty
+    Enum.each game.staticParty, fn char ->
+      if char.name == characterName do
+        character = char
+      end
+    end
+
+    character
+  end
+
 
   # use a specific skill on a certain enemy
   def use_skill(game, skillName, targetId) do
-    character = get_character(game)
+    character = get_character_battle(game)
 
     # cond of all skills, goes to a function that deals with the logic of that skill
     cond do
@@ -226,8 +244,83 @@ defmodule Dndgame.Game do
   end
 
 
+  # SKILL FUNCTIONS
+
+  def short_rest(game, character, targetId) do
+    # goes on self
+    # refills mana to full for now
+
+
+
+    # get the static_mp of the character to know what value to refill
+    static_char = get_character_static(game)
+    static_mp = Dndgame.Characters.get_mp(static_char)
+
+    # update the character to have full mana again
+    updated_char = Map.replace(character, :mp, static_mp)
+
+    # variable to update the character in the list
+    updated_party = List.replace_at(game.battleParty, targetId, updated_char)
+
+    # loop through the list, replace the matching character with the updated character
+    #Enum.each updatedParty, fn char ->
+    #  if char.name == updated_char.name do
+    #    char = updated_char
+    #  end
+    #end
+
+    # update the battle party in the game and the battleAction text
+    game
+    |> Map.put(:battleParty, updated_party)
+    |> Map.put(:battleAction, "#{updated_char.name} restored to #{static_mp} mana with Short Rest.")
+
+  end
+
+  def double_attack(game, character, targetId) do
+
+  end
+
+  def rage(game, character, targetId) do
+
+  end
+
+  def turn_undead(game, character, targetId) do
+
+  end
+
+  def sneak_attack(game, character, targetId) do
+
+  end
+
+  def hide(game, character, targetId) do
+
+  end
+
   # SPELL FUNCTIONS
 
-  
+  def fire_bolt(game, character, targetId) do
+    # double damage for ice type
+    damage = roll_dice("1d10")
+
+    enemy = List.at(game.monsters, targetId)
+    newHP = enemy.hp - damage
+    new_enemy = Map.put(enemy, :hp, newHP)
+
+    game
+    |> Map.put(:monsters, List.replace_at(monsters, targetId, new_enemy)
+    |> Map.put(:battleAction, "#{character} did #{damage} damage to #{enemy.monster_name} number #{targetId}")
+  end
+
+
+def magic_missle(game, character, targetId) do
+
+end
+
+def cure_wounds(game, character, targetId) do
+
+end
+
+
+def shield_of_faith(game, character, targetId) do
 
 end
