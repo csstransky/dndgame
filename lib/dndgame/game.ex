@@ -145,27 +145,73 @@ defmodule Dndgame.Game do
     updated_char = %{}
     cond do
       roll == 1 ->
-        updated_char = Map.put(character, :deathSaves, character.deathSaveFailures + 2)
+        updated_char = Map.put(character, :deathSavefailures, character.deathSaveFailures + 2)
       roll == 20 ->
         updated_char = Map.put(character, :deathSaves, character.deathSaves + 2)
       roll >= 10 ->
         updated_char = Map.put(character, :deathSaves, character.deathSaves + 1)
       roll < 10 ->
-        updated_char = Map.put(character, :deathSaves, character.deathSaveFailures + 1)
+        updated_char = Map.put(character, :deathSaveFailures, character.deathSaveFailures + 1)
     end
     # replace the updated character into the battle party
+    # might need to put this in each arm of the cond for it to actually return properly
     Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
   end
 
-  # use a specific skill on a certain enemy
-  def use_skill(game, skillName, enemyId) do
+  def get_character(game) do
     # get character from game state and spell name
     # use a cond to go through and call a specific function for every skill we use
+    turn = game.orderIndex
+    turnList = game.orderArray
+    characterName = List.at(turnList, turn)
+    
+    # get character by looping through battleParty
+    Enum.each game.battleParty, fn char ->
+      if char.name == characterName do
+        character = char
+      end
+    end
+
+    character
+  end
+  
+
+  # use a specific skill on a certain enemy
+  def use_skill(game, skillName, targetId) do
+    character = get_character(game)
+
+    # cond of all skills, goes to a function that deals with the logic of that skill
+    cond do
+      skillName == "Short Rest" ->
+        short_rest(game, character, targetId)
+      skillName == "Double Attack" ->
+        double_attack(game, character, targetId)
+      skillName == "Rage" ->
+        rage(game, character, targetId)
+      skillName == "Turn Undead" ->
+        turn_undead(game, character, targetId)
+      skillName == "Sneak Attack" ->
+        sneak_attack(game, character, targetId)
+      skillName == "Hide" ->
+        hide(game, character, targetId)
+    end
   end
 
   # use a specific skill on an enemy
-  def use_spell(game, spellName, enemyId) do
+  def use_spell(game, spellName, targetId) do
     # same as use skill but for spells
+    character = get_character(game)
+
+    cond do
+      spellName == "Fire Bolt" ->
+        fire_bolt(game, character, targetId)
+      spellName == "Magic Missle" ->
+        magic_missle(game, character, targetId)
+      spellName == "Cure Wounds" ->
+        cure_wounds(game, character, targetId)
+      spellName == "Shield of Faith" ->
+        shield_of_faith(game, character, targetId)
+    end
   end
 
   # use base attack on a certain enemy
@@ -178,5 +224,10 @@ defmodule Dndgame.Game do
   def enemy_attack do
     # get current enemy
   end
+
+
+  # SPELL FUNCTIONS
+
+  
 
 end
