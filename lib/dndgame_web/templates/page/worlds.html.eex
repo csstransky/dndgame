@@ -8,8 +8,8 @@
       ["Boston": "boston",
       "Death Valley": "death-valley",
       "Greenland": "greenland",
-      "TODO": "TODO",
-      "Dasht-e Loot": "dasht-e-loot",
+      "Sydney": "sydney",
+      "Dallol": "dallol",
       "Mount Everest": "everest"] %>
     <br/>
     <%= submit "Join Game TODO make me attractive" %>
@@ -31,11 +31,11 @@
           <p id="greenland" class="list-group-item list-group-item-action" onMouseOver="desc('greenland')" onclick="select('greenland')">
             Greenland
           </p>
-          <p id="TODO" class="list-group-item list-group-item-action" onMouseOver="desc('TODO')" onclick="select('TODO')">
-            Pending Location (TODO: East, 12-ish hours ahead, 70-ish weather)
+          <p id="sydney" class="list-group-item list-group-item-action" onMouseOver="desc('sydney')" onclick="select('sydney')">
+            Sydney, Australia
           </p>
-          <p id="dasht-e-loot" class="list-group-item list-group-item-action" onMouseOver="desc('dasht-e-loot')" onclick="select('dasht-e-loot')">
-            Dasht-e Loot, Kerman Province, Iran
+          <p id="dallol" class="list-group-item list-group-item-action" onMouseOver="desc('dallol')" onclick="select('dallol')">
+            Dallol, Afar Region, Ethiopia
           </p>
           <p id="everest" class="list-group-item list-group-item-action" onMouseOver="desc('everest')" onclick="select('everest')">
             Mount Everest, Mahalangur Himal, Himalayas
@@ -65,11 +65,11 @@
         case "greenland":
           location_desc = "greenland location_descript"
           break;
-        case "TODO":
-          location_desc = "TODO"
+        case "sydney":
+          location_desc = "sydney description"
           break;
-        case "dasht-e-loot":
-          location_desc = "dashte-e loot location_descirption"
+        case "dallol":
+          location_desc = "dallol location_descirption"
           break;
         case "everest":
           location_desc = "everest location_description"
@@ -91,11 +91,11 @@
         case "greenland":
           location_desc = "greenland location_descript"
           break;
-        case "TODO":
-          location_desc = "TODO"
+        case "sydney":
+          location_desc = "You have pressed sydney"
           break;
-        case "dasht-e-loot":
-          location_desc = "dashte-e loot location_descirption"
+        case "dallol":
+          location_desc = "dallol location_descirption"
           break;
         case "everest":
           location_desc = "everest location_description"
