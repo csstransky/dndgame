@@ -11,8 +11,8 @@ defmodule Dndgame.Game do
           y: @starting_y,
           direction: 0 # 0 up, 1 right, 2 down, 3 left
         },
-        characterPosns: [] # TODO filled with posns from other characters
-        characterIndex: 0
+        characterPosns: [], # TODO filled with posns from other characters
+        characterIndex: 0,
         battleParty: [],
         staticParty: [], # TODO: fill this
         monsters: [], # fills up when character encounters monsters
@@ -87,6 +87,10 @@ defmodule Dndgame.Game do
     end
   end
 
+  def is_walkable?(x, y) do
+    true
+  end
+
   def run(game) do
     # TODO: add rolling to decide on running
     game
@@ -106,18 +110,19 @@ defmodule Dndgame.Game do
     # roll the d20 for save failure
     roll = roll_dice("1d20")
     # if greater than 10, update save rolls, if < then update failures
+    updated_char = %{}
     cond do
       roll == 1 ->
-        updated_char = Map.put(character, death_saves, character.deathSaveFailures + 2)
+        updated_char = Map.put(character, :deathSaves, character.deathSaveFailures + 2)
       roll == 20 ->
-        updated_char = Map.put(character, death_saves, character.deathSaves + 2)
+        updated_char = Map.put(character, :deathSaves, character.deathSaves + 2)
       roll >= 10 ->
-        updated_char = Map.put(character, death_saves, character.deathSaves + 1)
+        updated_char = Map.put(character, :deathSaves, character.deathSaves + 1)
       roll < 10 ->
-        updated_char = Map.put(character, death_saves, character.deathSaveFailures + 1)
+        updated_char = Map.put(character, :deathSaves, character.deathSaveFailures + 1)
     end
     # replace the updated character into the battle party
-    Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char)
+    Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
   end
 
   # use a specific skill on a certain enemy
