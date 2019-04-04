@@ -17,6 +17,7 @@ import _ from "lodash";
 
 import socket from "./socket";
 console.log(socket)
+import dndgame_init from "./dndgame";
 
 // Import local files
 //
@@ -27,8 +28,13 @@ $(function () {
   let gameCanvas = document.getElementById('dndgame');
   if (gameCanvas) {
     let channel = socket.channel("games:" + window.gameName, {user: window.playerName});
-    //TODO this should be done: dndgame_init(game, channel); 
+    dndgame_init(game, channel);
   }
+
+  $('.world-location').click((ev) => {
+    console.log(ev.target)
+    $('#world_name').val(ev.target.id)
+  })
 
   $('#roll').click((ev) => {
     update_stats();
