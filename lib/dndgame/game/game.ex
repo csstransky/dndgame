@@ -1,5 +1,6 @@
 defmodule Dndgame.Game do
   alias Dndgame.Characters
+  alias Dndgame.Game.World
   require Protocol
 
   @starting_x 44
@@ -254,34 +255,31 @@ defmodule Dndgame.Game do
     cond do
       direction == 0 ->
         #check if the above square is walkable
-        if is_walkable?(player_x, player_y - 1) do
+        if World.is_walkable?(player_x, player_y - 1) do
           # update y in the posn and update the posn in game
           Map.put(game, :playerPosn, Map.put(player_posn, :y, player_y - 1))
         end
       direction == 1 ->
         #check if the right square is walkable
-        if is_walkable?(player_x + 1, player_y) do
+        if World.is_walkable?(player_x + 1, player_y) do
           # update y in the posn and update the posn in game
           Map.put(game, :playerPosn, Map.put(player_posn, :x, player_x + 1))
         end
       direction == 2 ->
         #check if the down square is walkable
-        if is_walkable?(player_x, player_y + 1) do
+        if World.is_walkable?(player_x, player_y + 1) do
           # update y in the posn and update the posn in game
           Map.put(game, :playerPosn, Map.put(player_posn, :y, player_y + 1))
         end
       direction == 3 ->
         #check if the right square is walkable
-        if is_walkable?(player_x - 1, player_y) do
+        if World.is_walkable?(player_x - 1, player_y) do
           # update y in the posn and update the posn in game
           Map.put(game, :playerPosn, Map.put(player_posn, :x, player_x - 1))
         end
     end
   end
 
-  def is_walkable?(x, y) do
-    true
-  end
 
   def run(game) do
     # TODO: add rolling to decide on running
