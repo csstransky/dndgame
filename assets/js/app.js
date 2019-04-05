@@ -28,7 +28,9 @@ $(function () {
   let gameCanvas = document.getElementById('dndgame');
   if (gameCanvas) {
     let channel = socket.channel("games:" + window.gameName, {user: window.playerName});
-    dndgame_init(game, channel);
+    console.log(" HELO")
+    console.log(channel)
+    dndgame_init(gameCanvas, channel);
   }
 
   $('.world-location').click((ev) => {

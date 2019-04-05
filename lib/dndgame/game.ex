@@ -162,41 +162,24 @@ defmodule Dndgame.Game do
   def get_character_battle(game) do
     # get character from game state and spell name
     # use a cond to go through and call a specific function for every skill we use
-    turn = game.orderIndex
-    turnList = game.orderArray
-    characterName = List.at(turnList, turn)
-
-    # get character by looping through battleParty
-    Enum.each game.battleParty, fn char ->
-      if char.name == characterName do
-        character = char
-      end
-    end
-
-    character
+    charString = Enum.at(game.orderArray, game.orderIndex)
+    charIndex = String.replace(charString, ~r/[^\d]/, "")
+    characterName = Enum.at(game.battleParty, charIndex)
   end
 
   def get_character_static(game) do
     # get character from game state and spell name
     # use a cond to go through and call a specific function for every skill we use
-    turn = game.orderIndex
-    turnList = game.orderArray
-    characterName = List.at(turnList, turn)
-
-    # get character by looping through battleParty
-    Enum.each game.staticParty, fn char ->
-      if char.name == characterName do
-        character = char
-      end
-    end
-
-    character
+    charString = Enum.at(game.orderArray, game.orderIndex)
+    charIndex = String.replace(charString, ~r/[^\d]/, "")
+    characterName = Enum.at(game.staticParty, charIndex)
   end
 
 
   # use a specific skill on a certain enemy
-  def use_skill(game, skillName, targetId) do
+  def use_skill(game, skillId, targetId) do
     character = get_character_battle(game)
+    skillName = Enum.at(character.skills, skillId)
 
     # cond of all skills, goes to a function that deals with the logic of that skill
     cond do
@@ -216,9 +199,10 @@ defmodule Dndgame.Game do
   end
 
   # use a specific skill on an enemy
-  def use_spell(game, spellName, targetId) do
+  def use_spell(game, spellId, targetId) do
     # same as use skill but for spells
-    character = get_character(game)
+    character = get_character_battle(game)
+    spellName = Enum.at(character.spells, spellId)
 
     cond do
       spellName == "Fire Bolt" ->
@@ -346,27 +330,27 @@ defmodule Dndgame.Game do
     new_enemy = Map.put(enemy, :hp, newHP)
 
     game
-    |> Map.put(:monsters, List.replace_at(monsters, targetId, new_enemy)
-    |> Map.put(:battleAction, "#{character} did #{damage} damage to #{enemy.monster_name} number #{targetId}")
+    |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy)
+    |> Map.put(:battleAction, "#{character} did #{damage} damage to #{enemy.monster_name} number #{targetId}"))
+  end
+
+  def magic_missle(game, character, targetId) do
+    # 1d4 + 1 force damage to all enemies
+    # USE THE SPELL'S HIT DIE AND DAMAGE BONUS
+  end
+
+  def cure_wounds(game, character, targetId) do
+   # add hp to the chosen character 1d8 + your spellcasting ability modifier.
+
+   # the only person that does this is cleric, so look at character.class.ability_modifier
+   # and then get the modifier from that stat with get_stat_modifier(stat)
+   # example: ability_modifier: "CHA", cha: 12, roll: 5
+   # OUTPUT: 5 + 1 to chosen character
   end
 
 
-def magic_missle(game, character, targetId) do
-  # 1d4 + 1 force damage to all enemies
-  # USE THE SPELL'S HIT DIE AND DAMAGE BONUS
-end
-
-def cure_wounds(game, character, targetId) do
- # add hp to the chosen character 1d8 + your spellcasting ability modifier.
-
- # the only person that does this is cleric, so look at character.class.ability_modifier
- # and then get the modifier from that stat with get_stat_modifier(stat)
- # example: ability_modifier: "CHA", cha: 12, roll: 5
- # OUTPUT: 5 + 1 to chosen character
-end
-
-
-def shield_of_faith(game, character, targetId) do
-  # roll the "die" to add to the ac of the target
-  # make sure that the ac is increased in the battle party
+  def shield_of_faith(game, character, targetId) do
+    # roll the "die" to add to the ac of the target
+    # make sure that the ac is increased in the battle party
+  end
 end

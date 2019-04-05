@@ -200,14 +200,12 @@ class Dndgame extends React.Component {
       buildMenuPath: [],
     };
 
-
     this.channel
       .join()
       .receive("ok", this.got_view.bind(this))
       .receive("error", resp => {
         console.log("Unable to join", resp);
       });
-
   }
 
   got_view(view) {
