@@ -277,23 +277,62 @@ defmodule Dndgame.Game do
   end
 
   def double_attack(game, character, targetId) do
-
+    # simply do 2 attacks
   end
 
   def rage(game, character, targetId) do
-
+    # increase "dice" to character's strength
+    # if str is greater than 30, set str to 30
   end
 
   def turn_undead(game, character, targetId) do
+    # check if the monster is undead
+    # if it is
+      # check if there is more than 1 monster
+      # if there's more than 1
+        # remove that monster
+      # if last monster
+        # bring health to 0
+        # our backend logic should make it so now you add exp, YOU WON
+    # if not
+      # do nothing
 
   end
 
   def sneak_attack(game, character, targetId) do
+    # HARDEST ONE TO DO
 
+    # do a stealth check
+      # roll a d20, add dexterity modifier, and then add proficiency bonus IF
+      # you have the "stealth" proficiency
+      # Compare that roll to the monster's Perception check (d20 + wis modifier)
+
+    # if succeed stealth check
+      # do TWO attack rolls, and pick the largest value (called "advantage")
+      # do weapon_damage + dex modifier + 1d6 * ceil(level / 2)
+
+    # if fail,
+      # (just a normal attack function)
+      # do normal attack
+      # do weapon_damage + dex modifier
+
+    # make sure our battle message shows whether or not the monster sees you
+    # (stealth pass or fail message)
   end
 
   def hide(game, character, targetId) do
+    # do a stealth check
+      # roll a d20, add dexterity modifier, and then add proficiency bonus IF
+      # you have the "stealth" proficiency
+      # Compare that roll to ALL monsters' Perception check (d20 + wis modifier)
+      # basically, grab the highest wisdom check from monsters
 
+    # if succeed
+      # ac + 1
+      # dex + 3
+
+    # if fail
+      # nothing, show you were caught with message
   end
 
   # SPELL FUNCTIONS
@@ -313,14 +352,21 @@ defmodule Dndgame.Game do
 
 
 def magic_missle(game, character, targetId) do
-
+  # 1d4 + 1 force damage to all enemies
+  # USE THE SPELL'S HIT DIE AND DAMAGE BONUS
 end
 
 def cure_wounds(game, character, targetId) do
+ # add hp to the chosen character 1d8 + your spellcasting ability modifier.
 
+ # the only person that does this is cleric, so look at character.class.ability_modifier
+ # and then get the modifier from that stat with get_stat_modifier(stat)
+ # example: ability_modifier: "CHA", cha: 12, roll: 5
+ # OUTPUT: 5 + 1 to chosen character
 end
 
 
 def shield_of_faith(game, character, targetId) do
-
+  # roll the "die" to add to the ac of the target
+  # make sure that the ac is increased in the battle party
 end
