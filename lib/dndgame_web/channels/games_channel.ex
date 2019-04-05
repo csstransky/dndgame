@@ -9,26 +9,26 @@ defmodule DndgameWeb.GamesChannel do
   def join("games:" <> name, payload, socket) do
     IO.inspect("BRING ME THE CORPSES OF THOSE WHO FOUGHT")
     if authorized?(payload) do
-      game = BackupAgent.get(name) || Game.new_world(name)
+      world = BackupAgent.get(name) || Game.new_world(name)
+      IO.inspect(world)
       player = Map.get(payload, "user")
-      game = game
-      |> Dndgame.Game.add_to_lobby(player)
-      |> Dndgame.Game.add_name(name)
-      BackupAgent.put(name, game)
-      update_players(name, player)
+      IO.inspect(player)
 
+      BackupAgent.put(name, world)
+      update_players(name, player)
+      game = {}
       socket = socket
         |> assign(:player, player)
         |> assign(:game, game)
-        |> assign(:name, name)
-      {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
+        |> assign(:worldName, name)
+      {:ok, %{"join" => name, "game" => Game.client_view(world)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
   end
 
   def handle_in("start_game", _payload, socket) do
-    name = socket.assigns[:name]
+    name = socket.assigns[:worldName]
     game = BackupAgent.get(name) || socket.assigns[:game]
 
     if length(game.lobbyList) >= 2 do
@@ -47,7 +47,7 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("play_next_game", _map, socket) do
-    name = socket.assigns[:name]
+    name = socket.assigns[:worldName]
 
     game = Game.play_next_game(BackupAgent.get(name))
     socket = assign(socket, :game, game)
@@ -61,7 +61,7 @@ defmodule DndgameWeb.GamesChannel do
 
   def handle_out("update_players", game, socket) do
     player = socket.assigns[:player]
-    name = socket.assigns[:name]
+    name = socket.assigns[:worldName]
 
     if player && name do
       push socket, "update", Game.client_view(game)
