@@ -27,9 +27,11 @@ import dndgame_init from "./dndgame";
 $(function () {
   let gameCanvas = document.getElementById('dndgame');
   if (gameCanvas) {
-    let channel = socket.channel("games:" + window.gameName, {user: window.playerName});
-    console.log(" HELO")
-    console.log(channel)
+    let channel = socket.channel("games:" + window.gameName,
+      {user: window.playerName,
+        partyId1: window.partyId1,
+        partyId2: window.partyId2,
+        partyId3: window.partyId3});
     dndgame_init(gameCanvas, channel);
   }
 

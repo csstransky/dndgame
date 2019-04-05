@@ -80,7 +80,7 @@ Repo.insert!(%Skill{name: "Sneak Attack", level_req: 1, type: "damage",
 Repo.insert!(%Skill{name: "Hide", level_req: 1, type: "buff",
               sp_cost: 1, target: "self", buff_stat: "DEX", dice: "4d1"})
 
-###### CLASSES #######https:https://www.dndbeyond.com/races/gnome//www.dndbeyond.com/races/gnome
+###### CLASSES #######
 barbarian_profs = ["Athletics", "Intimidation"]
 barbarian_saves = ["STR", "CON"]
 barbarian_wpns = ["Simple", "Martial"]

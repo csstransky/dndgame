@@ -1,27 +1,29 @@
 defmodule Dndgame.Game do
+  alias Dndgame.Characters
+  require Protocol
+
   @starting_x 44
   @starting_y 64
   @boss_x 40
   @boss_y 40
 
-  def new(party_id_1, party_id_2, party_id_3) do
+  def new_game(world) do
+    # You're a new character, so this should be fine
+    worldIndex = world.playerCount - 1
     %{
-        # TODO: Fill it with this:
-        playerPosn: %{
-          x: @starting_x,
-          y: @starting_y,
-          direction: 0 # 0 up, 1 right, 2 down, 3 left
-        },
-        characterPosns: [], # TODO filled with posns from other characters
-        characterIndex: 0,
+        characterIndex: worldIndex,
+        windSpeed: Map.get(world, "windSpeed"), # in MPH
+        temperature: Map.get(world, "apparentTemperature"), # in F
+        visibility: Map.get(world, "visibility"),
+        timezone: world.timezone, # the difference from UTC, Boston = -4
+
         battleParty: [],
-        staticParty: [], # TODO: fill this
+        staticParty: [], # Will be added onto later
         monsters: [], # fills up when character encounters monsters
         boss: %{
           x: @boss_x,
           y: @boss_y,
         },
-        # We'll have to grab this from the server state
 
         orderArray: [], # fills up with strings of whose turn it is
         orderIndex: 0, # who's turn it is
@@ -31,14 +33,203 @@ defmodule Dndgame.Game do
         isGameOver: false, # flag to show a gameover screen
 
         currentMenu: "main", # main, skill, spell, monsterSelect, deathSaves
-        menuIndex: 0,
         battleAction: "",
+        steps: 0,
     }
   end
 
-  def client_view(game) do
-    # TODO: fix this up in the future
+  def create_party(game, party_id_1, party_id_2, party_id_3) do
+    characterListItem1 = create_character_list_item(party_id_1)
+    characterListItem2 = create_character_list_item(party_id_2)
+    characterListItem3 = create_character_list_item(party_id_3)
+    newParty = characterListItem1 ++ characterListItem2 ++ characterListItem3
     game
+    |> Map.put(:staticParty, newParty)
+  end
+
+  # NOTE: Returns a list of 1 character
+  def create_character_list_item(party_id) do
+    if party_id == "" do
+      []
+    else
+      character = Dndgame.Characters.get_character!(party_id)
+      character = character
+      |> Map.put(:weapon, Dndgame.Weapons.get_weapon!(character.weapon_id))
+      |> Map.put(:class, Dndgame.Classes.get_class!(character.class_id))
+      |> Map.put(:hp, Characters.get_hp(character))
+      |> Map.put(:ac, Characters.get_ac(character))
+      |> Map.put(:mp, Characters.get_mp(character))
+      |> Map.put(:sp, Characters.get_sp(character))
+      |> Map.put(:level, Characters.get_level(character))
+      |> Map.put(:initiative, Characters.get_initiative(character))
+      [character]
+    end
+  end
+
+  def update_game_world(game, world) do
+    game
+    |> Map.put(:characterPosns, world.playerPosns)
+    |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
+    |> Map.put(:temperature, Map.get(world, "apparentTemperature"))
+    |> Map.put(:timezone, world.timezone)
+  end
+
+  def client_view(game) do
+    gameView = %{
+      characterPosns: game.characterPosns,
+      characterIndex: game.characterIndex,
+      weather: %{
+        wind: game.windSpeed, # in MPH
+        temperature: game.temperature, # in F
+        visibility: game.visibility,
+      },
+
+      windSpeed: game.windSpeed,
+      temperature: game.temperature,
+      timezone: game.timezone,
+      monsters: game.monsters, # fills up when character encounters monsters
+      boss: %{
+        x: game.boss.x,
+        y: game.boss.y,
+      },
+      steps: game.steps,
+
+      orderArray: game.orderArray, # fills up with strings of whose turn it is
+      orderIndex: game.orderIndex, # who's turn it is
+
+      isLevelUp: game.isLevelUp, # flag to show a level screen or not
+      isBossDead: game.isBossDead, # name of person who killed boss
+      isGameOver: game.isGameOver, # flag to show a gameover screen
+
+      currentMenu: game.currentMenu, # main, skill, spell, monsterSelect, deathSaves
+      battleAction: game.battleAction,
+
+      mainMenuOptions: [],
+      mainMenuCurrentSelection: 0,
+      subMenuOptions: [],
+      subMenuCurrentSelection: 0,
+      monsterCurrentSelection: 0,
+      buildMenuPath: [],
+      menuIndex: 0,
+    }
+    if game.monsters == [] do
+      staticParty = Enum.map(game.staticParty, fn character -> character_view(character) end)
+      Map.put(gameView, :party, staticParty)
+    else
+      battleParty = Enum.map(game.battleParty, fn character -> character_view(character) end)
+      Map.put(gameView, :party, battleParty)
+    end
+  end
+
+  def character_view(character) do
+    %{
+      name: character.name,
+      hp: character.hp,
+      ac: character.ac,
+      mp: character.mp,
+      sp: character.sp,
+
+      level: character.level,
+      exp: character.exp,
+      initiative: character.initiative,
+
+      str: character.str,
+      dex: character.dex,
+      int: character.int,
+      con: character.con,
+      wis: character.wis,
+      cha: character.cha,
+
+      weapon: weapon_view(character.weapon),
+      armor: armor_view(character.armor),
+      class: class_view(character.class),
+      race: race_view(character.race),
+      spells: Enum.map(character.class.spells, fn spell -> spell_view(spell) end),
+      skills: Enum.map(character.class.skills, fn skill -> skill_view(skill) end),
+    }
+  end
+
+  def weapon_view(weapon) do
+    %{
+      name: weapon.name,
+      desc: weapon.desc,
+      category: weapon.weapon_category,
+      attackName: weapon.attack.name,
+      damageDie: weapon.attack.damage_dice,
+      target: weapon.attack.target,
+      type: weapon.attack.type,
+    }
+  end
+
+  def armor_view(armor) do
+    %{
+      name: armor.name,
+      desc: armor.desc,
+      category: armor.armor_category,
+      base: armor.base,
+      stealthDisadvantage: armor.stealth_disadvantage,
+      strMinimum: armor.str_minimum,
+      maxDexBonus: armor.max_dex_bonus,
+    }
+  end
+
+  def class_view(class) do
+    %{
+      name: class.name,
+      desc: class.desc,
+      abilityModifier: class.ability_modifier,
+      hitDie: class.hit_die,
+      saves: class.save_array,
+      proficiencies: class.prof_array,
+      weaponProficiencies: class.weapon_prof_array,
+      armorProficiencies: class.armor_prof_array,
+    }
+  end
+
+  def race_view(race) do
+    %{
+      name: race.name,
+      desc: race.desc,
+      size: race.size,
+      strBonus: race.str_bonus,
+      dexBonus: race.dex_bonus,
+      intBonus: race.int_bonus,
+      conBonus: race.con_bonus,
+      wisBonus: race.wis_bonus,
+      chaBonus: race.cha_bonus,
+      saves: race.save_array,
+      proficiencies: race.prof_array,
+      weaponProficiencies: race.weapon_prof_array,
+      armorProficiencies: race.armor_prof_array,
+    }
+  end
+
+  def skill_view(skill) do
+    %{
+      name: skill.name,
+      desc: skill.desc,
+      spCost: skill.sp_cost,
+      levelReq: skill.level_req,
+      dice: skill.dice,
+      diceBonus: skill.dice_bonus,
+      buffState: skill.buff_stat,
+      target: skill.target,
+      type: skill.type,
+    }
+  end
+
+  def spell_view(spell) do
+    %{
+      buffState: spell.buff_stat,
+      name: spell.name,
+      desc: spell.desc,
+      dice: spell.dice,
+      diceBonus: spell.dice_bonus,
+      levelReq: spell.level_req,
+      mpCost: spell.mp_cost,
+      target: spell.target,
+      type: spell.type,
+    }
   end
 
   # takes in something like "1d6" and gives the random die roll
@@ -133,7 +324,7 @@ defmodule Dndgame.Game do
     # use a cond to go through and call a specific function for every skill we use
     charString = Enum.at(game.orderArray, game.orderIndex)
     charIndex = String.replace(charString, ~r/[^\d]/, "")
-    characterName = Enum.at(game.battleParty, charIndex)
+    Enum.at(game.battleParty, charIndex)
   end
 
   def get_character_static(game) do
@@ -141,7 +332,7 @@ defmodule Dndgame.Game do
     # use a cond to go through and call a specific function for every skill we use
     charString = Enum.at(game.orderArray, game.orderIndex)
     charIndex = String.replace(charString, ~r/[^\d]/, "")
-    characterName = Enum.at(game.staticParty, charIndex)
+    Enum.at(game.staticParty, charIndex)
   end
 
 

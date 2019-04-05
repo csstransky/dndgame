@@ -1,6 +1,9 @@
 <script>
  window.gameName = "<%= @gameName %>";
  window.playerName = "<%= @current_user.email %>";
+ window.partyId1 = "<%= @partyId1 %>"
+ window.partyId2 = "<%= @partyId2 %>"
+ window.partyId3 = "<%= @partyId3 %>"
 </script>
 
 <div class="row">
