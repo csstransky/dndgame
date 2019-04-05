@@ -27,7 +27,7 @@ defmodule Dndgame.GameServer do
 
   def start_link(name) do
     IO.inspect("I HAVE ALREADY DONE THIS, BUT TLOOK")
-    game = Dndgame.BackupAgent.get(name) || Dndgame.World.new_world(name)
+    game = Dndgame.BackupAgent.get(name) || Dndgame.Game.World.new_world(name)
     IO.inspect(name)
     IO.inspect("genserver name above")
     GenServer.start_link(__MODULE__, game, name: reg(name))

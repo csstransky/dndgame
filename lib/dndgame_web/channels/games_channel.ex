@@ -2,7 +2,7 @@ defmodule DndgameWeb.GamesChannel do
   use DndgameWeb, :channel
 
   alias Dndgame.Game
-  alias Dndgame.World
+  alias Dndgame.Game.World
   alias Dndgame.BackupAgent
 
   intercept ["update_players"]
@@ -17,7 +17,7 @@ defmodule DndgameWeb.GamesChannel do
       IO.inspect(playerName)
       world = World.join_world(world, playerName)
       IO.inspect(world)
-      player = Game.join_game(world)
+      #player = Game.join_game(world)
       BackupAgent.put(name, world)
       update_players(name, playerName)
       game = {}
@@ -25,7 +25,7 @@ defmodule DndgameWeb.GamesChannel do
         |> assign(:player, playerName)
         |> assign(:game, game)
         |> assign(:worldName, name)
-      {:ok, %{"join" => name, "game" => Game.client_view(world)}, socket}
+      {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end

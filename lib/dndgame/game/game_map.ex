@@ -1,4 +1,4 @@
-defmodule Dndgame.GameMap do
+defmodule Dndgame.Game.GameMap do
 
   def get_map() do
 [
@@ -62,5 +62,3 @@ defmodule Dndgame.GameMap do
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
   end
 end
-
-

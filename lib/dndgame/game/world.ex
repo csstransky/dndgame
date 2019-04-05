@@ -1,9 +1,10 @@
-defmodule Dndgame.World do
+defmodule Dndgame.Game.World do
   @startingX 44
   @startingY 64
   @startingDirection "down"
   @worldLogicOffsetX 15
   @worldLogicOffsetY 12
+  @gameMap Dndgame.Game.GameMap.get_map()
 
   def new_world(worldName) do
     weatherInfo = call_weather_api(worldName)
