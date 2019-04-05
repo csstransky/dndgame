@@ -12,7 +12,7 @@ defmodule Dndgame.Game do
     # You're a new character, so this should be fine
     worldIndex = world.playerCount - 1
     %{
-        characterIndex: worldIndex,
+        playerIndex: worldIndex,
         windSpeed: Map.get(world, "windSpeed"), # in MPH
         temperature: Map.get(world, "apparentTemperature"), # in F
         visibility: Map.get(world, "visibility"),
@@ -69,16 +69,17 @@ defmodule Dndgame.Game do
 
   def update_game_world(game, world) do
     game
-    |> Map.put(:characterPosns, world.playerPosns)
+    |> Map.put(:playerPosns, world.playerPosns)
     |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
     |> Map.put(:temperature, Map.get(world, "apparentTemperature"))
+    |> Map.put(:visibility, Map.get(world, "visibility"))
     |> Map.put(:timezone, world.timezone)
   end
 
   def client_view(game) do
     gameView = %{
-      characterPosns: game.characterPosns,
-      characterIndex: game.characterIndex,
+      playerPosns: game.playerPosns,
+      playerIndex: game.playerIndex,
       weather: %{
         wind: game.windSpeed, # in MPH
         temperature: game.temperature, # in F
