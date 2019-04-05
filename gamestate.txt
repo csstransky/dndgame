@@ -85,13 +85,18 @@ Sydney, Australia: -33.865143, 151.209900
   1554246646
 
 
+FOR MAP LOGIC:
+OFFSET:
+  X = 15
+  Y = 12
+
 Server Calls:
 
-walk (int 0-3) //document
-attack (enemyId \\ 1)
-use_skill (skill.name, enemyId \\ 1)
-use_spell(spell.name, enemyId \\ 1)
+walk (int 0-3) // 0 = up, 1 = right, 2 = down, 3 = left
+attack (enemyIndex \\ 0)
+use_skill (skillIndex, enemyIndex \\ 0)
+use_spell(spellIndex, enemyIndex \\ 0)
 run
 death_save # We won't need the character ID because we know whose turn it is
 enemy_attack(enemyId \\ 0) # enemies are attack individually now
-Example of orderArray: ["bryce", "monster1", "noah", "monster1"]
+Example of orderArray: ["chararcter0", "monster1", "character1", "monster1"]
