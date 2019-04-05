@@ -3,7 +3,7 @@ defmodule Dndgame.Game do
   @starting_y 64
   @boss_x 40
   @boss_y 40
-
+  @game_map Dndgame.GameMap.getMap()
   def new_world(worldName) do
     weatherInfo = getWeatherInfo(worldName)
     |> Map.put_new(:playerPosns, [])
