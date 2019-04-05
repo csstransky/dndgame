@@ -5,9 +5,15 @@ defmodule DndgameWeb.CharacterController do
   alias Dndgame.Characters.Character
 
   def index(conn, _params) do
-    user_id = conn.assigns.current_user.id
-    characters = Characters.list_user_characters(user_id)
-    render(conn, "index.html", characters: characters)
+    if conn.assigns.current_user do
+      user_id = conn.assigns.current_user.id
+      characters = Characters.list_user_characters(user_id)
+      render(conn, "index.html", characters: characters)
+    else
+      characters = %{}
+      render(conn, "index.html", characters: {characters})
+    end
+
   end
 
   def new(conn, _params) do

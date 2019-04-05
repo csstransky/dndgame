@@ -29,6 +29,7 @@ defmodule Google do
   end
 
   def get_token!(params \\ [], headers \\ []) do
+    IO.inspect("CHECKING TOKEN")
     IO.inspect(Keyword.merge(params, client_secret: client().client_secret))
     OAuth2.Client.get_token!(client(), Keyword.merge(params, client_secret: client().client_secret))
   end
@@ -40,8 +41,11 @@ defmodule Google do
   end
 
   def get_token(client, params, headers) do
-    client
+    client = client
     |> put_header("Accept", "application/json")
     |> AuthCode.get_token(params, headers)
+    IO.inspect("WHERE IS THE TOKEN?")
+    IO.inspect(client)
+    client
   end
 end

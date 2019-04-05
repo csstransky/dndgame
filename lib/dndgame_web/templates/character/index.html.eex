@@ -1,36 +1,36 @@
 
-<%= if @current_user == nil do %>
-  <h6> Please log in to see your characters. </h6>
+<%= if @current_user do %>
 
+  <h1>Listing Characters</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Name</th>
+        <th>Race</th>
+        <th>Class</th>
+      </tr>
+    </thead>
+    <tbody>
+  <%= for character <- @characters do %>
+      <tr>
+        <td><%= Dndgame.Characters.get_level(character) %></td>
+        <td><%= character.name %></td>
+        <td><%= Dndgame.Characters.get_race(character) %></td>
+        <td><%= Dndgame.Characters.get_class(character) %></td>
+        <td>
+          <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
+        </td>
+        <td>
+          <%= link "Delete", to: Routes.character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"] %>
+        </td>
+      </tr>
+    <% end %>
+
+    </tbody>
+  </table>
+
+  <span><%= link "New Character", to: Routes.character_path(@conn, :new) %></span>
 <% else %>
-<h1>Listing Characters</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Level</th>
-      <th>Name</th>
-      <th>Race</th>
-      <th>Class</th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for character <- @characters do %>
-    <tr>
-      <td><%= Dndgame.Characters.get_level(character) %></td>
-      <td><%= character.name %></td>
-      <td><%= Dndgame.Characters.get_race(character) %></td>
-      <td><%= Dndgame.Characters.get_class(character) %></td>
-      <td>
-        <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
-      </td>
-      <td>
-        <%= link "Delete", to: Routes.character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"] %>
-      </td>
-    </tr>
-  <% end %>
-
-  </tbody>
-</table>
-
-<span><%= link "New Character", to: Routes.character_path(@conn, :new) %></span>
+  <h6> Please log in to see your characters. </h6>
 <% end %>

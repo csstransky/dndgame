@@ -5,15 +5,17 @@ defmodule Dndgame.Game do
   @boss_y 40
   @game_map Dndgame.GameMap.getMap()
   def new_world(worldName) do
-    weatherInfo = getWeatherInfo(worldName)
+    weatherInfo = callWeatherAPI(worldName)
     |> Map.put_new(:playerPosns, [])
     |> Map.put_new(:playerCount, 0)
   end
 
-  def getWeatherInfo(worldName) do
+  def callWeatherAPI(worldName) do
     cond do
+      worldName == "boston" ->
+        Darkskyx.current(42.361145, -71.057083)
+        |> Map.put_new(:timezone, -4)
       worldName == "death-valley" ->
-        IO.inspect("FEEL THE BURNING OF THE DEATH VALLEY, PLEASE NOTICE")
         Darkskyx.current(36.4622, -116.867)
         |> Map.put_new(:timezone, -7)
       worldName == "greenland" ->
@@ -29,9 +31,7 @@ defmodule Dndgame.Game do
         Darkskyx.current(27.986065, 86.922623)
         |> Map.put_new(:timezone, +5)
       true -> # boston
-        IO.inspect("IN BOSTON?")
-        Darkskyx.current(42.361145, -71.057083)
-        |> Map.put_new(:timezone, -4)
+        %{error: "World not found"}
     end
   end
 

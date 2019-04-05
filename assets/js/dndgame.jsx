@@ -210,8 +210,6 @@ class Dndgame extends React.Component {
 
   got_view(view) {
     this.setState(view.game);
-
-
   }
 
   componentDidMount() {
