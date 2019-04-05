@@ -2,18 +2,22 @@ defmodule DndgameWeb.GamesChannel do
   use DndgameWeb, :channel
 
   alias Dndgame.Game
+  alias Dndgame.World
   alias Dndgame.BackupAgent
 
   intercept ["update_players"]
 
   def join("games:" <> name, payload, socket) do
     IO.inspect("BRING ME THE CORPSES OF THOSE WHO FOUGHT")
+    IO.inspect(payload)
+    IO.inspect(socket)
     if authorized?(payload) do
-      world = BackupAgent.get(name) || Game.new_world(name)
-      IO.inspect(world)
+      world = BackupAgent.get(name) || World.new_world(name)
       playerName = Map.get(payload, "user")
       IO.inspect(playerName)
-      #world = joinWorld(playerName)
+      world = World.join_world(world, playerName)
+      IO.inspect(world)
+      player = Game.join_game(world)
       BackupAgent.put(name, world)
       update_players(name, playerName)
       game = {}

@@ -4,37 +4,6 @@ defmodule Dndgame.Game do
   @boss_x 40
   @boss_y 40
 
-  def new_world(worldName) do
-    weatherInfo = callWeatherAPI(worldName)
-    |> Map.put_new(:playerPosns, [])
-    |> Map.put_new(:playerCount, 0)
-  end
-
-  def callWeatherAPI(worldName) do
-    cond do
-      worldName == "boston" ->
-        Darkskyx.current(42.361145, -71.057083)
-        |> Map.put_new(:timezone, -4)
-      worldName == "death-valley" ->
-        Darkskyx.current(36.4622, -116.867)
-        |> Map.put_new(:timezone, -7)
-      worldName == "greenland" ->
-        Darkskyx.current(69.869007, -41.954900)
-        |> Map.put_new(:timezone, -2)
-      worldName == "sydney" ->
-        Darkskyx.current(-33.865143, 151.209900)
-        |> Map.put_new(:timezone, +11)
-      worldName == "dallol" ->
-        Darkskyx.current(14.236499054, 40.289665508)
-        |> Map.put_new(:timezone, +3)
-      worldName == "everest" ->
-        Darkskyx.current(27.986065, 86.922623)
-        |> Map.put_new(:timezone, +5)
-      true -> # boston
-        %{error: "World not found"}
-    end
-  end
-
   def new(party_id_1, party_id_2, party_id_3) do
     %{
         # TODO: Fill it with this:
