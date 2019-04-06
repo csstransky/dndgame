@@ -108,7 +108,6 @@ defmodule Dndgame.Armors do
 
   def get_select_armors(armors, race, class, str) do
     total_str = str + race.str_bonus
-    IO.inspect(total_str)
     armor_profs = Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
     armors
     |> Enum.filter(fn armor ->

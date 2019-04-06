@@ -1,0 +1,112 @@
+<h1>Choose a World!</h1>
+<br/>
+<%= if @current_user do %>
+
+  <%= form_for @conn, "/party", fn func -> %>
+    <%= hidden_input func, :user_id, value: @current_user.id %>
+    <%= select func, :world_name,
+      ["Boston": "boston",
+      "Death Valley": "death-valley",
+      "Greenland": "greenland",
+      "TODO": "TODO",
+      "Dasht-e Loot": "dasht-e-loot",
+      "Mount Everest": "everest"] %>
+    <br/>
+    <%= submit "Join Game TODO make me attractive" %>
+  <% end %>
+  <br/>
+  <br/>
+  <div class="row">
+    <div class="card-group">
+      <div class="card card-primary", style="width: 45rem;">
+        <div class="card-header"><h2>Worlds</h2></div>
+        <div class="card-body">
+
+          <p id="boston" class="list-group-item list-group-item-action" onMouseOver="desc('boston')" onclick="select('boston')">
+            Boston, Massachusetts, USA
+          </p>
+          <p id="death-valley" class="list-group-item list-group-item-action" onMouseOver="desc('death-valley')" onclick="select('death-valley')">
+            Death Valley, California, USA
+          </p>
+          <p id="greenland" class="list-group-item list-group-item-action" onMouseOver="desc('greenland')" onclick="select('greenland')">
+            Greenland
+          </p>
+          <p id="TODO" class="list-group-item list-group-item-action" onMouseOver="desc('TODO')" onclick="select('TODO')">
+            Pending Location (TODO: East, 12-ish hours ahead, 70-ish weather)
+          </p>
+          <p id="dasht-e-loot" class="list-group-item list-group-item-action" onMouseOver="desc('dasht-e-loot')" onclick="select('dasht-e-loot')">
+            Dasht-e Loot, Kerman Province, Iran
+          </p>
+          <p id="everest" class="list-group-item list-group-item-action" onMouseOver="desc('everest')" onclick="select('everest')">
+            Mount Everest, Mahalangur Himal, Himalayas
+          </p>
+        </div>
+      </div>
+      <div class="card card-primary", style="width: 45rem;">
+        <div class="card-header"><h2>Description</h2></div>
+        <div class="card-body" id="world-desc">
+          <!-- This will be replaced by description text -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <br/>
+  <br/>
+  <script>
+    function desc(place) {
+      location_desc = ""
+      switch(place) {
+        case "boston":
+          location_desc = "boston location_description"
+          break;
+        case "death-valley":
+          location_desc = "death valley location_description"
+          break;
+        case "greenland":
+          location_desc = "greenland location_descript"
+          break;
+        case "TODO":
+          location_desc = "TODO"
+          break;
+        case "dasht-e-loot":
+          location_desc = "dashte-e loot location_descirption"
+          break;
+        case "everest":
+          location_desc = "everest location_description"
+          break;
+        default:
+          location_desc = "error"
+      }
+      document.getElementById("world-desc").innerHTML = location_desc;
+    }
+
+    function select(place) {
+      switch(place) {
+        case "boston":
+          location_desc = "boston location_description"
+          break;
+        case "death-valley":
+          location_desc = "death valley location_description"
+          break;
+        case "greenland":
+          location_desc = "greenland location_descript"
+          break;
+        case "TODO":
+          location_desc = "TODO"
+          break;
+        case "dasht-e-loot":
+          location_desc = "dashte-e loot location_descirption"
+          break;
+        case "everest":
+          location_desc = "everest location_description"
+          break;
+        default:
+          location_desc = "error"
+      }
+      text = "This function should actually select the :world input for Elixir, but because ofthe languages disconnects, I'm stuck with an ugly select box."
+      document.getElementById("world-desc").innerHTML = text;
+    }
+  </script>
+<% else %>
+  Please <a href="/login"><u>login</u></a> to enter a world.
+<% end %>
