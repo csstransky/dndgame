@@ -206,9 +206,14 @@ class Dndgame extends React.Component {
       .receive("error", resp => {
         console.log("Unable to join", resp);
       });
+
+    this.channel.on("update", resp => {
+      this.setState(resp)
+    });  
   }
 
   got_view(view) {
+    console.log(view.game)
     this.setState(view.game);
   }
 
@@ -247,7 +252,7 @@ class Dndgame extends React.Component {
 
 
     let drawing = new Image();
-    drawing.src = require("../static/standardWorld.png");
+    //drawing.src = require("../static/standardWorld.png");
     ctx.drawImage(drawing, 500,500);
     //drawing.src = "http://www.foster-douglas.com/img/games/755_Defining_Video_Game_Maps_1.jpg";
 

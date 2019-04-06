@@ -26,7 +26,6 @@ defmodule Dndgame.GameServer do
   end
 
   def start_link(name) do
-    IO.inspect("I HAVE ALREADY DONE THIS, BUT TLOOK")
     game = Dndgame.BackupAgent.get(name) || Dndgame.Game.World.new_world(name)
     IO.inspect(name)
     IO.inspect("genserver name above")

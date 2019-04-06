@@ -8,27 +8,49 @@ defmodule DndgameWeb.GamesChannel do
   intercept ["update_players"]
 
   def join("games:" <> name, payload, socket) do
-    IO.inspect("BRING ME THE CORPSES OF THOSE WHO FOUGHT")
-    IO.inspect(payload)
-    IO.inspect(socket)
     if authorized?(payload) do
       world = BackupAgent.get(name) || World.new_world(name)
       playerName = Map.get(payload, "user")
-      IO.inspect(playerName)
+      partyId1 = Map.get(payload, "partyId1")
+      partyId2 = Map.get(payload, "partyId2")
+      partyId3 = Map.get(payload, "partyId3")
+
       world = World.join_world(world, playerName)
-      IO.inspect(world)
-      #player = Game.join_game(world)
+      game = BackupAgent.get(playerName) || Game.new_game(world)
+      |> Game.create_party(partyId1, partyId2, partyId3)
+      |> Game.update_game_world(world)
       BackupAgent.put(name, world)
+      BackupAgent.put(playerName, game)
       update_players(name, playerName)
-      game = {}
       socket = socket
-        |> assign(:player, playerName)
-        |> assign(:game, game)
+        |> assign(:playerName, playerName)
         |> assign(:worldName, name)
       {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def handle_in("walk", directionInt, socket) do
+    worldName= socket.assigns[:worldName]
+    playerName = socket.assigns[:playerName]
+    world = BackupAgent.get(worldName)
+    # TODO, you may need to change this
+    game = BackupAgent.get(playerName)
+    |> Game.walk(directionInt)
+    world = Map.put_new(world, :playerPosns, game.playerPosns)
+    BackupAgent.put(worldName, world)
+    BackupAgent.put(playerName, game)
+    update_players(worldName, playerName)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("attack", enemyIndex, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.attack(enemyId)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
   def handle_in("start_game", _payload, socket) do
@@ -40,7 +62,7 @@ defmodule DndgameWeb.GamesChannel do
       socket = assign(socket, :game, game)
       BackupAgent.put(name, game)
 
-      player = socket.assigns[:player]
+      player = socket.assigns[:playerName]
       update_players(name, player)
 
       Dndgame.GameServer.start(name)
@@ -57,17 +79,19 @@ defmodule DndgameWeb.GamesChannel do
     socket = assign(socket, :game, game)
     BackupAgent.put(name, game)
 
-    player = socket.assigns[:player]
+    player = socket.assigns[:playerName]
     update_players(name, player)
 
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
-  def handle_out("update_players", game, socket) do
-    player = socket.assigns[:player]
-    name = socket.assigns[:worldName]
+  def handle_out("update_players", world, socket) do
+    playerName = socket.assigns[:playerName]
+    worldName = socket.assigns[:worldName]
 
-    if player && name do
+    if playerName && worldName do
+      game = BackupAgent.get(playerName)
+      |> Game.update_game_world(world)
       push socket, "update", Game.client_view(game)
       {:noreply, socket}
     else
@@ -75,11 +99,12 @@ defmodule DndgameWeb.GamesChannel do
     end
   end
 
-  def update_players(name, player) do
-    if player do
-      game = BackupAgent.get(name)
-      DndgameWeb.Endpoint.broadcast!("games:#{name}", "update_players", game)
-      {:ok, game}
+  def update_players(worldName, playerName) do
+    if playerName do
+      # I'm doing this here so backup agent is only called once for world
+      world = BackupAgent.get(worldName)
+      DndgameWeb.Endpoint.broadcast!("games:#{worldName}", "update_players", world)
+      {:ok, world}
     end
   end
 
