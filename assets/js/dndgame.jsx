@@ -108,16 +108,14 @@ class Dndgame extends React.Component {
     // So this is strange, but I think you actually need to render it at 0,0
     // AND THEN move it. It needs to be saved in the browser's cache first, and
     // this is how it's done.
-    ctx.drawImage(drawing, 0, 0, 3500, 3500);
+    ctx.drawImage(drawing, 0 - this.state.playerPosns[this.state.characterIndex].x, 0 - this.state.playerPosns[this.state.characterIndex],y, 3500, 3500);
     drawing.src = require("../static/standardWorld.png");
     ctx.drawImage(drawing, -1280, -2000, 3500, 3500);
-    ctx.scale(10,10);
 
     let character = new Image();
 
     character.src = require("../static/ff_sprite.png");
-    ctx.scale(0.018, 0.018);
-    ctx.drawImage(character, 2600, 1500);
+    ctx.drawImage(character, 470, 270, 40, 40);
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
@@ -160,10 +158,10 @@ class Dndgame extends React.Component {
     });
 
 
-    ctx.font = "150px Arial";
-    ctx.fillText("Visibility:" + this.state.weather.visibility, 10, 100);
-    ctx.fillText("Temp:" + this.state.weather.temperature, 10, 250);
-    ctx.fillText("Wind:" + this.state.weather.wind, 10, 400);
+    ctx.font = "25px Arial";
+    ctx.fillText("Visibility:" + this.state.weather.visibility, 10,30);
+    ctx.fillText("Temp:" + this.state.weather.temperature, 10, 65);
+    ctx.fillText("Wind:" + this.state.weather.wind, 10, 100);
 
     return canvas;
 
@@ -339,6 +337,32 @@ class Dndgame extends React.Component {
   // Receives the keyDown events and sorts based on menu
   onKeyDown(ev) {
     console.log(ev.key);
+    if (!this.state.monsters.length == 0) {
+      if (ev.key == "w") {
+        let newPlayerPosns = this.state.playerPosns.slice();
+        newPlayer[this.state.characterIndex].y -= 30;
+        this.setState({playeraPosns: newPlayerPosns});
+      }
+      else if (ev.key == "a") {
+        let newPlayerPosns = this.state.playerPosns.slice();
+        newPlayer[this.state.characterIndex].x -= 30;
+        this.setState({playeraPosns: newPlayerPosns});
+ 
+      }
+      else if (ev.key == "s") {
+        let newPlayerPosns = this.state.playerPosns.slice();
+        newPlayer[this.state.characterIndex].y += 30;
+        this.setState({playeraPosns: newPlayerPosns});
+ 
+      }
+      else if (ev.key == "d") {
+        let newPlayerPosns = this.state.playerPosns.slice();
+        newPlayer[this.state.characterIndex].x += 30;
+        this.setState({playeraPosns: newPlayerPosns});
+ 
+      }
+
+    }
 
     // If the battleAction string is not empty, the next key will be the "next" key
     if (!this.state.battleAction == "") {
