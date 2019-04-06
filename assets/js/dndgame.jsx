@@ -15,188 +15,21 @@ class Dndgame extends React.Component {
 
     this.channel = props.channel;
     this.state = {
-      player: {
-        name: "char",
-        x: 10,
-        y: 10,
-        direction: 1,
-      },
-      other_characters: [
-        {
-          name: "char",
-          x: 215,
-          y: 150,
-          direction: 3,
-        },
-        {
-          name: "char",
-          x: 315,
-          y: 150,
-          direction: 3,
-        },
-      ],
+      playerPosns: [],
       characterIndex: 0,
-      party: [
-        {
-          name: "char1",
-          hp: 10,
-          ac: 10,
-          mp: 10,
-          sp: 10,
-
-          level: 10,
-          exp: 10,
-          initiative: 10,
-
-          str: 10,
-          dex: 10,
-          int: 10,
-          con: 10,
-          wis: 10,
-          cha: 10,
-
-          weapon_name: "bow",
-          weapon_attack_name: "shoot",
-
-          armor_name: "metal",
-
-          skills: [
-            "skill1",
-            "skill2",
-            "skill3",
-          ],
-
-          spells: [
-            "spell1",
-            "spell2",
-            "spell3",
-          ],
-        },
-        {
-          name: "char2",
-          hp: 10,
-          ac: 10,
-          mp: 10,
-          sp: 10,
-
-          level: 10,
-          exp: 10,
-          initiative: 10,
-
-          str: 10,
-          dex: 10,
-          int: 10,
-          con: 10,
-          wis: 10,
-          cha: 10,
-
-          weapon_name: "sward",
-          weapon_attack_name: "slash",
-
-          armor_name: "shield",
-
-          skills: [
-            "skill1",
-            "skill2",
-            "skill3",
-          ],
-
-          spells: [
-            "spell1",
-            "spell2",
-            "spell3",
-          ],
-        },
-        {
-          name: "char3",
-          hp: 10,
-          ac: 10,
-          mp: 10,
-          sp: 10,
-
-          level: 10,
-          exp: 10,
-          initiative: 10,
-
-          str: 10,
-          dex: 10,
-          int: 10,
-          con: 10,
-          wis: 10,
-          cha: 10,
-
-          weapon_name: "bow",
-          weapon_attack_name: "shoot",
-
-          armor_name: "metal",
-
-          skills: [
-            "skill1",
-            "skill2",
-            "skill3",
-          ],
-
-          spells: [
-            "spell1",
-            "spell2",
-            "spell3",
-          ],
-        }
-      ],
-      monsters: [
-        {
-          monster_name: "char",
-          monster_attack: "spit",
-          monster_hit: 10,
-          hp: 10,
-        },
-        {
-          monster_name: "char",
-          monster_attack: "swipe",
-          monster_hit: 10,
-          hp: 10,
-        },
-        {
-          monster_name: "char",
-          monster_attack: "flame",
-          monster_hit: 10,
-          hp: 10,
-        },
-      ],
-      boss: {
-        posn: {
-          x: 20,
-          y: 20,
-          direction: 2,
-        },
-      },
-      turn: 1,
-      weather: {
-        wind: 15,
-        visibility: 10,
-        temperature: 65,
-      },
-      orderArray: [
-        "character1",
-        "monster0",
-        "character0",
-        "monster1",
-        "character2",
-        "monster2",
-      ],
+      party: [],
+      monsters: [],
+      boss: {},
+      weather: {},
+      orderArray: [],
       orderIndex: 0,
-      mainMenuOptions: [
-        "Attack",
-        "Skill",
-        "Spell",
-        "Run",
-      ],
+      mainMenuOptions: [],
       mainMenuCurrentSelection: 0,
       subMenuOptions: [],
       subMenuCurrentSelection: 0,
       monsterCurrentSelection: 0,
       currentMenu: "main",
-      battleAction: "adfasd",
+      battleAction: "",
       buildMenuPath: [],
     };
 
@@ -310,8 +143,8 @@ class Dndgame extends React.Component {
     //boss.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
 
 
-    console.log(this.state.other_characters);
-    $.each(this.state.other_characters, function (index, value) {
+    console.log(this.state.playerPosns);
+    $.each(this.state.playerPosns, function (index, value) {
       let img = new Image();
       img.onload = function () {
         ctx.save(); //saves the state of canvas

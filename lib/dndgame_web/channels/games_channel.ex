@@ -24,6 +24,7 @@ defmodule DndgameWeb.GamesChannel do
       update_players(name, playerName)
       socket = socket
         |> assign(:playerName, playerName)
+        |> assign(:game, game)
         |> assign(:worldName, name)
       {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else

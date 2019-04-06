@@ -68,6 +68,8 @@ defmodule Dndgame.Game do
   end
 
   def update_game_world(game, world) do
+    IO.inspect("HELLLLOOOO")
+    IO.inspect(world)
     game
     |> Map.put(:playerPosns, world.playerPosns)
     |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
@@ -86,8 +88,6 @@ defmodule Dndgame.Game do
         visibility: game.visibility,
       },
 
-      windSpeed: game.windSpeed,
-      temperature: game.temperature,
       timezone: game.timezone,
       monsters: game.monsters, # fills up when character encounters monsters
       boss: %{
