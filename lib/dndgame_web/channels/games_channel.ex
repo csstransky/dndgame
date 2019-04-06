@@ -31,6 +31,28 @@ defmodule DndgameWeb.GamesChannel do
     end
   end
 
+  def handle_in("walk", directionInt, socket) do
+    worldName= socket.assigns[:worldName]
+    playerName = socket.assigns[:playerName]
+    world = BackupAgent.get(worldName)
+    # TODO, you may need to change this
+    game = BackupAgent.get(playerName)
+    |> Game.walk(directionInt)
+    world = Map.put_new(world, :playerPosns, game.playerPosns)
+    BackupAgent.put(worldName, world)
+    BackupAgent.put(playerName, game)
+    update_players(worldName, playerName)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("attack", enemyIndex, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.attack(enemyId)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
   def handle_in("start_game", _payload, socket) do
     name = socket.assigns[:worldName]
     game = BackupAgent.get(name) || socket.assigns[:game]

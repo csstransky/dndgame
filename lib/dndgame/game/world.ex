@@ -43,7 +43,7 @@ defmodule Dndgame.Game.World do
     offset_y = @worldLogicOffsetY
     Enum.at(Enum.at(@gameMap, offset_y), offset_x)
   end
-
+  
   def join_world(world, playerName) do
     nameList = Enum.map(world.playerPosns, fn playerPosn -> playerPosn.name end)
     if Enum.member?(nameList, playerName) do
