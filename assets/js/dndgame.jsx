@@ -232,7 +232,7 @@ class Dndgame extends React.Component {
 
   // This figures out what type of display to render in the canvas
   drawDisplay() {
-    if (!this.state.monsters.length == 0) {
+    if (this.state.monsters.length == 0) {
       this.drawGameMap();
     } else {
       this.drawBattleScreen();
