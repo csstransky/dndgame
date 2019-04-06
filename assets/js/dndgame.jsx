@@ -270,7 +270,7 @@ class Dndgame extends React.Component {
     let drawing = new Image();
 
     drawing.src = require("../static/standardWorld.png");
-    ctx.drawImage(drawing, 0, 0, 3500, 3500);
+    ctx.drawImage(drawing, -1280, -2000, 3500, 3500);
     ctx.scale(10,10);
 
     let character = new Image();
