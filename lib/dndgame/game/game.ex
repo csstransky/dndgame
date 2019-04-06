@@ -7,6 +7,7 @@ defmodule Dndgame.Game do
   @starting_y 64
   @boss_x 40
   @boss_y 40
+  @d20 "1d20"
 
   def new_game(world) do
     # You're a new character, so this should be fine
@@ -260,7 +261,6 @@ defmodule Dndgame.Game do
   # just return the current game state
   def walk(game, direction) do
     # 0 = up, 1 = right, 2 = down, 3 = left
-
     player_posn = Enum.at(game.playerPosns, game.playerIndex)
     player_x = game.playerPosn.x
     player_y = game.playerPosn.y
@@ -307,21 +307,30 @@ defmodule Dndgame.Game do
     # TODO: add rolling to decide on running
     # dexterity check for each player & monster, compare largest of each
     game
+    |> reset_to_overworld
+  end
+
+  def reset_to_overworld(game) do
+    game
     |> Map.put(:battle_party, [])
     |> Map.put(:monsters, [])
+    |> Map.put(:orderArray, [])
+    |> Map.put(:orderIndex, 0)
+    |> Map.put(:currentMenu, "main")
+    |> Map.put(:battleAction, "")
   end
 
   # blank for now, will: clear battleParty, monsters, update xp,
-  def end_battle(game) do
+  def end_battle_check(game) do
     # TODO get this workoing
   end
 
   # roll a death save for character
-  def death_save(game, characterIndex) do
+  def death_save(game) do
     # get the character
-    character = List.at(game.battleParty, characterIndex)
+    character = get_character_battle(game)
     # roll the d20 for save failure
-    roll = roll_dice("1d20")
+    roll = roll_dice(@d20)
     # if greater than 10, update save rolls, if < then update failures
     updated_char = %{}
     cond do
@@ -397,7 +406,7 @@ defmodule Dndgame.Game do
     end
   end
 
-  def stat_mod(character) do
+  def get_character_stat_mod(character) do
     # get the type of modifier for the characters class
     statString = character.class.ability_modifier
 
@@ -430,27 +439,34 @@ defmodule Dndgame.Game do
 
     # get the attack of this character
     attack = character.weapon.attack
+    weapon = character.weapon
 
-    # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
-    attackRoll = roll_dice("1d20") + stat_mod(character)
-            + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+    if weapon.target == "enemy" do
+      # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
+      attackRoll = roll_dice(@d20) + get_character_stat_mod(character)
+              + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
 
       # if it is a hit
-      if attackRoll > enemy.ac do
+      if attackRoll >= enemy.ac do
         # calculate damage
-        damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
         # take damage out of enemy hp
         hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
         # replace less hp monster and update battleAction in game
         game
         |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
-        |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
-                              to #{enemy.name} with #{attack.name}")
+        |> Map.replace(:battleAction, "#{character.name} used #{weapon.name} to
+                                #{attack.name} #{enemy.name} for #{damage} damage."
+        |> remove_dead_monsters
       else
         game
         |> Map.replace(:battleAction, "#{character.name} tried to attack
-                              #{enemy.name} with #{attack.name}, but it missed")
+                              #{enemy.name} with #{weapon.name}, but it missed.")
       end
+    else
+      game
+      |> Map.replace(:battleAction, "TODO I need to actually code attack all enemies")
+    end
   end
 
   def enemy_attack(game, characterId) do
@@ -467,7 +483,7 @@ defmodule Dndgame.Game do
     # pick a random attack to use this turn, based off length of attackList
     attack = List.at(attackList, :rand.uniform(length(attackList)) - 1)
 
-    attackRoll = roll_dice("1d20") + attack.attack_bonus
+    attackRoll = roll_dice(@d20) + attack.attack_bonus
 
     # if it is indeed a hit based off the attackRoll
     if attackRoll > targetCharacter.ac do
