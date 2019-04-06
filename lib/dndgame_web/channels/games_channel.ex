@@ -9,6 +9,7 @@ defmodule DndgameWeb.GamesChannel do
 
   def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
+<<<<<<< HEAD
       world = BackupAgent.get(name) || World.new_world(name)
       playerName = Map.get(payload, "user")
       partyId1 = Map.get(payload, "partyId1")
@@ -22,6 +23,13 @@ defmodule DndgameWeb.GamesChannel do
       BackupAgent.put(name, world)
       BackupAgent.put(playerName, game)
       update_players(name, playerName)
+=======
+      game = BackupAgent.get(name) || Game.new()
+      player = Map.get(payload, "user")
+      BackupAgent.put(name, game)
+      update_players(name, player)
+
+>>>>>>> canvas
       socket = socket
         |> assign(:playerName, playerName)
         |> assign(:worldName, name)

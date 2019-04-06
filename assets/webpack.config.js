@@ -29,6 +29,7 @@ module.exports = (env, options) => ({
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
           }
+<<<<<<< HEAD
         }
       },
       {
@@ -36,7 +37,20 @@ module.exports = (env, options) => ({
         loader: 'url-loader',
         options: {
           limit: 10000
+=======
+>>>>>>> canvas
         }
+      },
+      {
+        test: /\.(png|jp(e*)g|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              name: '[path][name].[ext]',
+            },
+          }
+        ],
       },
       {
         test: /\.css$/,
@@ -56,3 +70,5 @@ module.exports = (env, options) => ({
     new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
   ]
 });
+
+

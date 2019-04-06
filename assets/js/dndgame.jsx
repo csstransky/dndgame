@@ -124,6 +124,7 @@ class Dndgame extends React.Component {
           con: 10,
           wis: 10,
           cha: 10,
+<<<<<<< HEAD
 
           weapon_name: "bow",
           weapon_attack_name: "shoot",
@@ -199,6 +200,84 @@ class Dndgame extends React.Component {
       battleAction: "Why does javascript suck so much, shit",
       buildMenuPath: [],
     };
+=======
+
+          weapon_name: "bow",
+          weapon_attack_name: "shoot",
+
+          armor_name: "metal",
+
+          skills: [
+            "skill1",
+            "skill2",
+            "skill3",
+          ],
+
+          spells: [
+            "spell1",
+            "spell2",
+            "spell3",
+          ],
+        }
+      ],
+      monsters: [
+        {
+          monster_name: "char",
+          monster_attack: "spit",
+          monster_hit: 10,
+          hp: 10,
+        },
+        {
+          monster_name: "char",
+          monster_attack: "swipe",
+          monster_hit: 10,
+          hp: 10,
+        },
+        {
+          monster_name: "char",
+          monster_attack: "flame",
+          monster_hit: 10,
+          hp: 10,
+        },
+      ],
+      boss: {
+        posn: {
+          x: 20,
+          y: 20,
+          direction: 2,
+        },
+      },
+      turn: 1,
+      weather: {
+        wind: 15,
+        visibility: 10,
+        temperature: 65,
+      },
+      orderArray: [
+        "character1",
+        "monster0",
+        "character0",
+        "monster1",
+        "character2",
+        "monster2",
+      ],
+      orderIndex: 0,
+      mainMenuOptions: [
+        "Attack",
+        "Skill",
+        "Spell",
+        "Run",
+      ],
+      mainMenuCurrentSelection: 0,
+      subMenuOptions: [],
+      subMenuCurrentSelection: 0,
+      monsterCurrentSelection: 0,
+      currentMenu: "main",
+      battleAction: "adfasd",
+      buildMenuPath: [],
+    };
+
+>>>>>>> canvas
 
     this.channel
       .join()
@@ -207,6 +286,7 @@ class Dndgame extends React.Component {
         console.log("Unable to join", resp);
       });
 
+<<<<<<< HEAD
     this.channel.on("update", resp => {
       this.setState(resp)
     });  
@@ -214,6 +294,11 @@ class Dndgame extends React.Component {
 
   got_view(view) {
     console.log(view.game)
+=======
+  }
+
+  got_view(view) {
+>>>>>>> canvas
     this.setState(view.game);
   }
 
@@ -225,6 +310,7 @@ class Dndgame extends React.Component {
   componentWillUnmount() {
     // no intervals, leaving empty for now
   }
+<<<<<<< HEAD
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     this.drawDisplay();
@@ -236,13 +322,49 @@ class Dndgame extends React.Component {
       this.drawGameMap();
     } else {
       this.drawBattleScreen();
+=======
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    this.drawDisplay();
+  }
+
+  // This figures out what type of display to render in the canvas
+  drawDisplay() {
+    if (!this.state.monsters.length == 0) {
+      this.drawGameMap();
+    } else {
+      this.drawBattleScreen();
     }
   }
 
+  // Parses through the chracter order array based on the current player index to determine the type of the next player
+  determineCurrentPlayerType() {
+    let currentPlayerString = this.state.orderArray[this.state.orderIndex]
+    if (currentPlayerString[0] == "c") {
+      return "character";
+    } else {
+      return "monster";
+>>>>>>> canvas
+    }
+  }
+
+  // Parses through the character array to determine the index (within the character or monster array) of the next chracter
+  determineCurrentPlayerIndex() {
+    let currentPlayerString = this.state.orderArray[this.state.orderIndex]
+    if (currentPlayerString[0] == "c") {
+      return currentPlayerString[9];
+    } else {
+      return currentPlayerString[7];
+    }
+  }
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
+<<<<<<< HEAD
     //console.log(require('../static/standardWorld.png'));
+=======
+    console.log(require('../static/standardWorld.png'));
+>>>>>>> canvas
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     ctx.fillStyle = "#FFFFFF";
@@ -252,6 +374,7 @@ class Dndgame extends React.Component {
 
 
     let drawing = new Image();
+<<<<<<< HEAD
     //drawing.src = require("../static/standardWorld.png");
     ctx.drawImage(drawing, 500,500);
     //drawing.src = "http://www.foster-douglas.com/img/games/755_Defining_Video_Game_Maps_1.jpg";
@@ -259,15 +382,34 @@ class Dndgame extends React.Component {
 
     let character = new Image();
     character.onload = function () {
+=======
+
+    drawing.src = require("../static/standardWorld.png");
+    ctx.drawImage(drawing, -1280, -2000, 3500, 3500);
+    ctx.scale(10,10);
+
+    let character = new Image();
+
+    character.src = require("../static/ff_sprite.png");
+    ctx.scale(0.018, 0.018);
+    ctx.drawImage(character, 2600, 1500);
+    /*character.onload = function () {
+>>>>>>> canvas
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
       ctx.translate(character.width, character.height); //let's translate
       ctx.rotate(Math.PI / 180 * (character.direction)); //increment the angle and rotate the image
       ctx.drawImage(character, character.x, character.y, 10, 10);
       ctx.restore(); //restore the state of canvas}
+<<<<<<< HEAD
     };
     // character.src = require('./images/char.png');
     character.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
+=======
+    };*/
+
+
+>>>>>>> canvas
 
 
     let boss = new Image();
@@ -280,7 +422,11 @@ class Dndgame extends React.Component {
       ctx.restore(); //restore the state of canvas}
     };
     //boss.src = require('./images/char.png');
+<<<<<<< HEAD
     boss.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
+=======
+    //boss.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
+>>>>>>> canvas
 
 
     console.log(this.state.other_characters);
@@ -300,10 +446,17 @@ class Dndgame extends React.Component {
     });
 
 
+<<<<<<< HEAD
     ctx.font = "10px Arial";
     ctx.fillText("Visibility:" + this.state.weather.visibility, 10, 50);
     ctx.fillText("Temp:" + this.state.weather.temperature, 10, 60);
     ctx.fillText("Wind:" + this.state.weather.wind, 10, 70);
+=======
+    ctx.font = "150px Arial";
+    ctx.fillText("Visibility:" + this.state.weather.visibility, 10, 100);
+    ctx.fillText("Temp:" + this.state.weather.temperature, 10, 250);
+    ctx.fillText("Wind:" + this.state.weather.wind, 10, 400);
+>>>>>>> canvas
 
     return canvas;
 
@@ -311,6 +464,14 @@ class Dndgame extends React.Component {
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
+<<<<<<< HEAD
+=======
+
+    // There will be used later to render the appropriate menu
+    let currentPlayerType = this.determineCurrentPlayerType();
+    let currentPlayerIndex = this.determineCurrentPlayerIndex();
+
+>>>>>>> canvas
     // initialize canvas
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
@@ -346,6 +507,7 @@ class Dndgame extends React.Component {
     // can't use a "this" within the each statements, so saving as var out here
     // not super elegant, and we can factor this out later, but it works decently
     // and I'm trying to get everything else to work first
+<<<<<<< HEAD
     var orderArray = this.state.orderArray;
     var orderIndex = this.state.orderIndex;
     var mainMenuCurrentSelection = this.state.mainMenuCurrentSelection;
@@ -355,6 +517,18 @@ class Dndgame extends React.Component {
     var mainMenuOptions = this.state.mainMenuOptions;
     var monsters = this.state.monsters;
     var monsterCurrentSelection = this.state.monsterCurrentSelection;
+=======
+    let orderArray = this.state.orderArray;
+    let orderIndex = this.state.orderIndex;
+    let mainMenuCurrentSelection = this.state.mainMenuCurrentSelection;
+    let subMenuOptions = this.state.subMenuOptions;
+    let subMenuCurrentSelection = this.state.subMenuCurrentSelection;
+    let currentMenu = this.state.currentMenu;
+    let mainMenuOptions = this.state.mainMenuOptions;
+    let monsters = this.state.monsters;
+    let monsterCurrentSelection = this.state.monsterCurrentSelection;
+    let battleAction = this.state.battleAction
+>>>>>>> canvas
 
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
@@ -389,6 +563,7 @@ class Dndgame extends React.Component {
         }
       }
 
+<<<<<<< HEAD
       // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
       ctx.font = "25px Helvetica";
       if (orderArray[orderIndex] == value.name) {
@@ -408,6 +583,34 @@ class Dndgame extends React.Component {
               ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
             });
             break;
+=======
+
+      // Wrapping this function in an if statement to only be triggered if it is a character's turn & statement string is empty
+      if (currentPlayerType == "character" && battleAction == "") {
+
+        // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
+        ctx.font = "25px Helvetica";
+
+        // Determines if the current player in the each loop is equal to the character who's turn it currently is
+        if (currentPlayerIndex == index) {
+          switch (currentMenu) {
+            case "main":
+              $.each(mainMenuOptions, function (index2, value2) {
+                ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 5), ((index2 * 40) + 440));
+              });
+              break;
+            case "sub":
+              $.each(subMenuOptions, function (index2, value2) {
+                ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 5), ((index2 * 40) + 440));
+              });
+              break;
+            case "monster":
+              $.each(monsters, function (index2, value2) {
+                ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
+              });
+              break;
+          }
+>>>>>>> canvas
         }
       }
 
@@ -421,6 +624,10 @@ class Dndgame extends React.Component {
 
     });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> canvas
     // Draw monsters on the screen
     $.each(this.state.monsters, function (index, value) {
       let img = new Image();
@@ -431,8 +638,26 @@ class Dndgame extends React.Component {
       img.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
       // stack party vertically based on order in array
       ctx.fillText("HP:" + value.hp, ((index * 333) + 110), 280);
+<<<<<<< HEAD
     });
 
+=======
+
+      // Check if the current charcter's turn is a monster
+      if (currentPlayerType == "monster") {
+        // Check if the current character matches the index
+        if (currentPlayerIndex == index) {
+          // TODO: add some graphics here to indicate which monster is selected
+        }
+      }
+
+    });
+
+    if (!this.state.battleAction == "") {
+      // TODO: show a "press any key to continue" message
+    }
+
+>>>>>>> canvas
     // Draw the headline text describing what is happening in the game
     ctx.font = "25px Ariel";
     ctx.fillText(this.state.battleAction, 20, 40);
@@ -453,9 +678,26 @@ class Dndgame extends React.Component {
   onKeyDown(ev) {
     console.log(ev.key);
 
+<<<<<<< HEAD
     // First, check if "Enter" key has been received
     if (ev.key == "Enter") {
       this.selectMenu();
+=======
+    // If the battleAction string is not empty, the next key will be the "next" key
+    if (!this.state.battleAction == "") {
+      console.log("Sending an okay command after a battleAction string was displayed");
+      this.channel.push("okay")
+        .receive("ok", resp => {
+          this.setState(resp.game);
+        });
+      return;
+    }
+
+    // First, check if "Enter" key has been received
+    if (ev.key == "Enter") {
+      this.selectMenu();
+      return;
+>>>>>>> canvas
     } else {
 
       // If any other key than enter, check what menu we are in, and increment by one.

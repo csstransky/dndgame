@@ -25,6 +25,7 @@ import dndgame_init from "./dndgame";
 // import socket from "./socket"
 
 $(function () {
+<<<<<<< HEAD
   let gameCanvas = document.getElementById('dndgame');
   if (gameCanvas) {
     let channel = socket.channel("games:" + window.gameName,
@@ -39,6 +40,15 @@ $(function () {
     console.log(ev.target)
     $('#world_name').val(ev.target.id)
   })
+=======
+  let game = document.getElementById('dndgame');
+  console.log("getting element")
+  if (game) {
+    let channel = socket.channel("games:" + "test", {user: "tuck"});
+    dndgame_init(game, channel);
+  }
+
+>>>>>>> canvas
 
   $('#roll').click((ev) => {
     update_stats();

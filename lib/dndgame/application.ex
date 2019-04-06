@@ -6,6 +6,7 @@ defmodule Dndgame.Application do
   use Application
 
   def start(_type, _args) do
+
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
