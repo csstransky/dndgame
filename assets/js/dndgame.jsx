@@ -232,7 +232,7 @@ class Dndgame extends React.Component {
 
   // This figures out what type of display to render in the canvas
   drawDisplay() {
-    if (this.state.monsters.length == 0) {
+    if (!this.state.monsters.length == 0) {
       this.drawGameMap();
     } else {
       this.drawBattleScreen();
@@ -252,7 +252,8 @@ class Dndgame extends React.Component {
 
 
     let drawing = new Image();
-    drawing.src = require("../static/standardWorld.png");
+    
+    drawing.src = require("../static/gameworldmap.png");
     ctx.drawImage(drawing, 500,500);
     //drawing.src = "http://www.foster-douglas.com/img/games/755_Defining_Video_Game_Maps_1.jpg";
 
@@ -267,7 +268,6 @@ class Dndgame extends React.Component {
       ctx.restore(); //restore the state of canvas}
     };
     // character.src = require('./images/char.png');
-    character.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
 
 
     let boss = new Image();
@@ -280,7 +280,7 @@ class Dndgame extends React.Component {
       ctx.restore(); //restore the state of canvas}
     };
     //boss.src = require('./images/char.png');
-    boss.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
+    //boss.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
 
 
     console.log(this.state.other_characters);

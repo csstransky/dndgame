@@ -32,11 +32,15 @@ module.exports = (env, options) => ({
         }
       },
       {
-        test: /\.(png|jpe?g|gif)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000
-        }
+        test: /\.(png|jp(e*)g|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              name: '[path][name].[ext]',
+            },
+          }
+        ],
       },
       {
         test: /\.css$/,
