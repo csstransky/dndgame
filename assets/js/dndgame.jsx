@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from "lodash";
-import testback from "./char.png";
 
 
 export default function dndgame_init(game, channel) {
@@ -257,9 +256,6 @@ class Dndgame extends React.Component {
     }
   }
 
-
-
-
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
     //console.log(require('../static/standardWorld.png'));
@@ -274,22 +270,26 @@ class Dndgame extends React.Component {
     let drawing = new Image();
     
     drawing.src = require("../static/gameworldmap.png");
-    ctx.drawImage(drawing, 500,500);
-    //drawing.src = "http://www.foster-douglas.com/img/games/755_Defining_Video_Game_Maps_1.jpg";
-
+    ctx.drawImage(drawing, -1000,-1000, 3500, 3500);
+    ctx.scale(10,10);
 
     let character = new Image();
-    character.onload = function () {
+
+    character.src = require("../static/ff_sprite.png");
+    ctx.scale(0.018, 0.018);
+    ctx.drawImage(character, 2600, 1500);
+    /*character.onload = function () {
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
       ctx.translate(character.width, character.height); //let's translate
       ctx.rotate(Math.PI / 180 * (character.direction)); //increment the angle and rotate the image
       ctx.drawImage(character, character.x, character.y, 10, 10);
       ctx.restore(); //restore the state of canvas}
-    };
-    // character.src = require('./images/char.png');
+    };*/
 
 
+
+    
     let boss = new Image();
     boss.onload = function () {
       ctx.save(); //saves the state of canvas
@@ -320,10 +320,10 @@ class Dndgame extends React.Component {
     });
 
 
-    ctx.font = "10px Arial";
-    ctx.fillText("Visibility:" + this.state.weather.visibility, 10, 50);
-    ctx.fillText("Temp:" + this.state.weather.temperature, 10, 60);
-    ctx.fillText("Wind:" + this.state.weather.wind, 10, 70);
+    ctx.font = "150px Arial";
+    ctx.fillText("Visibility:" + this.state.weather.visibility, 10, 100);
+    ctx.fillText("Temp:" + this.state.weather.temperature, 10, 250);
+    ctx.fillText("Wind:" + this.state.weather.wind, 10, 400);
 
     return canvas;
 
