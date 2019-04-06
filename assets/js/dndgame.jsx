@@ -178,12 +178,12 @@ class Dndgame extends React.Component {
         temperature: 65,
       },
       orderArray: [
-        "char2",
+        "character1",
+        "monster0",
+        "character0",
         "monster1",
-        "char1",
+        "character2",
         "monster2",
-        "char3",
-        "monster3",
       ],
       orderIndex: 0,
       mainMenuOptions: [
@@ -197,7 +197,7 @@ class Dndgame extends React.Component {
       subMenuCurrentSelection: 0,
       monsterCurrentSelection: 0,
       currentMenu: "main",
-      battleAction: "Why does javascript suck so much, shit",
+      battleAction: "adfasd",
       buildMenuPath: [],
     };
 
@@ -213,8 +213,6 @@ class Dndgame extends React.Component {
 
   got_view(view) {
     this.setState(view.game);
-
-
   }
 
   componentDidMount() {
@@ -238,6 +236,28 @@ class Dndgame extends React.Component {
       this.drawBattleScreen();
     }
   }
+
+  // Parses through the chracter order array based on the current player index to determine the type of the next player
+  determineCurrentPlayerType() {
+    let currentPlayerString = this.state.orderArray[this.state.orderIndex]
+    if (currentPlayerString[0] == "c") {
+      return "character";
+    } else {
+      return "monster";
+    }
+  }
+
+  // Parses through the character array to determine the index (within the character or monster array) of the next chracter
+  determineCurrentPlayerIndex() {
+    let currentPlayerString = this.state.orderArray[this.state.orderIndex]
+    if (currentPlayerString[0] == "c") {
+      return currentPlayerString[9];
+    } else {
+      return currentPlayerString[7];
+    }
+  }
+
+
 
 
   // Here's the big function for drawing the game world when character is not in battle
@@ -311,6 +331,11 @@ class Dndgame extends React.Component {
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
+
+    // There will be used later to render the appropriate menu
+    let currentPlayerType = this.determineCurrentPlayerType();
+    let currentPlayerIndex = this.determineCurrentPlayerIndex();
+
     // initialize canvas
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
@@ -346,15 +371,16 @@ class Dndgame extends React.Component {
     // can't use a "this" within the each statements, so saving as var out here
     // not super elegant, and we can factor this out later, but it works decently
     // and I'm trying to get everything else to work first
-    var orderArray = this.state.orderArray;
-    var orderIndex = this.state.orderIndex;
-    var mainMenuCurrentSelection = this.state.mainMenuCurrentSelection;
-    var subMenuOptions = this.state.subMenuOptions;
-    var subMenuCurrentSelection = this.state.subMenuCurrentSelection;
-    var currentMenu = this.state.currentMenu;
-    var mainMenuOptions = this.state.mainMenuOptions;
-    var monsters = this.state.monsters;
-    var monsterCurrentSelection = this.state.monsterCurrentSelection;
+    let orderArray = this.state.orderArray;
+    let orderIndex = this.state.orderIndex;
+    let mainMenuCurrentSelection = this.state.mainMenuCurrentSelection;
+    let subMenuOptions = this.state.subMenuOptions;
+    let subMenuCurrentSelection = this.state.subMenuCurrentSelection;
+    let currentMenu = this.state.currentMenu;
+    let mainMenuOptions = this.state.mainMenuOptions;
+    let monsters = this.state.monsters;
+    let monsterCurrentSelection = this.state.monsterCurrentSelection;
+    let battleAction = this.state.battleAction
 
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
@@ -389,25 +415,32 @@ class Dndgame extends React.Component {
         }
       }
 
-      // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
-      ctx.font = "25px Helvetica";
-      if (orderArray[orderIndex] == value.name) {
-        switch (currentMenu) {
-          case "main":
-            $.each(mainMenuOptions, function (index2, value2) {
-              ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 5), ((index2 * 40) + 440));
-            });
-            break;
-          case "sub":
-            $.each(subMenuOptions, function (index2, value2) {
-              ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 5), ((index2 * 40) + 440));
-            });
-            break;
-          case "monster":
-            $.each(monsters, function (index2, value2) {
-              ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
-            });
-            break;
+
+      // Wrapping this function in an if statement to only be triggered if it is a character's turn & statement string is empty
+      if (currentPlayerType == "character" && battleAction == "") {
+
+        // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
+        ctx.font = "25px Helvetica";
+
+        // Determines if the current player in the each loop is equal to the character who's turn it currently is
+        if (currentPlayerIndex == index) {
+          switch (currentMenu) {
+            case "main":
+              $.each(mainMenuOptions, function (index2, value2) {
+                ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 5), ((index2 * 40) + 440));
+              });
+              break;
+            case "sub":
+              $.each(subMenuOptions, function (index2, value2) {
+                ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 5), ((index2 * 40) + 440));
+              });
+              break;
+            case "monster":
+              $.each(monsters, function (index2, value2) {
+                ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
+              });
+              break;
+          }
         }
       }
 
@@ -421,6 +454,7 @@ class Dndgame extends React.Component {
 
     });
 
+
     // Draw monsters on the screen
     $.each(this.state.monsters, function (index, value) {
       let img = new Image();
@@ -431,7 +465,20 @@ class Dndgame extends React.Component {
       img.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
       // stack party vertically based on order in array
       ctx.fillText("HP:" + value.hp, ((index * 333) + 110), 280);
+
+      // Check if the current charcter's turn is a monster
+      if (currentPlayerType == "monster") {
+        // Check if the current character matches the index
+        if (currentPlayerIndex == index) {
+          // TODO: add some graphics here to indicate which monster is selected
+        }
+      }
+
     });
+
+    if (!this.state.battleAction == "") {
+      // TODO: show a "press any key to continue" message
+    }
 
     // Draw the headline text describing what is happening in the game
     ctx.font = "25px Ariel";
@@ -453,9 +500,20 @@ class Dndgame extends React.Component {
   onKeyDown(ev) {
     console.log(ev.key);
 
+    // If the battleAction string is not empty, the next key will be the "next" key
+    if (!this.state.battleAction == "") {
+      console.log("Sending an okay command after a battleAction string was displayed");
+      this.channel.push("okay")
+        .receive("ok", resp => {
+          this.setState(resp.game);
+        });
+      return;
+    }
+
     // First, check if "Enter" key has been received
     if (ev.key == "Enter") {
       this.selectMenu();
+      return;
     } else {
 
       // If any other key than enter, check what menu we are in, and increment by one.
