@@ -317,7 +317,7 @@ defmodule Dndgame.Game do
   end
 
   # roll a death save for character
-  def death_save(game, characterIndex) do
+  def death_save(game) do
     # get the character
     character = List.at(game.battleParty, characterIndex)
     # roll the d20 for save failure

@@ -32,7 +32,7 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("walk", directionInt, socket) do
-    worldName= socket.assigns[:worldName]
+    worldName = socket.assigns[:worldName]
     playerName = socket.assigns[:playerName]
     world = BackupAgent.get(worldName)
     # TODO, you may need to change this
@@ -49,6 +49,46 @@ defmodule DndgameWeb.GamesChannel do
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.attack(enemyId)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("use_skill", %{"skillId" => skillId, "enemyIndex" => enemyIndex}, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.use_skill(skillId, enemyIndex)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("use_spell", %{"spellId" => spellId, "enemyIndex" => enemyIndex}, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.use_spell(spellId, enemyIndex)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("run", _payload, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.run()
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("death_save", _payload, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.death_save()
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("enemy_attack", characterIndex, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.enemy_attack(characterIndex)
     BackupAgent.put(playerName, game)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
