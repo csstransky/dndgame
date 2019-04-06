@@ -200,6 +200,7 @@ class Dndgame extends React.Component {
       buildMenuPath: [],
     };
 
+
     this.channel
       .join()
       .receive("ok", this.got_view.bind(this))
@@ -271,6 +272,10 @@ class Dndgame extends React.Component {
 
     let drawing = new Image();
 
+    // So this is strange, but I think you actually need to render it at 0,0
+    // AND THEN move it. It needs to be saved in the browser's cache first, and
+    // this is how it's done.
+    ctx.drawImage(drawing, 0, 0, 3500, 3500);
     drawing.src = require("../static/standardWorld.png");
     ctx.drawImage(drawing, -1280, -2000, 3500, 3500);
     ctx.scale(10,10);

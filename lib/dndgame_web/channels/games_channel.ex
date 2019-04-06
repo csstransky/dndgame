@@ -8,6 +8,7 @@ defmodule DndgameWeb.GamesChannel do
   intercept ["update_players"]
 
   def join("games:" <> name, payload, socket) do
+    IO.inspect("HELLO MR. GAME CHANNEL")
     if authorized?(payload) do
       world = BackupAgent.get(name) || World.new_world(name)
       playerName = Map.get(payload, "user")
