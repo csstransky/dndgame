@@ -319,7 +319,7 @@ defmodule Dndgame.Game do
   # roll a death save for character
   def death_save(game) do
     # get the character
-    character = List.at(game.battleParty, characterIndex)
+    character = List.at(game.battleParty, game.playerIndex)
     # roll the d20 for save failure
     roll = roll_dice("1d20")
     # if greater than 10, update save rolls, if < then update failures
@@ -327,16 +327,16 @@ defmodule Dndgame.Game do
     cond do
       roll == 1 ->
         updated_char = Map.put(character, :deathSavefailures, character.deathSaveFailures + 2)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
+        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
       roll == 20 ->
         updated_char = Map.put(character, :deathSaves, character.deathSaves + 2)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
+        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
       roll >= 10 ->
         updated_char = Map.put(character, :deathSaves, character.deathSaves + 1)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
+        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
       roll < 10 ->
         updated_char = Map.put(character, :deathSaveFailures, character.deathSaveFailures + 1)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, characterIndex, updated_char))
+        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
     end
   end
 
