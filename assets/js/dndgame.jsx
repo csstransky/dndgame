@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from "lodash";
 
-
+// test line
 export default function dndgame_init(game, channel) {
   ReactDOM.render(<Dndgame channel={channel} />, game);
 }
