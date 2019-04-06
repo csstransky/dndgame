@@ -258,7 +258,7 @@ class Dndgame extends React.Component {
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
-    //console.log(require('../static/standardWorld.png'));
+    console.log(require('../static/standardWorld.png'));
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     ctx.fillStyle = "#FFFFFF";
@@ -268,9 +268,9 @@ class Dndgame extends React.Component {
 
 
     let drawing = new Image();
-    
-    drawing.src = require("../static/gameworldmap.png");
-    ctx.drawImage(drawing, -1000,-1000, 3500, 3500);
+
+    drawing.src = require("../static/standardWorld.png");
+    ctx.drawImage(drawing, 0, 0, 3500, 3500);
     ctx.scale(10,10);
 
     let character = new Image();
@@ -289,7 +289,7 @@ class Dndgame extends React.Component {
 
 
 
-    
+
     let boss = new Image();
     boss.onload = function () {
       ctx.save(); //saves the state of canvas
@@ -613,4 +613,3 @@ class Dndgame extends React.Component {
     )
   }
 }
-
