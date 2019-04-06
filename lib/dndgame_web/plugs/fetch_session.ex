@@ -11,4 +11,5 @@ defmodule DndgameWeb.Plugs.FetchSession do
       assign(conn, :current_user, nil)
     end
   end
+
 end
