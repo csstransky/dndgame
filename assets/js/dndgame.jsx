@@ -92,6 +92,15 @@ class Dndgame extends React.Component {
     }
   }
 
+  //ATTRIBUTION: function to calc timezeone
+  // stackoverflow.com/questions/8201655/get-time-of-specific-timezone
+  calcTime(offset) {
+    var d = new Date();
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    var nd = new Date(utc + (3600000 * offset));
+    return Date.parse(nd.toLocaleString());
+  }
+
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
     let canvas = this.refs.canvas;
@@ -108,30 +117,42 @@ class Dndgame extends React.Component {
     // AND THEN move it. It needs to be saved in the browser's cache first, and
     // this is how it's done.
     ctx.drawImage(drawing, 0, 0, 3500, 3500);
-    let date = new Date();
-    console.log(date.getHours());
-
-    console.log(date.getMinutes());
+    
+    // time calculations
+    // current time, still need to do comparisons
+    let date =  this.calcTime(this.state.timezone);
+    
+    
+    // times to compare
+    // 6AM
+    let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 6, 0, 0));
+    // 6PM
+    let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 18, 0, 0));
+    
     // DAY
-    // snow
-    if(this.state.weather.temperature < 30) {
-      drawing.src = require("../static/snow_day.png");
-    } // hot
-    else if (this.state.weather.temperature > 90) {
-      drawing.src = require("../static/hot_day.png");
-    } // anything in between (day)
-    else {
-      drawing.src = require("../static/cool_day.png");
+    if (earlyDate > date > lateDate) {
+      // snow
+      if(this.state.weather.temperature < 30) {
+        drawing.src = require("../static/snow_day.png");
+      }
+       // hot
+      else if (this.state.weather.temperature > 90) {
+        drawing.src = require("../static/hot_day.png");
+      } // anything in between (day)
+      else {
+        drawing.src = require("../static/cool_day.png");
+      }
     }
-
-    if(this.state.weather.temperature < 20) {
-      drawing.src = require("../static/snow_night.png");
-    } // hot
-    else if (this.state.weather.temperature > 80) {
-      drawing.src = require("../static/hot_night.png");
-    } // anything in between (day)
-    else {
-      drawing.src = require("../static/cool_night.png");
+    else { // NIGHT
+      if(this.state.weather.temperature < 20) {
+        drawing.src = require("../static/snow_night.png");
+      } // hot
+      else if (this.state.weather.temperature > 80) {
+        drawing.src = require("../static/hot_night.png");
+      } // anything in between (day)
+      else {
+        drawing.src = require("../static/cool_night.png");
+      }
     }
 
 
