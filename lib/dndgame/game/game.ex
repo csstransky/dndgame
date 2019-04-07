@@ -244,14 +244,13 @@ defmodule Dndgame.Game do
 
   # sets the players position to whatever is sent in the arguments
   def update_player_posn(game, x, y, direction) do
-    newPosn =
-      Enum.at(game.player_posns, game.playerIndex)
-      |> Map.put(:y, y)
-      |> Map.put(:x, x)
-      |> Map.put(:direction, direction)
-
+    newPosn = Enum.at(game.playerPosns, game.playerIndex)
+    |> Map.put(:y, y)
+    |> Map.put(:x, x)
+    |> Map.put(:direction, direction)
+    newPlayerPosns = List.replace_at(game.playerPosns, game.playerIndex, newPosn)
     game
-    |> Map.put(:playerPosns, List.replace_at(game.playerPosns, game.playerIndex, newPosn))
+    |> Map.put(:playerPosns, newPlayerPosns)
   end
 
   # Move the player in a specific direction if that is a valid option, otherwise
@@ -259,44 +258,49 @@ defmodule Dndgame.Game do
   def walk(game, direction) do
     # 0 = up, 1 = right, 2 = down, 3 = left
 
-    player_posn = Enum.at(game.playerPosns, game.playerIndex)
-    player_x = game.playerPosn.x
-    player_y = game.playerPosn.y
+    playerPosn = Enum.at(game.playerPosns, game.playerIndex)
+    playerX = playerPosn.x
+    playerY = playerPosn.y
 
     cond do
-      direction == 0 ->
+      direction == "up" ->
         #check if the above square is walkable
-        if World.is_walkable?(player_x, player_y - 1) do
+        if World.is_walkable?(playerX, playerY - 1) do
           # update y in the posn and the direction
-          update_player_posn(game, player_x, player_y - 1, direction)
+          update_player_posn(game, playerX, playerY - 1, direction)
         else
           # just update the direction
-          update_player_posn(game, player_x, player_y, direction)
+          update_player_posn(game, playerX, playerY, direction)
         end
-      direction == 1 ->
+      direction == "right" ->
         #check if the right square is walkable
-        if World.is_walkable?(player_x + 1, player_y) do
+        if World.is_walkable?(playerX + 1, playerY) do
           # update y in the posn and update the posn in game
-          update_player_posn(game, player_x + 1, player_y, direction)
+          update_player_posn(game, playerX + 1, playerY, direction)
         else
-          update_player_posn(game, player_x, player_y, direction)
+          update_player_posn(game, playerX, playerY, direction)
         end
-      direction == 2 ->
+      direction == "down" ->
         #check if the down square is walkable
-        if World.is_walkable?(player_x, player_y + 1) do
+        if World.is_walkable?(playerX, playerY + 1) do
           # update y in the posn and update the posn in game
-          update_player_posn(game, player_x, player_y + 1, direction)
+          update_player_posn(game, playerX, playerY + 1, direction)
         else
-          update_player_posn(game, player_x, player_y, direction)
+          update_player_posn(game, playerX, playerY, direction)
         end
-      direction == 3 ->
+      direction == "left" ->
         #check if the right square is walkable
-        if World.is_walkable?(player_x - 1, player_y) do
+        if World.is_walkable?(playerX - 1, playerY) do
           # update y in the posn and update the posn in game
-          update_player_posn(game, player_x - 1, player_y, direction)
+          update_player_posn(game, playerX - 1, playerY, direction)
         else
-          update_player_posn(game, player_x, player_y, direction)
+          update_player_posn(game, playerX, playerY, direction)
         end
+      true ->
+        %{
+          error: "Could not find direction",
+          direction: direction,
+        }
     end
   end
 

@@ -13,7 +13,6 @@ defmodule DndgameWeb.GamesChannel do
       world = BackupAgent.get(name) || World.new_world(name)
       playerName = Map.get(payload, "user")
       world = World.join_world(world, playerName)
-
       game = BackupAgent.get(playerName) || Game.new_game(world)
       partyId1 = Map.get(payload, "partyId1")
       partyId2 = Map.get(payload, "partyId2")
@@ -33,14 +32,13 @@ defmodule DndgameWeb.GamesChannel do
     end
   end
 
-  def handle_in("walk", directionInt, socket) do
+  def handle_in("walk", direction, socket) do
     worldName = socket.assigns[:worldName]
     playerName = socket.assigns[:playerName]
     world = BackupAgent.get(worldName)
-    # TODO, you may need to change this
     game = BackupAgent.get(playerName)
-    |> Game.walk(directionInt)
-    world = Map.put_new(world, :playerPosns, game.playerPosns)
+    |> Game.walk(direction)
+    world = Map.put(world, :playerPosns, game.playerPosns)
     BackupAgent.put(worldName, world)
     BackupAgent.put(playerName, game)
     update_players(worldName, playerName)
@@ -134,6 +132,7 @@ defmodule DndgameWeb.GamesChannel do
     if playerName && worldName do
       game = BackupAgent.get(playerName)
       |> Game.update_game_world(world)
+      BackupAgent.put(playerName, game)
       push socket, "update", Game.client_view(game)
       {:noreply, socket}
     else
