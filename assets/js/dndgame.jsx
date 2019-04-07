@@ -130,6 +130,11 @@ class Dndgame extends React.Component {
     if (player != null) {
 
     ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+    let bossDrawing = new Image();
+    // TODO FOR NOAH
+    bossDrawing.src = require("../static/monsters/dragonBossMapSprite.png");
+    ctx.drawImage(bossDrawing, 0-player.x*50,0-player.y*50, PLAYERSIZE, PLAYERSIZE);
+
 
     for (let i = 0; i < this.state.playerPosns.length; i++) {
       let character = new Image();

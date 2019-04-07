@@ -5,7 +5,7 @@ defmodule Dndgame.Game do
 
   @boss_x 40
   @boss_y 40
-  @max_steps_for_encounter 30
+  @max_steps_for_encounter 3000000
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
