@@ -43,7 +43,8 @@ defmodule Dndgame.Game.World do
     # need to offset x by 15, y 12
     offset_x = @worldLogicOffsetX
     offset_y = @worldLogicOffsetY
-    Enum.at(Enum.at(@gameMap, y + offset_y), x + offset_x) == 1
+    #Enum.at(Enum.at(@gameMap, y + offset_y), x + offset_x) == 1
+    true
   end
 
   def join_world(world, playerName) do
