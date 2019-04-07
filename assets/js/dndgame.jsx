@@ -21,7 +21,6 @@ let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMont
 // 6PM
 let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
 
-
 class Dndgame extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +45,6 @@ class Dndgame extends React.Component {
       buildMenuPath: [],
       timezone: 0
     };
-
 
     this.channel
       .join()
@@ -132,8 +130,6 @@ class Dndgame extends React.Component {
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
-
-    ctx.drawImage(drawing, 0, 0, MAPSIZE, MAPSIZE);
     // DAY
     if (earlyDate < date && date < lateDate) {
       // snow
@@ -163,35 +159,32 @@ class Dndgame extends React.Component {
     let player = this.state.playerPosns[this.state.characterIndex];
     let direction;
     if (player != null) {
+      ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
 
-    ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
-
-    for (let i = 0; i < this.state.playerPosns.length; i++) {
-      let character = new Image();
-      let currplayer = this.state.playerPosns[i];
-      direction = currplayer.direction;
-      switch (direction){
-        case "right":
-          character.src = require("../static/character/playerMoveRight.png");
-          break;
-        case "left":
-          character.src = require("../static/character/playerMoveLeft.png");
-          break;
-        case "up":
-          character.src = require("../static/character/playerMoveUp.png");
-          break;
-        case "down":
-          character.src = require("../static/character/playerMoveDown.png");
-          break;
-        default:
-          console.log("broken");
-          break;
-      }
-
-    ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
+      for (let i = 0; i < this.state.playerPosns.length; i++) {
+        let character = new Image();
+        let currplayer = this.state.playerPosns[i];
+        direction = currplayer.direction;
+        switch (direction){
+          case "right":
+            character.src = require("../static/character/playerMoveRight.png");
+            break;
+          case "left":
+            character.src = require("../static/character/playerMoveLeft.png");
+            break;
+          case "up":
+            character.src = require("../static/character/playerMoveUp.png");
+            break;
+          case "down":
+            character.src = require("../static/character/playerMoveDown.png");
+            break;
+          default:
+            console.log("broken");
+            break;
+        }
+      ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
     }
-
-    }
+  }
 
 
     /*let boss = new Image();
@@ -293,7 +286,7 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, (index * 333) + 260, 550, 50, 50);
       }, false);
-      img.src = require("../static/monsters/iceZomebie.png");
+      img.src = require("../static/monsters/iceZombie.png");
 
 
       // This determines if the given "option" number matches the currently selected menu option and returns
@@ -317,36 +310,6 @@ class Dndgame extends React.Component {
           return "";
         }
       }
-
-      function getMonsterImage(monster) {
-        switch (monster.name.toLowerCase()){
-          case "goblin":
-            img.src = require("../static/monsters/goblin.png");
-            break;
-          case "fire goblin":
-            img.src = require("../static/monsters/fireGoblin.png");
-            break;
-          case "ice goblin":
-            img.src = require("../static/monsters/iceGoblin.png");
-            break;
-          case "zombie":
-            img.src = require("../static/monsters/zombie.png");
-            break;
-          case "fire zombie":
-            img.src = require("../static/monsters/fireZombie.png");
-            break;
-          case "ice zombie":
-            img.src = require("../static/monsters/iceZombie.png");
-            break;
-          case "young green dragon":
-            img.src = require("../static/monsters/dragonBossBattleSprite.png");
-            break;
-          default:
-            console.log("monster does not have image loaded for it");
-            break;
-        }
-      }
-
 
       // Wrapping this function in an if statement to only be triggered if it is a character's turn & statement string is empty
       if (currentPlayerType == "character" && battleAction == "") {
@@ -385,6 +348,27 @@ class Dndgame extends React.Component {
 
     });
 
+    function getMonsterImage(monster) {
+      switch (monster.name.toLowerCase()){
+        case "goblin":
+          return require("../static/monsters/goblin.png");
+        case "fire goblin":
+          return require("../static/monsters/fireGoblin.png");
+        case "ice goblin":
+          return require("../static/monsters/iceGoblin.png");
+        case "zombie":
+          return require("../static/monsters/zombie.png");
+        case "fire zombie":
+          return require("../static/monsters/fireZombie.png");
+        case "ice zombie":
+          return require("../static/monsters/iceZombie.png");
+        case "young green dragon":
+          return require("../static/monsters/dragonBossBattleSprite.png");
+        default:
+          console.log("monster does not have image loaded for it");
+          return null;
+      }
+    }
 
     let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
     // Draw monsters on the screen
@@ -393,7 +377,7 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 200);
       }, false);
-      
+
       img.src = getMonsterImage(monster);
 
       // stack party vertically based on order in array
