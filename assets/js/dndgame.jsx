@@ -55,7 +55,7 @@ class Dndgame extends React.Component {
 
   componentDidMount() {
     this.drawDisplay();
-    //this.interval = setInterval(() => this.setState(this.drawGameMap()), 50000);
+    this.interval = setInterval(() => this.setState(this.drawDisplay()), 60);
   }
 
   componentWillUnmount() {
@@ -398,6 +398,9 @@ class Dndgame extends React.Component {
         console.log(newPlayerPosns);
         newPlayerPosns[this.state.characterIndex].y += 30;
         this.setState({playerPosns: newPlayerPosns});
+//         this.channel.push("move_paddle", {paddle_move_dist: -1 * PADDLE_MOVE})
+//   .receive("ok", this.got_view.bind(this));
+// this.draw_canvas();
       }
       else if (ev.key == "a" || ev.which == leftArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
