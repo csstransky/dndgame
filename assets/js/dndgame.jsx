@@ -124,67 +124,39 @@ class Dndgame extends React.Component {
     ctx.strokeRect(0, 0, 1000, 600);
     ctx.fillRect(0, 0, 1000, 600);
 
-
-    let drawing = new Image();
-
-    // time calculations
-    // current time, still need to do comparisons
-    let date =  this.calcTime(this.state.timezone);
-    // DAY
-    if (earlyDate < date && date < lateDate) {
-      // snow
-      if(this.state.weather.temperature < 30) {
-        drawing.src = require("../static/snow_day.png");
-      }
-       // hot
-      else if (this.state.weather.temperature > 90) {
-        drawing.src = require("../static/hot_day.png");
-      } // anything in between (day)
-      else {
-        drawing.src = require("../static/cool_day.png");
-      }
-    }
-    else { // NIGHT
-      if(this.state.weather.temperature < 20) {
-        drawing.src = require("../static/snow_night.png");
-      } // hot
-      else if (this.state.weather.temperature > 80) {
-        drawing.src = require("../static/hot_night.png");
-      } // anything in between (day)
-      else {
-        drawing.src = require("../static/cool_night.png");
-      }
-    }
-
+    let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.characterIndex];
     let direction;
     if (player != null) {
-      ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
 
-      for (let i = 0; i < this.state.playerPosns.length; i++) {
-        let character = new Image();
-        let currplayer = this.state.playerPosns[i];
-        direction = currplayer.direction;
-        switch (direction){
-          case "right":
-            character.src = require("../static/character/playerMoveRight.png");
-            break;
-          case "left":
-            character.src = require("../static/character/playerMoveLeft.png");
-            break;
-          case "up":
-            character.src = require("../static/character/playerMoveUp.png");
-            break;
-          case "down":
-            character.src = require("../static/character/playerMoveDown.png");
-            break;
-          default:
-            console.log("broken");
-            break;
-        }
-      ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
+    ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+
+    for (let i = 0; i < this.state.playerPosns.length; i++) {
+      let character = new Image();
+      let currplayer = this.state.playerPosns[i];
+      direction = currplayer.direction;
+      switch (direction){
+        case "right":
+          character.src = require("../static/character/playerMoveRight.png");
+          break;
+        case "left":
+          character.src = require("../static/character/playerMoveLeft.png");
+          break;
+        case "up":
+          character.src = require("../static/character/playerMoveUp.png");
+          break;
+        case "down":
+          character.src = require("../static/character/playerMoveDown.png");
+          break;
+        default:
+          console.log("broken");
+          break;
+      }
+
+    ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
     }
-  }
+
+    }
 
 
     /*let boss = new Image();
@@ -217,6 +189,10 @@ class Dndgame extends React.Component {
 
 */
     ctx.font = "25px Arial";
+    ctx.fillStyle = "#70a4be";
+    ctx.fillRect(0, 0, 180, 120);
+    ctx.stroke();
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillText("Visibility:" + this.state.weather.visibility, 10,30);
     ctx.fillText("Temp:" + this.state.weather.temperature, 10, 65);
     ctx.fillText("Wind:" + this.state.weather.wind, 10, 100);
@@ -224,6 +200,41 @@ class Dndgame extends React.Component {
     return canvas;
 
   };
+
+  getEnvironmentMap() {
+    let drawing = new Image();
+
+    // time calculations
+    // current time, still need to do comparisons
+    let date =  this.calcTime(this.state.timezone);
+
+    // DAY
+    if (earlyDate < date && date < lateDate) {
+      // snow
+      if(this.state.weather.temperature < 30) {
+        drawing.src = require("../static/snow_day.png");
+      }
+       // hot
+      else if (this.state.weather.temperature > 90) {
+        drawing.src = require("../static/hot_day.png");
+      } // anything in between (day)
+      else {
+        drawing.src = require("../static/cool_day.png");
+      }
+    }
+    else { // NIGHT
+      if(this.state.weather.temperature < 20) {
+        drawing.src = require("../static/snow_night.png");
+      } // hot
+      else if (this.state.weather.temperature > 80) {
+        drawing.src = require("../static/hot_night.png");
+      } // anything in between (day)
+      else {
+        drawing.src = require("../static/cool_night.png");
+      }
+    }
+    return drawing;
+  }
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
@@ -238,7 +249,32 @@ class Dndgame extends React.Component {
     // x: 600, Y: 800
     ctx.clearRect(0, 0, 1050, 650);
 
+    let drawing = this.getEnvironmentMap();
+    let player = this.state.playerPosns[this.state.characterIndex];
+    ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+    ctx.stroke();
+
+    // Top background for header
+    ctx.fillStyle = "#70a4be";
+    ctx.fillRect(0, 0, 1050, 50);
+    ctx.stroke();
+
+    // Bottom background for party
+    ctx.fillRect(0, 400, 1050, 650);
+    ctx.stroke();
+
+    // divide up the bottom of the screen for menus
+
     // screen setup
+
+    let date =  this.calcTime(this.state.timezone);
+    if (earlyDate < date && date < lateDate) {
+      // DAY
+      ctx.fillStyle = "#000000";
+    }
+    else {
+      ctx.fillStyle = "#FFFFFF";
+    }
     ctx.rect(0, 0, 1050, 650);
     ctx.stroke();
 
@@ -286,8 +322,6 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, (index * 333) + 260, 550, 50, 50);
       }, false);
-      img.src = require("../static/monsters/iceZombie.png");
-
 
       // This determines if the given "option" number matches the currently selected menu option and returns
       // a " <-" string to append to that menu option to indicate it has been selected.
