@@ -31,6 +31,7 @@ class Dndgame extends React.Component {
       currentMenu: "main",
       battleAction: "",
       buildMenuPath: [],
+      timezone: 0
     };
 
 
@@ -47,6 +48,8 @@ class Dndgame extends React.Component {
   }
 
   got_view(view) {
+    console.log("VIEW");
+    console.log(view.game);
     this.setState(view.game);
   }
 
@@ -122,7 +125,7 @@ class Dndgame extends React.Component {
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
-    console.log(this.state);
+    console.log(this.state.timezone);
     
     // times to compare
     // 6AM
