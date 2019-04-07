@@ -416,9 +416,8 @@ defmodule Dndgame.Game do
     allRolls = characterRolls ++ monsterRolls
 
     # sort using the initiative so that the highest comes first
-    sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end)
-
-    # put in the sorted array and set the current index to 0
+    sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end
+    |> Enum.map(fn roll -> roll.name end)
     game
     |> Map.put(:orderArray, sortedOrderArray)
     |> Map.put(:orderIndex, 0)
