@@ -140,7 +140,7 @@ class Dndgame extends React.Component {
 
     let character = new Image();
 
-    character.src = require("../static/ff_sprite.png");
+    character.src = require("../static/player_move_down.png");
     ctx.drawImage(character, 470, 270, 35, 35);
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
