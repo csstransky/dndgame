@@ -33,7 +33,7 @@ class Dndgame extends React.Component {
       buildMenuPath: [],
     };
 
-    
+
     this.channel
       .join()
       .receive("ok", this.got_view.bind(this))
@@ -43,7 +43,7 @@ class Dndgame extends React.Component {
 
     this.channel.on("update", resp => {
       this.setState(resp)
-    }); 
+    });
   }
 
   got_view(view) {
@@ -103,6 +103,7 @@ class Dndgame extends React.Component {
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
+    console.log(require('../static/cool_day.png'));
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     ctx.fillStyle = "#FFFFFF";
@@ -160,7 +161,7 @@ class Dndgame extends React.Component {
 
     let character = new Image();
 
-    character.src = require("../static/ff_sprite.png");
+    character.src = require("../static/player_move_down.png");
     ctx.drawImage(character, 470, 270, 35, 35);
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
@@ -394,19 +395,19 @@ class Dndgame extends React.Component {
         let newPlayerPosns = this.state.playerPosns.slice();
         newPlayerPosns[this.state.characterIndex].x += 30;
         this.setState({playerPosns: newPlayerPosns});
- 
+
       }
       else if (ev.key == "s") {
         let newPlayerPosns = this.state.playerPosns.slice();
         newPlayerPosns[this.state.characterIndex].y -= 30;
         this.setState({playerPosns: newPlayerPosns});
- 
+
       }
       else if (ev.key == "d") {
         let newPlayerPosns = this.state.playerPosns.slice();
         newPlayerPosns[this.state.characterIndex].x -= 30;
         this.setState({playerPosns: newPlayerPosns});
- 
+
       }
 
     }
