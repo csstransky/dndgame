@@ -34,7 +34,7 @@ defmodule Dndgame.Game.World do
       worldName == "everest" ->
         Darkskyx.current(27.986065, 86.922623)
         |> Map.put_new(:timezone, +5)
-      true -> 
+      true ->
         %{error: "World not found"}
     end
   end
@@ -43,7 +43,7 @@ defmodule Dndgame.Game.World do
     # need to offset x by 15, y 12
     offset_x = @worldLogicOffsetX
     offset_y = @worldLogicOffsetY
-    Enum.at(Enum.at(@gameMap, offset_y), offset_x)
+    Enum.at(Enum.at(@gameMap, y - offset_y), x - offset_x)
   end
 
   def join_world(world, playerName) do

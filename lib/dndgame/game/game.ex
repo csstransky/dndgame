@@ -325,20 +325,19 @@ defmodule Dndgame.Game do
     # roll the d20 for save failure
     roll = roll_dice("1d20")
     # if greater than 10, update save rolls, if < then update failures
-    updated_char = %{}
     cond do
       roll == 1 ->
         updated_char = Map.put(character, :deathSavefailures, character.deathSaveFailures + 2)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
+        update_battle_party(game, updated_char)
       roll == 20 ->
         updated_char = Map.put(character, :deathSaves, character.deathSaves + 2)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
+        update_battle_party(game, updated_char)
       roll >= 10 ->
         updated_char = Map.put(character, :deathSaves, character.deathSaves + 1)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
+        update_battle_party(game, updated_char)
       roll < 10 ->
         updated_char = Map.put(character, :deathSaveFailures, character.deathSaveFailures + 1)
-        Map.put(game, :battleParty, List.replace_at(game.battleParty, game.playerIndex, updated_char))
+        update_battle_party(game, updated_char)
     end
   end
 
@@ -358,6 +357,21 @@ defmodule Dndgame.Game do
     Enum.at(game.staticParty, charIndex)
   end
 
+  # get the index of the character whose turn it is
+  def get_character_index(game) do
+    charString = Enum.at(game.orderArray, game.orderIndex)
+    characterIndex = String.replace(charString, ~r/[^\d]/, "")
+  end
+
+  # updates the given newChar into the battleParty for the game
+  def update_battle_party(game, newChar) do
+    idx = get_character_index(game)
+    # replace the character in the battle party and update the game
+    newBattleParty = List.replace_at(game.battleParty, idx, newChar)
+
+    game
+    |> Map.replace(:battleParty, newBattleParty)
+  end
 
   # use a specific skill on a certain enemy
   def use_skill(game, skillId, targetId) do
@@ -432,27 +446,25 @@ defmodule Dndgame.Game do
 
     # get the attack of this character
     attack = character.weapon.attack
-
     # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
     attackRoll = roll_dice("1d20") + stat_mod(character)
-            + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
-
-      # if it is a hit
-      if attackRoll > enemy.ac do
-        # calculate damage
-        damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
-        # take damage out of enemy hp
-        hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
-        # replace less hp monster and update battleAction in game
-        game
-        |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
-        |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
-                              to #{enemy.name} with #{attack.name}")
-      else
-        game
-        |> Map.replace(:battleAction, "#{character.name} tried to attack
-                              #{enemy.name} with #{attack.name}, but it missed")
-      end
+    + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+    # if it is a hit
+    if attackRoll > enemy.ac do
+      # calculate damage
+      damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+      # take damage out of enemy hp
+      hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
+      # replace less hp monster and update battleAction in game
+      game
+      |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+      |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
+      to #{enemy.name} with #{attack.name}")
+    else
+      game
+      |> Map.replace(:battleAction, "#{character.name} tried to attack
+      #{enemy.name} with #{attack.name}, but it missed")
+    end
   end
 
   def enemy_attack(game, characterId) do
@@ -463,12 +475,10 @@ defmodule Dndgame.Game do
 
     # get the target character of the attack
     targetCharacter = Enum.at(game.battleParty, characterId)
-
     # get the list of this enemy's available attacks
     attackList = enemy.attacks
     # pick a random attack to use this turn, based off length of attackList
     attack = List.at(attackList, :rand.uniform(length(attackList)) - 1)
-
     attackRoll = roll_dice("1d20") + attack.attack_bonus
 
     # if it is indeed a hit based off the attackRoll
@@ -479,7 +489,7 @@ defmodule Dndgame.Game do
       hitCharacter = Map.replace(targetCharacter, :hp, targetCharacter.hp - damage)
       # replace the character in the game and update the battle action
       game
-      |> Map.replace(:battleParty, List.replace_at(game.battleParty, characterId, hitCharacter))
+      |> update_battle_party(hitCharacter)
       |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to
                                    #{targetCharacter.name} with #{attack.name}")
     else
@@ -499,27 +509,71 @@ defmodule Dndgame.Game do
     character = get_character_battle(game)
     static_char = get_character_static(game)
     static_mp = Dndgame.Characters.get_mp(static_char)
-
     # update the character to have full mana again
     updated_char = Map.replace(character, :mp, static_mp)
-
-    # variable to update the character in the list
-    updated_party = List.replace_at(game.battleParty, targetId, updated_char)
-
     # update the battle party in the game and the battleAction text
     game
-    |> Map.put(:battleParty, updated_party)
+    |> update_battle_party(updated_char)
     |> Map.put(:battleAction, "#{updated_char.name} restored to #{static_mp} mana with Short Rest.")
-
   end
 
   def double_attack(game, targetId) do
     # simply do 2 attacks
+    # get the character whose turn it is
+    character = get_character_battle(game)
+    enemy = Enum.at(game.monsters, enemyId)
+    doubleAttack = Dndgame.Skills.get_skill_by_name("Double Attack")
+    # get the attack of this character
+    attack = character.weapon.attack
+    # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
+    attackRoll1 = roll_dice("1d20") + stat_mod(character)
+    + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+    attackRoll2 = roll_dice("1d20") + stat_mod(character)
+    + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+    # update the characters sp to reflect the cost of Double Attack
+    newChar = Map.replace(character, :sp, character.sp - doubleAttack.sp_cost)
+
+    cond do
+      # if both rolls are hits
+      attackRoll1 > enemy.ac && attackRoll2 > enemy.ac ->
+        # calculate damage
+        damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+        fullDamage = damage + damage
+        # take damage out of enemy hp
+        hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
+        # replace less hp monster and update battleAction in game
+        game
+        |> update_battle_party(newchar)
+        |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+        |> Map.replace(:battleAction, "#{character.name} did #{fullDamage} damage
+        to #{enemy.name} using Double Attack with #{attack.name}")
+
+      # if only one of the rolls hit
+      attackRoll1 > enemy.ac && attackRoll2 <= enemy.ac or attackRoll1 <= enemy.ac && attackRoll2 > enemy.ac ->
+        damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+        # take damage out of enemy hp
+        hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
+        # replace less hp monster and update battleAction in game
+        game
+        |> update_battle_party(newChar)
+        |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+        |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
+        to #{enemy.name} with one hit using Double Attack with #{attack.name}")
+
+      attackRoll1 <= enemy.ac && attackRoll2 <= enemy.ac ->
+        game
+        |> update_battle_party(newChar)
+        |> Map.replace(:battleAction, "#{character.name} tried to Double Attack
+                              #{enemy.name} with #{attack.name}, but it missed")
+    end
   end
 
-  def rage(game, targetId) do
+  def rage(game) do
     # increase "dice" to character's strength
     # if str is greater than 30, set str to 30
+
+    char = get_character_battle(game)
+
   end
 
   def turn_undead(game, targetId) do
@@ -649,12 +703,31 @@ defmodule Dndgame.Game do
   end
 
   def cure_wounds(game, targetId) do
-   # add hp to the chosen character 1d8 + your spellcasting ability modifier.
+    # add hp to the chosen character 1d8 + your spellcasting ability modifier.
 
-   # the only person that does this is cleric, so look at character.class.ability_modifier
-   # and then get the modifier from that stat with get_stat_modifier(stat)
-   # example: ability_modifier: "CHA", cha: 12, roll: 5
-   # OUTPUT: 5 + 1 to chosen character
+    # the only person that does this is cleric, so look at character.class.ability_modifier
+    # and then get the modifier from that stat with get_stat_modifier(stat)
+    # example: ability_modifier: "CHA", cha: 12, roll: 5
+    # OUTPUT: 5 + 1 to chosen character
+
+    # get the character and the spell
+    char = get_character_battle(game)
+    staticChar = get_character_static(game)
+    staticHP = staticChar.hp
+    cureWounds = Dndgame.Spells.get_spell_by_name("Cure Wounds")
+    # get the stat modifier for the character
+    statMod = get_character_stat_mod(char.class.ability_modifier)
+    # calculate the hp buff given via dice roll + stat modifier
+    buff = roll_dice(cureWounds.dice) + statMod
+    # update the characters hp
+    newHP = Enum.min([staticChar.hp, char.hp + buff])
+    newChar = Map.replace(char, :hp, newHP)
+    idx = get_character_index(game)
+    # replace the character in the battle party and update the game
+    newBattleParty = List.replace_at(game.battleParty, idx, newChar)
+    game
+    |> Map.replace(:battleParty, newBattleParty)
+    |> Map.replace(:battleAction, "#{char.name} restored #{buff} hp with Cure Wounds")
   end
 
 
@@ -662,6 +735,18 @@ defmodule Dndgame.Game do
     # roll the "die" to add to the ac of the target
     # make sure that the ac is increased in the battle party
     char = get_character_battle(game)
+    spellShield = Dndgame.Spells.get_spell_by_name("Shield of Faith")
+    # get the increase in AC by rolling the spell's dice
+    increase = roll_dice(spellShield.dice)
 
+    # get haracter's index and replace the updated character into battleParty
+    charIndex = get_character_index(game)
+    newChar = Map.replace(char, :ac, char.ac + increase)
+    newBattleParty = List.replace_at(game.battleParty, charIndex, newChar)
+
+    game
+    |> Map.replace(:battleParty, newBattleParty)
+    |> Map.replace(:battleAction, "#{char.name} increased ac by #{increase}
+    with Shield of Faith")
   end
 end
