@@ -163,24 +163,33 @@ class Dndgame extends React.Component {
     let direction;
     if (player != null) {
 
-    direction = player.direction;
     ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
-    let character = new Image();
-    
-    if (direction == "right") {
-      character.src = require("../static/character/playerMoveRight.png");
-    }
-    else  if (direction == "left") {
-      character.src = require("../static/character/playerMoveLeft.png");
-    }
-     else  if (direction == "up") {
-      character.src = require("../static/character/playerMoveUp.png");
-    }
-    else  if (direction == "down") {
-      character.src = require("../static/character/playerMoveDown.png");
-    }
+
+    for (let i = 0; i < this.state.playerPosns.length; i++) {
+      let character = new Image();
+      let currplayer = this.state.playerPosns[i];
+      direction = currplayer.direction;
+      switch (direction){
+        case "right":
+          character.src = require("../static/character/playerMoveRight.png");
+          break;
+        case "left":
+          character.src = require("../static/character/playerMoveLeft.png");
+          break;
+        case "up":
+          character.src = require("../static/character/playerMoveUp.png");
+          break;
+        case "down":
+          character.src = require("../static/character/playerMoveDown.png");
+          break;
+        default: 
+          console.log("broken");
+          break;
+      }
 
     ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
+    }
+
     }
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
