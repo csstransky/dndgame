@@ -404,10 +404,18 @@ defmodule Dndgame.Game do
   end
 
   def add_order_array(game) do
-    # TODO make this better in the future
-    orderArray = ["character0", "monster0"]
+    characterRolls = Enum.map(Enum.with_index(game.staticParty), fn {char, index} ->
+      %{name: "character#{index}", init: roll_dice(@d20) + Dndgame.Characters.get_initiative(char)} end)
+
+    monsterRolls = Enum.map(Enum.with_index(game.monsters), fn {monster, index} ->
+      %{name: "monster#{index}", init: roll_dice(@d20) + Dndgame.Characters.get_initiative(monster)} end)
+
+    allRolls = characterRolls ++ monsterRolls
+
+    sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end)
+
     game
-    |> Map.put(:orderArray, orderArray)
+    |> Map.put(:orderArray, sortedOrderArray)
     |> Map.put(:orderIndex, 0)
   end
 
