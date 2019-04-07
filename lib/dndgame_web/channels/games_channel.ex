@@ -9,7 +9,9 @@ defmodule DndgameWeb.GamesChannel do
 
   def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
+
       world = BackupAgent.get(name) || World.new_world(name)
+      IO.puts("here")
       playerName = Map.get(payload, "user")
       partyId1 = Map.get(payload, "partyId1")
       partyId2 = Map.get(payload, "partyId2")

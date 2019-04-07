@@ -15,6 +15,7 @@ defmodule Dndgame.Game.World do
   def call_weather_api(worldName) do
     cond do
       worldName == "boston" ->
+        IO.puts("DARKSKY")
         Darkskyx.current(42.361145, -71.057083)
         |> Map.put_new(:timezone, -4)
       worldName == "death-valley" ->
