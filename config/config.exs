@@ -27,6 +27,10 @@ config :phoenix, :json_library, Jason
 
 config :oauth2, debug: true
 
+config :mime, :types, %{
+  "application/xml" => ["xml"]
+}
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

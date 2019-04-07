@@ -2,12 +2,20 @@
   <p>Login Page</p>
   <div>
 
-    <a class="btn btn-primary btn-lg" href="<%= Routes.auth_path(@conn, :index2, "google") %>">
+    <a class="btn btn-primary btn-lg" href="<%= Routes.auth_path(@conn, :index, "google") %>">
       <i class="fa fa-google"></i>
       Sign in with Google
     </a>
 
     <p>- Or -</p>
+
+    <a class="btn btn-primary btn-lg" href="<%= Routes.auth_path(@conn, :index, "github") %>">
+          <i class="fa fa-google"></i>
+          Sign in with GitHub
+        </a>
+
+    <p>- Or -</p>
+
 
     <%= form_for @conn, Routes.session_path(@conn, :create),
                          [class: "form-inline"], fn f -> %>

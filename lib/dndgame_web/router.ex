@@ -2,11 +2,12 @@ defmodule DndgameWeb.Router do
   use DndgameWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "json"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :assign_current_user
     plug DndgameWeb.Plugs.FetchSession
   end
 
@@ -55,7 +56,7 @@ defmodule DndgameWeb.Router do
   scope "/auth", DndgameWeb do
     pipe_through :browser
 
-    get "/:provider", AuthController, :index2
+    get "/:provider", AuthController, :index
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
   end
@@ -69,4 +70,8 @@ defmodule DndgameWeb.Router do
   # defp assign_current_user(conn, _) do
   #  assign(conn, :current_user, get_session(conn, :current_user))
   # end
+  defp assign_current_user(conn, _) do
+    IO.inspect("Running assign_current_user in router.ex")
+    assign(conn, :current_user, get_session(conn, :current_user))
+  end
 end
