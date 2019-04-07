@@ -6,8 +6,16 @@ import _ from "lodash";
 export default function dndgame_init(game, channel) {
   ReactDOM.render(<Dndgame channel={channel} />, game);
 }
-let WIDTH = 800;
-let HEIGHT = 600;
+let WIDTH = 1050;
+let HEIGHT = 650;
+let XOFFSET = 50;
+let YOFFSET = 50;
+let DAWNHOUR = 6;
+let DUSKHOUR = 18;
+let PLAYERX = 500;
+let PLAYERY = 300;
+let PLAYERSIZE = 50;
+let MAPSIZE = 4000;
 
 class Dndgame extends React.Component {
   constructor(props) {
@@ -107,7 +115,6 @@ class Dndgame extends React.Component {
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
-    console.log(require('../static/cool_day.png'));
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     ctx.fillStyle = "#FFFFFF";
@@ -118,11 +125,6 @@ class Dndgame extends React.Component {
 
     let drawing = new Image();
 
-    // So this is strange, but I think you actually need to render it at 0,0
-    // AND THEN move it. It needs to be saved in the browser's cache first, and
-    // this is how it's done.
-    ctx.drawImage(drawing, 0, 0, 3500, 3500);
-
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
@@ -130,9 +132,9 @@ class Dndgame extends React.Component {
 
     // times to compare
     // 6AM
-    let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 6, 0, 0));
+    let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DAWNHOUR, 0, 0));
     // 6PM
-    let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 18, 0, 0));
+    let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
 
     // DAY
     if (earlyDate < date < lateDate) {
@@ -161,12 +163,14 @@ class Dndgame extends React.Component {
     }
 
 
-    ctx.drawImage(drawing, -1324 + this.state.playerPosns[this.state.characterIndex].x, -2074 + this.state.playerPosns[this.state.characterIndex].y, 3500, 3500);
-
+    //ctx.drawImage(drawing, -1324 + this.state.playerPosns[this.state.characterIndex].x, -2074 + this.state.playerPosns[this.state.characterIndex].y, 3500, 3500);
+    drawing.src = require("../static/bordered_gamemap.png");
+    ctx.drawImage(drawing, -750, -600, MAPSIZE, MAPSIZE);
     let character = new Image();
 
-    character.src = require("../static/character/playerMoveDown.png");
-    ctx.drawImage(character, 470, 270, 35, 35);
+    character.src = require("../static/character/playerMoveRight.png");
+    ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
+
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
@@ -401,28 +405,27 @@ class Dndgame extends React.Component {
         // this.setState({playerPosns: newPlayerPosns});
         this.channel.push("walk", "up").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
-
-//         this.channel.push("move_paddle", {paddle_move_dist: -1 * PADDLE_MOVE})
-//   .receive("ok", this.got_view.bind(this));
-// this.draw_canvas();
       }
       else if (ev.key == "a" || ev.which == leftArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayerPosns[this.state.characterIndex].x += 30;
-        this.setState({playerPosns: newPlayerPosns});
-
+        // newPlayerPosns[this.state.characterIndex].x += 30;
+        // this.setState({playerPosns: newPlayerPosns});
+        this.channel.push("walk", "left").receive("ok", this.got_view.bind(this));
+        this.drawDisplay();
       }
       else if (ev.key == "s" || ev.which == downArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayerPosns[this.state.characterIndex].y -= 30;
-        this.setState({playerPosns: newPlayerPosns});
-
+        // newPlayerPosns[this.state.characterIndex].y -= 30;
+        // this.setState({playerPosns: newPlayerPosns});
+        this.channel.push("walk", "down").receive("ok", this.got_view.bind(this));
+        this.drawDisplay();
       }
       else if (ev.key == "d" || ev.which == rightArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayerPosns[this.state.characterIndex].x -= 30;
-        this.setState({playerPosns: newPlayerPosns});
-
+        // newPlayerPosns[this.state.characterIndex].x -= 30;
+        // this.setState({playerPosns: newPlayerPosns});
+        this.channel.push("walk", "right").receive("ok", this.got_view.bind(this));
+        this.drawDisplay();
       }
 
     }
@@ -536,7 +539,7 @@ class Dndgame extends React.Component {
   // render function down here, just renders the canvas
   render() {
     return (
-      <canvas id={"canvas"} ref="canvas" tabIndex={-1} width={1000} height={600} onKeyDown={this.onKeyDown.bind(this)}/>
+      <canvas id={"canvas"} ref="canvas" tabIndex={-1} width={WIDTH} height={HEIGHT} onKeyDown={this.onKeyDown.bind(this)}/>
     )
   }
 }
