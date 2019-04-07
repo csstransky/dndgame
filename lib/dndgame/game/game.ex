@@ -7,6 +7,12 @@ defmodule Dndgame.Game do
   @boss_y 40
   @max_steps_for_encounter 30
   @d20 "1d20"
+  @duskTime ~T[18:00:00.0]
+  @dawnTime ~T[06:00:00.0]
+  @nightHotTemp 80
+  @nightColdTemp 20
+  @dayHotTemp 90
+  @dayColdTemp 30
 
   def new_game(world) do
     # You're a new character, so this should be fine
@@ -104,7 +110,7 @@ defmodule Dndgame.Game do
       currentMenu: game.currentMenu, # main, skill, spell, monsterSelect, deathSaves
       battleAction: game.battleAction,
 
-      mainMenuOptions: [],
+      mainMenuOptions: ["attack", "skills", "spells", "run"],
       mainMenuCurrentSelection: 0,
       subMenuOptions: [],
       subMenuCurrentSelection: 0,
@@ -349,10 +355,41 @@ defmodule Dndgame.Game do
   end
 
   def add_environment_monsters(game) do
-    # TODO make this better in the future
-    monster = Dndgame.Monsters.get_monster!(1)
-    game
-    |> Map.put(:monsters, [monster])
+    currTime = Time.utc_now()
+    worldTime = Time.add(currTime, game.timezone*60*60, :second)
+    if @dawnTime < worldTime && worldTime < @duskTime do
+      cond do
+        game.temperature > @dayHotTemp ->
+          # TODO make this better in the future
+          monster = Dndgame.Monsters.get_monster_by_name("Fire Goblin")
+          game
+          |> Map.put(:monsters, [monster])
+        game.temperature < @dayColdTemp ->
+          monster = Dndgame.Monsters.get_monster_by_name("Ice Goblin")
+          game
+          |> Map.put(:monsters, [monster])
+        true ->
+          monster = Dndgame.Monsters.get_monster_by_name("Goblin")
+          game
+          |> Map.put(:monsters, [monster])
+      end
+    else
+      cond do
+        game.temperature > @nightHotTemp ->
+          # TODO make this better in the future
+          monster = Dndgame.Monsters.get_monster_by_name("Fire Zombie")
+          game
+          |> Map.put(:monsters, [monster])
+        game.temperature < @nightColdTemp ->
+          monster = Dndgame.Monsters.get_monster_by_name("Ice Zombie")
+          game
+          |> Map.put(:monsters, [monster])
+        true ->
+          monster = Dndgame.Monsters.get_monster_by_name("Zombie")
+          game
+          |> Map.put(:monsters, [monster])
+      end
+    end
   end
 
   def start_battle(game) do
