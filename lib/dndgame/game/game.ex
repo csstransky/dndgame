@@ -463,17 +463,17 @@ defmodule Dndgame.Game do
     # cond of all skills, goes to a function that deals with the logic of that skill
     cond do
       skillName == "Short Rest" ->
-        short_rest(game, targetId)
+        short_rest(game)
       skillName == "Double Attack" ->
         double_attack(game, targetId)
       skillName == "Rage" ->
-        rage(game, targetId)
+        rage(game)
       skillName == "Turn Undead" ->
         turn_undead(game, targetId)
       skillName == "Sneak Attack" ->
         sneak_attack(game, targetId)
       skillName == "Hide" ->
-        hide(game, targetId)
+        hide(game)
     end
   end
 
@@ -495,7 +495,7 @@ defmodule Dndgame.Game do
     end
   end
 
-  def stat_mod(character) do
+  def get_character_stat_mod(character) do
     # get the type of modifier for the characters class
     statString = character.class.ability_modifier
 
@@ -529,12 +529,12 @@ defmodule Dndgame.Game do
     # get the attack of this character
     attack = character.weapon.attack
     # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
-    attackRoll = roll_dice("1d20") + stat_mod(character)
+    attackRoll = roll_dice("1d20") + get_character_stat_mod(character)
     + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
     # if it is a hit
     if attackRoll > enemy.ac do
       # calculate damage
-      damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+      damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
       # take damage out of enemy hp
       hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
       # replace less hp monster and update battleAction in game
@@ -583,7 +583,7 @@ defmodule Dndgame.Game do
 
   ##### SKILL FUNCTIONS #####
 
-  def short_rest(game, targetId) do
+  def short_rest(game) do
     # goes on self
     # refills mana to full for now
 
@@ -603,14 +603,14 @@ defmodule Dndgame.Game do
     # simply do 2 attacks
     # get the character whose turn it is
     character = get_character_battle(game)
-    enemy = Enum.at(game.monsters, enemyId)
+    enemy = Enum.at(game.monsters, targetId)
     doubleAttack = Dndgame.Skills.get_skill_by_name("Double Attack")
     # get the attack of this character
     attack = character.weapon.attack
     # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
-    attackRoll1 = roll_dice("1d20") + stat_mod(character)
+    attackRoll1 = roll_dice("1d20") + get_character_stat_mod(character)
     + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
-    attackRoll2 = roll_dice("1d20") + stat_mod(character)
+    attackRoll2 = roll_dice("1d20") + get_character_stat_mod(character)
     + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
     # update the characters sp to reflect the cost of Double Attack
     newChar = Map.replace(character, :sp, character.sp - doubleAttack.sp_cost)
@@ -619,26 +619,26 @@ defmodule Dndgame.Game do
       # if both rolls are hits
       attackRoll1 > enemy.ac && attackRoll2 > enemy.ac ->
         # calculate damage
-        damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
         fullDamage = damage + damage
         # take damage out of enemy hp
         hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
         # replace less hp monster and update battleAction in game
         game
-        |> update_battle_party(newchar)
-        |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+        |> update_battle_party(newChar)
+        |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, hitEnemy))
         |> Map.replace(:battleAction, "#{character.name} did #{fullDamage} damage
         to #{enemy.name} using Double Attack with #{attack.name}")
 
       # if only one of the rolls hit
       attackRoll1 > enemy.ac && attackRoll2 <= enemy.ac or attackRoll1 <= enemy.ac && attackRoll2 > enemy.ac ->
-        damage = roll_dice(attack.damage_dice) + stat_mod(character) + attack.damage_bonus
+        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
         # take damage out of enemy hp
         hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
         # replace less hp monster and update battleAction in game
         game
         |> update_battle_party(newChar)
-        |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+        |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, hitEnemy))
         |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
         to #{enemy.name} with one hit using Double Attack with #{attack.name}")
 
@@ -733,7 +733,7 @@ defmodule Dndgame.Game do
     # (stealth pass or fail message)
   end
 
-  def hide(game, targetId) do
+  def hide(game) do
     # do a stealth check
       # roll a d20, add dexterity modifier, and then add proficiency bonus IF
       # you have the "stealth" proficiency
