@@ -5,7 +5,7 @@ defmodule Dndgame.Game do
 
   @boss_x 40
   @boss_y 40
-  @max_steps_for_encounter 3000000
+  @max_steps_for_encounter 30
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
@@ -404,16 +404,21 @@ defmodule Dndgame.Game do
   end
 
   def add_order_array(game) do
+    # map the characters in the party to a list of maps of names and rolls
     characterRolls = Enum.map(Enum.with_index(game.staticParty), fn {char, index} ->
       %{name: "character#{index}", init: roll_dice(@d20) + Dndgame.Characters.get_initiative(char)} end)
 
+    # map the monsters in the array to monster# and rolls
     monsterRolls = Enum.map(Enum.with_index(game.monsters), fn {monster, index} ->
       %{name: "monster#{index}", init: roll_dice(@d20) + Dndgame.Characters.get_initiative(monster)} end)
 
+    # combine the 2 lists of maps
     allRolls = characterRolls ++ monsterRolls
 
+    # sort using the initiative so that the highest comes first
     sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end)
 
+    # put in the sorted array and set the current index to 0
     game
     |> Map.put(:orderArray, sortedOrderArray)
     |> Map.put(:orderIndex, 0)
@@ -738,11 +743,6 @@ defmodule Dndgame.Game do
       # update character by subtracting the sp cost of the move
       newChar = Map.replace(char, :sp, char.sp - skill.sp_cost)
 
-      charString = Enum.at(game.orderArray, game.orderIndex)
-      charIndex = String.replace(charString, ~r/[^\d]/, "")
-
-      newBattleArray = List.replace_at(game.battleParty, charIndex, newChar)
-
       if type == "undead" do
         # if there is more than one monster in the battle array
         if length(game.monsters) > 1 do
@@ -751,7 +751,7 @@ defmodule Dndgame.Game do
           # replace the array and update the battleAction text
           game
           |> Map.replace(:monsters, newMonsters)
-          |> Map.replace(:battleParty, newBattleArray)
+          |> update_battle_party(newChar)
           |> Map.replace(:battleAction,
                               "#{char.name} used Turn Undead on #{enemy.name}")
         else
@@ -760,14 +760,14 @@ defmodule Dndgame.Game do
           # replace the monster in the array and update battleAction text
           game
           |> Map.replace(:monsters, List.replace_at(game.monsters, 0, deadEnemy))
-          |> Map.replace(:battleParty, newBattleArray)
+          |> update_battle_party(newChar)
           |> Map.replace(:battleAction,
                               "#{char.name} used Turn Undead on #{enemy.name}")
         end
       else
         # if the selected creature is not undead, do nothing but remove sp
         game
-        |> Map.replace(:battleParty, newBattleArray)
+        |> update_battle_party(newChar)
         |> Map.replace(:battleAction,
               "#{char.name} attempted to use Turn Undead on the non-undead #{enemy.name}")
       end
