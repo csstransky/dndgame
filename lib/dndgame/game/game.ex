@@ -3,8 +3,8 @@ defmodule Dndgame.Game do
   alias Dndgame.Game.World
   require Protocol
 
-  @starting_x 44
-  @starting_y 64
+  @starting_x 49
+  @starting_y 50
   @boss_x 40
   @boss_y 40
 

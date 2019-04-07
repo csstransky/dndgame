@@ -1,6 +1,6 @@
 defmodule Dndgame.Game.World do
-  @startingX 44
-  @startingY 64
+  @startingX 49
+  @startingY 50
   @startingDirection "down"
   @worldLogicOffsetX 15
   @worldLogicOffsetY 12

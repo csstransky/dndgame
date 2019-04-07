@@ -16,6 +16,11 @@ let PLAYERX = 500;
 let PLAYERY = 300;
 let PLAYERSIZE = 50;
 let MAPSIZE = 4000;
+// 6AM
+let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DAWNHOUR, 0, 0));
+// 6PM
+let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
+
 
 class Dndgame extends React.Component {
   constructor(props) {
@@ -23,7 +28,7 @@ class Dndgame extends React.Component {
 
     this.channel = props.channel;
     this.state = {
-      playerPosns: [{x: 44, y: 64}],
+      playerPosns: [],
       characterIndex: 0,
       party: [],
       monsters: [],
@@ -56,7 +61,6 @@ class Dndgame extends React.Component {
   }
 
   got_view(view) {
-    console.log("VIEW");
     console.log(view.game);
     this.setState(view.game);
   }
@@ -128,16 +132,10 @@ class Dndgame extends React.Component {
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
-    console.log(this.state.timezone);
 
-    // times to compare
-    // 6AM
-    let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DAWNHOUR, 0, 0));
-    // 6PM
-    let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
-
+    ctx.drawImage(drawing, 0, 0, MAPSIZE, MAPSIZE);
     // DAY
-    if (earlyDate < date < lateDate) {
+    if (earlyDate < date && date < lateDate) {
       // snow
       if(this.state.weather.temperature < 30) {
         drawing.src = require("../static/snow_day.png");
@@ -162,15 +160,29 @@ class Dndgame extends React.Component {
       }
     }
 
+    let player = this.state.playerPosns[this.state.characterIndex];
+    let direction;
+    if (player != null) {
 
-    //ctx.drawImage(drawing, -1324 + this.state.playerPosns[this.state.characterIndex].x, -2074 + this.state.playerPosns[this.state.characterIndex].y, 3500, 3500);
-    drawing.src = require("../static/bordered_gamemap.png");
-    ctx.drawImage(drawing, -750, -600, MAPSIZE, MAPSIZE);
+    direction = player.direction;
+    ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
     let character = new Image();
+    
+    if (direction == "right") {
+      character.src = require("../static/character/playerMoveRight.png");
+    }
+    else  if (direction == "left") {
+      character.src = require("../static/character/playerMoveLeft.png");
+    }
+     else  if (direction == "up") {
+      character.src = require("../static/character/playerMoveUp.png");
+    }
+    else  if (direction == "down") {
+      character.src = require("../static/character/playerMoveDown.png");
+    }
 
-    character.src = require("../static/character/playerMoveRight.png");
     ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
-
+    }
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
@@ -400,30 +412,21 @@ class Dndgame extends React.Component {
     if (this.state.monsters.length == 0) {
       if (ev.key == "w" || ev.which == upArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        console.log(newPlayerPosns);
-        // newPlayerPosns[this.state.characterIndex].y += 30;
-        // this.setState({playerPosns: newPlayerPosns});
         this.channel.push("walk", "up").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
       }
       else if (ev.key == "a" || ev.which == leftArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        // newPlayerPosns[this.state.characterIndex].x += 30;
-        // this.setState({playerPosns: newPlayerPosns});
         this.channel.push("walk", "left").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
       }
       else if (ev.key == "s" || ev.which == downArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        // newPlayerPosns[this.state.characterIndex].y -= 30;
-        // this.setState({playerPosns: newPlayerPosns});
         this.channel.push("walk", "down").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
       }
       else if (ev.key == "d" || ev.which == rightArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
-        // newPlayerPosns[this.state.characterIndex].x -= 30;
-        // this.setState({playerPosns: newPlayerPosns});
         this.channel.push("walk", "right").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
       }
