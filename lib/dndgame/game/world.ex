@@ -1,9 +1,9 @@
 defmodule Dndgame.Game.World do
-  @startingX 49
-  @startingY 50
+  @startingX 53
+  @startingY 60
   @startingDirection "down"
-  @worldLogicOffsetX 15
-  @worldLogicOffsetY 12
+  @worldLogicOffsetX 5
+  @worldLogicOffsetY 6
   @gameMap Dndgame.Game.GameMap.get_map()
 
   def new_world(worldName) do
@@ -40,10 +40,14 @@ defmodule Dndgame.Game.World do
   end
 
   def is_walkable?(x, y) do
+    IO.inspect('BEGINNING COORDINATES')
+    IO.inspect(x)
+    IO.inspect(y)
+    IO.inspect('GAME COORDINATES')
+    IO.inspect(y - @worldLogicOffsetY)
+    IO.inspect(x - @worldLogicOffsetX)
     # need to offset x by 15, y 12
-    offset_x = @worldLogicOffsetX
-    offset_y = @worldLogicOffsetY
-    Enum.at(Enum.at(@gameMap, y - offset_y), x - offset_x) == 1
+    Enum.at(Enum.at(@gameMap, y - @worldLogicOffsetY), x - @worldLogicOffsetX) == 1
   end
 
   def join_world(world, playerName) do
