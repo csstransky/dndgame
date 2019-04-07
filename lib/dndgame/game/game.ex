@@ -3,8 +3,6 @@ defmodule Dndgame.Game do
   alias Dndgame.Game.World
   require Protocol
 
-  @starting_x 44
-  @starting_y 64
   @boss_x 40
   @boss_y 40
   @max_steps_for_encounter 30
@@ -350,16 +348,38 @@ defmodule Dndgame.Game do
     end
   end
 
+  def add_environment_monsters(game) do
+    # TODO make this better in the future
+    monster = Dndgame.Monsters.get_monster!(1)
+    game
+    |> Map.put(:monsters, [monster])
+  end
+
+  def start_battle(game) do
+    game
+    |> add_environment_monsters
+    |> add_order_array
+    |> Map.put(:currentMenu, "main")
+    |> Map.put(:battleAction, "")
+    |> Map.put(:steps, 0)
+  end
+
+  def add_order_array(game) do
+    # TODO make this better in the future
+    orderArray = ["character0", "monster0"]
+    game
+    |> Map.put(:orderArray, orderArray)
+    |> Map.put(:orderIndex, 0)
+  end
+
   def random_encounter(game) do
     encounterRoll = roll_dice(@d20)
     IO.inspect("CHECKING ENCOUTNER")
     IO.inspect(encounterRoll)
     IO.inspect(game.steps)
     if encounterRoll + game.steps >= @max_steps_for_encounter do
-      # TODO make this better in the future
-      monster = Dndgame.Monsters.get_monster!(1)
       game
-      |> Map.put(:monsters, [monster])
+      |> start_battle
     else
       IO.inspect("NO ENOUCNTER")
       game

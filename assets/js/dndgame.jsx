@@ -64,7 +64,6 @@ class Dndgame extends React.Component {
   componentDidMount() {
     let fps = 60;
     this.drawDisplay();
-    this.interval = setInterval(() => this.setState(this.drawDisplay()), fps);
   }
 
   componentWillUnmount() {
