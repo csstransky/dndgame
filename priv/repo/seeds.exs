@@ -299,7 +299,7 @@ Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombi
                                 attack: Attacks.get_attack_by_name("Lava Chomp")})
 Repo.insert!(%Monster{name: "Young Green Dragon", hp: 136, ac: 18, type: "dragon",
                       element: "poison", size: 1, str: 19, dex: 12, con: 17,
-                      int: 16, wis: 13, cha: 15})
+                      int: 16, wis: 13, cha: 15}, exp: 10000)
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
                                 attack: Attacks.get_attack_by_name("Dragon Claw")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),

@@ -393,9 +393,11 @@ defmodule Dndgame.Game do
   end
 
   def start_battle(game) do
+    battleParty = game.staticParty
     game
     |> add_environment_monsters
     |> add_order_array
+    |> Map.put(:battleParty, battleParty)
     |> Map.put(:currentMenu, "main")
     |> Map.put(:battleAction, "")
     |> Map.put(:steps, 0)
