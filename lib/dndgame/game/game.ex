@@ -3,10 +3,10 @@ defmodule Dndgame.Game do
   alias Dndgame.Game.World
   require Protocol
 
-  @starting_x 49
-  @starting_y 50
   @boss_x 40
   @boss_y 40
+  @max_steps_for_encounter 30
+  @d20 "1d20"
 
   def new_game(world) do
     # You're a new character, so this should be fine
@@ -117,8 +117,42 @@ defmodule Dndgame.Game do
       Map.put(gameView, :party, staticParty)
     else
       battleParty = Enum.map(game.battleParty, fn character -> character_view(character) end)
-      Map.put(gameView, :party, battleParty)
+      monsters = Enum.map(game.monsters, fn monster -> monster_view(monster) end)
+      gameView
+      |> Map.put(:party, battleParty)
+      |> Map.put(:monsters, monsters)
     end
+  end
+
+  def monster_view(monster) do
+    %{
+      ac: monster.ac,
+      desc: monster.desc,
+      hp: monster.hp,
+      name: monster.name,
+      type: monster.type,
+      element: monster.element,
+      str: monster.str,
+      dex: monster.dex,
+      int: monster.int,
+      con: monster.con,
+      cha: monster.cha,
+      wis: monster.wis,
+      size: monster.size,
+      attacks: Enum.map(monster.attacks, fn attack -> attack_view(attack) end),
+    }
+  end
+
+  def attack_view(attack) do
+    %{
+      attackBonus: attack.attack_bonus,
+      damageBonus: attack.damage_bonus,
+      damageDice: attack.damage_dice,
+      desc: attack.desc,
+      name: attack.name,
+      target: attack.target,
+      type: attack.type,
+    }
   end
 
   def character_view(character) do
@@ -267,7 +301,10 @@ defmodule Dndgame.Game do
         #check if the above square is walkable
         if World.is_walkable?(playerX, playerY - 1) do
           # update y in the posn and the direction
-          update_player_posn(game, playerX, playerY - 1, direction)
+          game
+          |> update_player_posn(playerX, playerY - 1, direction)
+          |> Map.put(:steps, game.steps + 1)
+          |> random_encounter
         else
           # just update the direction
           update_player_posn(game, playerX, playerY, direction)
@@ -276,7 +313,10 @@ defmodule Dndgame.Game do
         #check if the right square is walkable
         if World.is_walkable?(playerX + 1, playerY) do
           # update y in the posn and update the posn in game
-          update_player_posn(game, playerX + 1, playerY, direction)
+          game
+          |> update_player_posn(playerX + 1, playerY, direction)
+          |> Map.put(:steps, game.steps + 1)
+          |> random_encounter
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -285,6 +325,8 @@ defmodule Dndgame.Game do
         if World.is_walkable?(playerX, playerY + 1) do
           # update y in the posn and update the posn in game
           update_player_posn(game, playerX, playerY + 1, direction)
+          |> Map.put(:steps, game.steps + 1)
+          |> random_encounter
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -293,6 +335,8 @@ defmodule Dndgame.Game do
         if World.is_walkable?(playerX - 1, playerY) do
           # update y in the posn and update the posn in game
           update_player_posn(game, playerX - 1, playerY, direction)
+          |> Map.put(:steps, game.steps + 1)
+          |> random_encounter
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -301,6 +345,44 @@ defmodule Dndgame.Game do
           error: "Could not find direction",
           direction: direction,
         }
+    end
+  end
+
+  def add_environment_monsters(game) do
+    # TODO make this better in the future
+    monster = Dndgame.Monsters.get_monster!(1)
+    game
+    |> Map.put(:monsters, [monster])
+  end
+
+  def start_battle(game) do
+    game
+    |> add_environment_monsters
+    |> add_order_array
+    |> Map.put(:currentMenu, "main")
+    |> Map.put(:battleAction, "")
+    |> Map.put(:steps, 0)
+  end
+
+  def add_order_array(game) do
+    # TODO make this better in the future
+    orderArray = ["character0", "monster0"]
+    game
+    |> Map.put(:orderArray, orderArray)
+    |> Map.put(:orderIndex, 0)
+  end
+
+  def random_encounter(game) do
+    encounterRoll = roll_dice(@d20)
+    IO.inspect("CHECKING ENCOUTNER")
+    IO.inspect(encounterRoll)
+    IO.inspect(game.steps)
+    if encounterRoll + game.steps >= @max_steps_for_encounter do
+      game
+      |> start_battle
+    else
+      IO.inspect("NO ENOUCNTER")
+      game
     end
   end
 
