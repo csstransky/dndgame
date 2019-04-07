@@ -15,8 +15,8 @@ class Dndgame extends React.Component {
 
     this.channel = props.channel;
     this.state = {
-      playerPosns: [],
-      characterIndex: 0,
+      playerPosns: [{direction: "down", name: "Cristian", x: 44, y: 64}],
+      playerIndex: 0,
       party: [],
       monsters: [],
       boss: {},
@@ -94,7 +94,7 @@ class Dndgame extends React.Component {
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
-    console.log(require('../static/standardWorld.png'));
+    console.log(require('../static/cool_day.png'));
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     ctx.fillStyle = "#FFFFFF";
@@ -108,8 +108,8 @@ class Dndgame extends React.Component {
     // So this is strange, but I think you actually need to render it at 0,0
     // AND THEN move it. It needs to be saved in the browser's cache first, and
     // this is how it's done.
-    ctx.drawImage(drawing, 0 - this.state.playerPosns[this.state.characterIndex].x, 0 - this.state.playerPosns[this.state.characterIndex],y, 3500, 3500);
-    drawing.src = require("../static/standardWorld.png");
+    ctx.drawImage(drawing, 0 - this.state.playerPosns[this.state.playerIndex].x, 0 - this.state.playerPosns[this.state.playerIndex],y, 3500, 3500);
+    drawing.src = require("../static/cool_day.png");
     ctx.drawImage(drawing, -1280, -2000, 3500, 3500);
 
     let character = new Image();
@@ -340,26 +340,26 @@ class Dndgame extends React.Component {
     if (!this.state.monsters.length == 0) {
       if (ev.key == "w") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.characterIndex].y -= 30;
+        newPlayer[this.state.playerIndex].y -= 30;
         this.setState({playeraPosns: newPlayerPosns});
       }
       else if (ev.key == "a") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.characterIndex].x -= 30;
+        newPlayer[this.state.playerIndex].x -= 30;
         this.setState({playeraPosns: newPlayerPosns});
- 
+
       }
       else if (ev.key == "s") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.characterIndex].y += 30;
+        newPlayer[this.state.playerIndex].y += 30;
         this.setState({playeraPosns: newPlayerPosns});
- 
+
       }
       else if (ev.key == "d") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.characterIndex].x += 30;
+        newPlayer[this.state.playerIndex].x += 30;
         this.setState({playeraPosns: newPlayerPosns});
- 
+
       }
 
     }

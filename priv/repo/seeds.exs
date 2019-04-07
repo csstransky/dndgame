@@ -248,8 +248,8 @@ Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d6", attack_bonus: 3,
                     damage_bonus: 1, target: "member", type: "ice"})
 Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d6", attack_bonus: 7,
                     damage_bonus: 4, target: "member", type: "slash"})
-Repo.insert!(%Attack{name: "Ice Breath", damage_dice: "3d8",
-                    target: "party", type: "ice"})
+Repo.insert!(%Attack{name: "Poison Breath", damage_dice: "3d8",
+                    target: "party", type: "poison"})
 Repo.insert!(%Attack{name: "Chomp", damage_dice: "2d10", damage_bonus: 4,
                     attack_bonus: 5, target: "member", type: "pierce"})
 
@@ -297,12 +297,12 @@ Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombi
                                 attack: Attacks.get_attack_by_name("Bite")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombie"),
                                 attack: Attacks.get_attack_by_name("Lava Chomp")})
-Repo.insert!(%Monster{name: "Young White Dragon", hp: 133, ac: 17, type: "dragon",
-                      element: "ice", size: 1, str: 18, dex: 10, con: 18,
-                      int: 6, wis: 11, cha: 12})
-Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young White Dragon"),
+Repo.insert!(%Monster{name: "Young Green Dragon", hp: 136, ac: 18, type: "dragon",
+                      element: "poison", size: 1, str: 19, dex: 12, con: 17,
+                      int: 16, wis: 13, cha: 15})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
                                 attack: Attacks.get_attack_by_name("Dragon Claw")})
-Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young White Dragon"),
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
                                 attack: Attacks.get_attack_by_name("Chomp")})
-Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young White Dragon"),
-                                attack: Attacks.get_attack_by_name("Ice Breath")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
+                                attack: Attacks.get_attack_by_name("Poison Breath")})
