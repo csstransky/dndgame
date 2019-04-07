@@ -42,7 +42,9 @@ defmodule Dndgame.Monsters do
   end
 
   def get_monster_by_name(name) do
+    preloads = [:attacks]
     Repo.get_by(Monster, name: name)
+    |> Repo.preload(preloads)
   end
 
   @doc """
