@@ -13,9 +13,10 @@ defmodule Dndgame.Game.World do
   end
 
   def call_weather_api(worldName) do
+    IO.inspect("WEATHER API CALL")
+    IO.inspect(worldName)
     cond do
       worldName == "boston" ->
-        IO.puts("DARKSKY")
         Darkskyx.current(42.361145, -71.057083)
         |> Map.put_new(:timezone, -4)
       worldName == "death-valley" ->
@@ -33,7 +34,7 @@ defmodule Dndgame.Game.World do
       worldName == "everest" ->
         Darkskyx.current(27.986065, 86.922623)
         |> Map.put_new(:timezone, +5)
-      true -> # boston
+      true -> 
         %{error: "World not found"}
     end
   end
@@ -44,7 +45,7 @@ defmodule Dndgame.Game.World do
     offset_y = @worldLogicOffsetY
     Enum.at(Enum.at(@gameMap, offset_y), offset_x)
   end
-  
+
   def join_world(world, playerName) do
     nameList = Enum.map(world.playerPosns, fn playerPosn -> playerPosn.name end)
     if Enum.member?(nameList, playerName) do

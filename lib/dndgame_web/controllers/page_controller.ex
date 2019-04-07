@@ -20,8 +20,15 @@ defmodule DndgameWeb.PageController do
   end
 
   def party(conn, %{"user_id" => user_id, "world_name" => world_name}, error \\ nil) do
-    characters = Dndgame.Characters.list_user_characters(user_id)
-    render conn, "party.html", characters: characters, world_name: world_name, error: error
+    if world_name == "" do
+      # Including a safety if the user decides not to pick any worlds.
+      world_name = "boston"
+      characters = Dndgame.Characters.list_user_characters(user_id)
+      render conn, "party.html", characters: characters, world_name: world_name, error: error
+    else
+      characters = Dndgame.Characters.list_user_characters(user_id)
+      render conn, "party.html", characters: characters, world_name: world_name, error: error
+    end
   end
 
   def worlds(conn, _params) do
