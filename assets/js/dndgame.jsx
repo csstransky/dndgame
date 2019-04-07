@@ -15,8 +15,8 @@ class Dndgame extends React.Component {
 
     this.channel = props.channel;
     this.state = {
-      playerPosns: [{direction: "down", name: "Cristian", x: 44, y: 64}],
-      playerIndex: 0,
+      playerPosns: [{x: 44, y: 64}],
+      characterIndex: 0,
       party: [],
       monsters: [],
       boss: {},
@@ -108,14 +108,40 @@ class Dndgame extends React.Component {
     // So this is strange, but I think you actually need to render it at 0,0
     // AND THEN move it. It needs to be saved in the browser's cache first, and
     // this is how it's done.
-    ctx.drawImage(drawing, 0 - this.state.playerPosns[this.state.playerIndex].x, 0 - this.state.playerPosns[this.state.playerIndex],y, 3500, 3500);
-    drawing.src = require("../static/cool_day.png");
-    ctx.drawImage(drawing, -1280, -2000, 3500, 3500);
+    ctx.drawImage(drawing, 0, 0, 3500, 3500);
+    let date = new Date();
+    console.log(date.getHours());
+
+    console.log(date.getMinutes());
+    // DAY
+    // snow
+    if(this.state.weather.temperature < 30) {
+      drawing.src = require("../static/snow_day.png");
+    } // hot
+    else if (this.state.weather.temperature > 90) {
+      drawing.src = require("../static/hot_day.png");
+    } // anything in between (day)
+    else {
+      drawing.src = require("../static/cool_day.png");
+    }
+
+    if(this.state.weather.temperature < 20) {
+      drawing.src = require("../static/snow_night.png");
+    } // hot
+    else if (this.state.weather.temperature > 80) {
+      drawing.src = require("../static/hot_night.png");
+    } // anything in between (day)
+    else {
+      drawing.src = require("../static/cool_night.png");
+    }
+
+
+    ctx.drawImage(drawing, -1324 + this.state.playerPosns[this.state.characterIndex].x, -2074 + this.state.playerPosns[this.state.characterIndex].y, 3500, 3500);
 
     let character = new Image();
 
     character.src = require("../static/ff_sprite.png");
-    ctx.drawImage(character, 470, 270, 40, 40);
+    ctx.drawImage(character, 470, 270, 35, 35);
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
@@ -128,7 +154,7 @@ class Dndgame extends React.Component {
 
 
 
-    let boss = new Image();
+    /*let boss = new Image();
     boss.onload = function () {
       ctx.save(); //saves the state of canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
@@ -157,7 +183,7 @@ class Dndgame extends React.Component {
       };
     });
 
-
+*/
     ctx.font = "25px Arial";
     ctx.fillText("Visibility:" + this.state.weather.visibility, 10,30);
     ctx.fillText("Temp:" + this.state.weather.temperature, 10, 65);
@@ -337,28 +363,29 @@ class Dndgame extends React.Component {
   // Receives the keyDown events and sorts based on menu
   onKeyDown(ev) {
     console.log(ev.key);
-    if (!this.state.monsters.length == 0) {
+    if (this.state.monsters.length == 0) {
       if (ev.key == "w") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.playerIndex].y -= 30;
-        this.setState({playeraPosns: newPlayerPosns});
+        console.log(newPlayerPosns);
+        newPlayerPosns[this.state.characterIndex].y += 30;
+        this.setState({playerPosns: newPlayerPosns});
       }
       else if (ev.key == "a") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.playerIndex].x -= 30;
-        this.setState({playeraPosns: newPlayerPosns});
+        newPlayerPosns[this.state.characterIndex].x += 30;
+        this.setState({playerPosns: newPlayerPosns});
 
       }
       else if (ev.key == "s") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.playerIndex].y += 30;
-        this.setState({playeraPosns: newPlayerPosns});
+        newPlayerPosns[this.state.characterIndex].y -= 30;
+        this.setState({playerPosns: newPlayerPosns});
 
       }
       else if (ev.key == "d") {
         let newPlayerPosns = this.state.playerPosns.slice();
-        newPlayer[this.state.playerIndex].x += 30;
-        this.setState({playeraPosns: newPlayerPosns});
+        newPlayerPosns[this.state.characterIndex].x -= 30;
+        this.setState({playerPosns: newPlayerPosns});
 
       }
 
