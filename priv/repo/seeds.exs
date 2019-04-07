@@ -250,7 +250,7 @@ Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d6", attack_bonus: 7,
                     damage_bonus: 4, target: "member", type: "slash"})
 Repo.insert!(%Attack{name: "Poison Breath", damage_dice: "3d8",
                     target: "party", type: "poison"})
-Repo.insert!(%{name: "Chomp", damage_dice: "2d10", damage_bonus: 4,
+Repo.insert!(%Attack{name: "Chomp", damage_dice: "2d10", damage_bonus: 4,
                     attack_bonus: 5, target: "member", type: "pierce"})
 
 ###### MONSTERS ######
