@@ -68,8 +68,6 @@ defmodule Dndgame.Game do
   end
 
   def update_game_world(game, world) do
-    IO.inspect("HELLLLOOOO")
-    IO.inspect(world)
     game
     |> Map.put(:playerPosns, world.playerPosns)
     |> Map.put(:windSpeed, Map.get(world, "windSpeed"))

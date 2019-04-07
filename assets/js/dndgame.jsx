@@ -121,18 +121,18 @@ class Dndgame extends React.Component {
     // AND THEN move it. It needs to be saved in the browser's cache first, and
     // this is how it's done.
     ctx.drawImage(drawing, 0, 0, 3500, 3500);
-    
+
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
     console.log(this.state.timezone);
-    
+
     // times to compare
     // 6AM
     let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 6, 0, 0));
     // 6PM
     let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 18, 0, 0));
-    
+
     // DAY
     if (earlyDate < date < lateDate) {
       // snow
@@ -386,27 +386,32 @@ class Dndgame extends React.Component {
 
   // Receives the keyDown events and sorts based on menu
   onKeyDown(ev) {
+    ev.preventDefault();
+    let leftArrowCode = 37;
+    let upArrowCode = 38;
+    let rightArrowCode = 39;
+    let downArrowCode = 40;
     console.log(ev.key);
     if (this.state.monsters.length == 0) {
-      if (ev.key == "w") {
+      if (ev.key == "w" || ev.which == upArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
         console.log(newPlayerPosns);
         newPlayerPosns[this.state.characterIndex].y += 30;
         this.setState({playerPosns: newPlayerPosns});
       }
-      else if (ev.key == "a") {
+      else if (ev.key == "a" || ev.which == leftArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
         newPlayerPosns[this.state.characterIndex].x += 30;
         this.setState({playerPosns: newPlayerPosns});
 
       }
-      else if (ev.key == "s") {
+      else if (ev.key == "s" || ev.which == downArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
         newPlayerPosns[this.state.characterIndex].y -= 30;
         this.setState({playerPosns: newPlayerPosns});
 
       }
-      else if (ev.key == "d") {
+      else if (ev.key == "d" || ev.which == rightArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
         newPlayerPosns[this.state.characterIndex].x -= 30;
         this.setState({playerPosns: newPlayerPosns});

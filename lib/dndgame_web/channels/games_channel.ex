@@ -11,14 +11,14 @@ defmodule DndgameWeb.GamesChannel do
     if authorized?(payload) do
 
       world = BackupAgent.get(name) || World.new_world(name)
-      IO.puts("here")
       playerName = Map.get(payload, "user")
+      world = World.join_world(world, playerName)
+
+      game = BackupAgent.get(playerName) || Game.new_game(world)
       partyId1 = Map.get(payload, "partyId1")
       partyId2 = Map.get(payload, "partyId2")
       partyId3 = Map.get(payload, "partyId3")
-
-      world = World.join_world(world, playerName)
-      game = BackupAgent.get(playerName) || Game.new_game(world)
+      game = game
       |> Game.create_party(partyId1, partyId2, partyId3)
       |> Game.update_game_world(world)
       BackupAgent.put(name, world)
@@ -26,7 +26,6 @@ defmodule DndgameWeb.GamesChannel do
       update_players(name, playerName)
       socket = socket
         |> assign(:playerName, playerName)
-        |> assign(:game, game)
         |> assign(:worldName, name)
       {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
