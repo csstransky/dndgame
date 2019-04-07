@@ -5,7 +5,7 @@ defmodule Dndgame.Game do
 
   @boss_x 40
   @boss_y 40
-  @max_steps_for_encounter 3000000
+  @max_steps_for_encounter 30
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
@@ -413,7 +413,7 @@ defmodule Dndgame.Game do
     allRolls = characterRolls ++ monsterRolls
 
     sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end)
-
+    |> Enum.map(fn roll -> roll.name end)
     game
     |> Map.put(:orderArray, sortedOrderArray)
     |> Map.put(:orderIndex, 0)

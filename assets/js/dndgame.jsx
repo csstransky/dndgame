@@ -87,6 +87,8 @@ class Dndgame extends React.Component {
 
   // Parses through the chracter order array based on the current player index to determine the type of the next player
   determineCurrentPlayerType() {
+    console.log("okokokokokokokok")
+    console.log(this.state.orderArray)
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
     if (currentPlayerString[0].toLowerCase() == "c") {
       console.log("here");
@@ -98,6 +100,8 @@ class Dndgame extends React.Component {
 
   // Parses through the character array to determine the index (within the character or monster array) of the next chracter
   determineCurrentPlayerIndex() {
+    console.log("okokokokokokokokokokokokokoknjkjkkj")
+    console.log(this.state.orderArray)
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
     if (currentPlayerString[0] == "c") {
       return currentPlayerString[9];
@@ -271,7 +275,6 @@ class Dndgame extends React.Component {
     // divide up the bottom of the screen for menus
 
     // screen setup
-
     let date =  this.calcTime(this.state.timezone);
     if (earlyDate < date && date < lateDate) {
       // DAY
