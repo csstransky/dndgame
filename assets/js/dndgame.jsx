@@ -122,7 +122,7 @@ class Dndgame extends React.Component {
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
-    
+    console.log(this.state);
     
     // times to compare
     // 6AM
@@ -131,7 +131,7 @@ class Dndgame extends React.Component {
     let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 18, 0, 0));
     
     // DAY
-    if (earlyDate > date > lateDate) {
+    if (earlyDate < date < lateDate) {
       // snow
       if(this.state.weather.temperature < 30) {
         drawing.src = require("../static/snow_day.png");
@@ -161,7 +161,7 @@ class Dndgame extends React.Component {
 
     let character = new Image();
 
-    character.src = require("../static/player_move_down.png");
+    character.src = require("../static/character/playerMoveDown.png");
     ctx.drawImage(character, 470, 270, 35, 35);
     /*character.onload = function () {
       ctx.save(); //saves the state of canvas
