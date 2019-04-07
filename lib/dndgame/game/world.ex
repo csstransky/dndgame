@@ -40,15 +40,6 @@ defmodule Dndgame.Game.World do
   end
 
   def is_walkable?(x, y) do
-    IO.inspect('BEGINNING COORDINATES')
-    IO.inspect(x)
-    IO.inspect(y)
-    IO.inspect('GAME COORDINATES')
-    IO.inspect(y - @worldLogicOffsetY)
-    IO.inspect(x - @worldLogicOffsetX)
-    # need to offset x by 15, y 12
-    offset_x = @worldLogicOffsetX
-    offset_y = @worldLogicOffsetY
     Enum.at(Enum.at(@gameMap, y - @worldLogicOffsetY), x - @worldLogicOffsetX) == 1
   end
 

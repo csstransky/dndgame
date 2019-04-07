@@ -183,7 +183,7 @@ class Dndgame extends React.Component {
         case "down":
           character.src = require("../static/character/playerMoveDown.png");
           break;
-        default: 
+        default:
           console.log("broken");
           break;
       }
@@ -295,6 +295,7 @@ class Dndgame extends React.Component {
       }, false);
       img.src = require("../static/monsters/iceZomebie.png");
 
+
       // This determines if the given "option" number matches the currently selected menu option and returns
       // a " <-" string to append to that menu option to indicate it has been selected.
       function addSelection(type, option) {
@@ -314,6 +315,35 @@ class Dndgame extends React.Component {
           return " <-";
         } else {
           return "";
+        }
+      }
+
+      function getMonsterImage(monster) {
+        switch (monster.name.toLowerCase()){
+          case "goblin":
+            img.src = require("../static/monsters/goblin.png");
+            break;
+          case "fire goblin":
+            img.src = require("../static/monsters/fireGoblin.png");
+            break;
+          case "ice goblin":
+            img.src = require("../static/monsters/iceGoblin.png");
+            break;
+          case "zombie":
+            img.src = require("../static/monsters/zombie.png");
+            break;
+          case "fire zombie":
+            img.src = require("../static/monsters/fireZombie.png");
+            break;
+          case "ice zombie":
+            img.src = require("../static/monsters/iceZombie.png");
+            break;
+          case "young green dragon":
+            img.src = require("../static/monsters/dragonBossBattleSprite.png");
+            break;
+          default:
+            console.log("monster does not have image loaded for it");
+            break;
         }
       }
 
@@ -356,21 +386,23 @@ class Dndgame extends React.Component {
     });
 
 
+    let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
     // Draw monsters on the screen
-    $.each(this.state.monsters, function (index, value) {
+    $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
       img.addEventListener('load', function() {
-        ctx.drawImage(img, ((index * 333) + 70), 100, 150, 200);
+        ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 200);
       }, false);
-      // img.src = require('./images/' + value.name + '.png');
-      img.src = require("../static/monsters/iceZombie.png");
+      
+      img.src = getMonsterImage(monster);
+
       // stack party vertically based on order in array
-      ctx.fillText("HP:" + value.hp, ((index * 333) + 110), 280);
+      ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
 
       // Check if the current charcter's turn is a monster
       if (currentPlayerType == "monster") {
-        // Check if the current character matches the index
-        if (currentPlayerIndex == index) {
+        // Check if the current character matches the monsterIndex
+        if (currentPlayerIndex == monsterIndex) {
           // TODO: add some graphics here to indicate which monster is selected
         }
       }

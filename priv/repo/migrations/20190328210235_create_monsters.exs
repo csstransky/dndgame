@@ -16,6 +16,7 @@ defmodule Dndgame.Repo.Migrations.CreateMonsters do
       add :cha, :integer
       add :wis, :integer
       add :size, :integer
+      add :exp, :integer
 
       timestamps()
     end
