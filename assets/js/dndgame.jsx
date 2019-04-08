@@ -581,13 +581,22 @@ class Dndgame extends React.Component {
     // Depending on the current menu, this switch will generate the next menu and modify the state accordingly
     switch (this.state.currentMenu) {
       case "main":
-        this.setState((state, props) => ({
-          buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
-         // mainMenuCurrentSelection: 0,
-          //subMenuCurrentSelection: 0,
-          currentMenu: "sub",
-          subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
-        }));
+        if (this.state.mainMenuCurrentSelection == 0) {
+          this.setState((state, props) => ({
+            buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]).concat([0]),
+            // mainMenuCurrentSelection: 0,
+            //subMenuCurrentSelection: 0,
+            currentMenu: "monster",
+          }));
+        } else {
+          this.setState((state, props) => ({
+            buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
+            // mainMenuCurrentSelection: 0,
+            //subMenuCurrentSelection: 0,
+            currentMenu: "sub",
+            subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
+          }));
+        }
         break;
       case "sub":
         this.setState((state, props) => ({
