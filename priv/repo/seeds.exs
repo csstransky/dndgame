@@ -223,9 +223,14 @@ Repo.insert!(%Weapon{name: "Hand Crossbow", weapon_category: "Martial",
 ###### USERS ######
 Repo.insert!(%User{email: "Cristian", admin: true, password_hash: pwhash})
 
+###### Debug Weapon ######
+Repo.insert!(%Attack{name: "Obliterate", damage_dice: "2d10", damage_bonus: 99,
+                    attack_bonus: 99, target: "enemy", type: "pierce"})
+Repo.insert!(%Weapon{name: "God Killer", weapon_category: "Heavenly",
+                    attack: Attacks.get_attack_by_name("Obliterate")})
 ###### CHARACTERS ######
-Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
-                wis: 10, cha: 13, weapon: Weapons.get_weapon_by_name("Dagger"),
+Repo.insert!(%Character{name: "Chuck", str: 10, dex: 20, int: 10, con: 20,
+                wis: 10, cha: 13, weapon: Weapons.get_weapon_by_name("God Killer"),
                 armor: Armors.get_armor_by_name("Mage Armor"),
                 class: Classes.get_class_by_name("Wizard"),
                 race: Races.get_race_by_name("Elf"),
@@ -252,6 +257,7 @@ Repo.insert!(%Attack{name: "Poison Breath", damage_dice: "3d8",
                     target: "party", type: "poison"})
 Repo.insert!(%Attack{name: "Chomp", damage_dice: "2d10", damage_bonus: 4,
                     attack_bonus: 5, target: "member", type: "pierce"})
+
 
 ###### MONSTERS ######
 Repo.insert!(%Monster{name: "Goblin", hp: 13, ac: 5,
