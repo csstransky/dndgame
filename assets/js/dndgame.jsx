@@ -162,12 +162,8 @@ class Dndgame extends React.Component {
         ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
 
       } else {
-        console.log(mainCharacter)
-        console.log(currplayer)
         let diffDistanceX = mainCharacter.x - currplayer.x;
         let diffDistanceY = mainCharacter.y - currplayer.y;
-        console.log(diffDistanceX)
-        console.log(diffDistanceY)
         ctx.drawImage(character, PLAYERX - (diffDistanceX * PLAYERSIZE),
                   PLAYERY - (diffDistanceY * PLAYERSIZE), PLAYERSIZE, PLAYERSIZE);
       }
@@ -429,7 +425,7 @@ class Dndgame extends React.Component {
           ctx.fillText("HP:" + monster.hp, 450, 390);
         }
         else {
-          ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 100, 150);
+          ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 150);
           // stack party vertically based on order in array
           ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
         }
