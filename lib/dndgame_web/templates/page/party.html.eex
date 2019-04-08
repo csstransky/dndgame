@@ -55,6 +55,6 @@
     <br/>
     <%= hidden_input form, :user_id, value: @current_user.id %>
     <%= hidden_input form, :world_name, value: @world_name%>
-    <%= submit "Join Game TODO make me attractive" %>
+    <%= submit "Join Game" %>
    <% end %>
 <% end %>

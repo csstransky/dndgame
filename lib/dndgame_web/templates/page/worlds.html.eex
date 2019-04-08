@@ -38,7 +38,7 @@
     <%= hidden_input func, :user_id, value: @current_user.id %>
     <%= hidden_input func, :world_name, value: "", id: "world_name" %>
     <br/>
-    <%= submit "Join Game TODO make me attractive" %>
+    <%= submit "Join Game" %>
   <% end %>
   <script>
     function desc(place) {
