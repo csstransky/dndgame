@@ -533,6 +533,7 @@ class Dndgame extends React.Component {
             monsterCurrentSelection: (state.monsterCurrentSelection + 1) % state.monsters.length,
           }));
           break;
+        }
       }
     }
   }
