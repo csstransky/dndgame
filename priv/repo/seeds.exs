@@ -60,7 +60,7 @@ Repo.insert!(%Race{name: "Human", str_bonus: 1, dex_bonus: 1, int_bonus: 1,
 Repo.insert!(%Spell{name: "Fire Bolt", dice: "1d10",
         level_req: 1, target: "enemy", type: "fire", mp_cost: 0})
 Repo.insert!(%Spell{name: "Magic Missle", dice: "1d4", dice_bonus: 1,
-        level_req: 1, target: "enemies", type: "force", mp_cost: 0})
+        level_req: 1, target: "enemies", type: "force", mp_cost: 1})
 Repo.insert!(%Spell{name: "Cure Wounds", dice: "1d8",
         level_req: 1, target: "member", type: "heal", mp_cost: 1})
 Repo.insert!(%Spell{name: "Shield of Faith", dice: "2d1",
