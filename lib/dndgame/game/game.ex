@@ -19,7 +19,11 @@ defmodule Dndgame.Game do
 
   def new_game(world) do
     # You're a new character, so this should be fine
+    IO.inspect("WORLDCOUNTER")
+    IO.inspect(world.playerCount)
+
     worldIndex = world.playerCount - 1
+        IO.inspect(worldIndex)
     %{
         playerIndex: worldIndex,
         windSpeed: Map.get(world, "windSpeed"), # in MPH
