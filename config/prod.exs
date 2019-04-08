@@ -13,7 +13,7 @@ config :dndgame, Dndgame.Endpoint,
   server: true,
   root: ".",
   version: Application.spec(:phoenix_distillery, :vsn),
-  url: [host: "hw10.cstransky.me", port: 443],
+  url: [host: "dndgame.cstransky.me", port: 443],
 #  http: [:inet6, port: {:system, "PORT"}],
   force_ssl: [hsts: true],
   cache_static_manifest: "priv/static/cache_manifest.json",
@@ -21,8 +21,8 @@ config :dndgame, Dndgame.Endpoint,
     :inet6,
     port: {:system, "PORT"},
     cipher_suite: :strong,
-    keyfile: "/etc/letsencrypt/live/hw10.cstransky.me/privkey.pem",
-    certfile: "/etc/letsencrypt/live/hw10.cstransky.me/fullchain.pem"
+    keyfile: "/etc/letsencrypt/live/dndgame.cstransky.me/privkey.pem",
+    certfile: "/etc/letsencrypt/live/dndgame.cstransky.me/fullchain.pem"
   ]
 
 # Do not print debug messages in production
