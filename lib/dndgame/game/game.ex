@@ -528,6 +528,13 @@ defmodule Dndgame.Game do
     character = get_character_battle(game)
     skillName = Enum.at(character.skills, skillId)
 
+    game
+    |> use_specific_skill(skillName, targetId)
+    |> incrementOrderIndex
+    |> Map.replace(:battleAction, "placeholder")
+  end
+
+  def use_specific_skill(game, skillName, targetId) do
     # cond of all skills, goes to a function that deals with the logic of that skill
     cond do
       skillName == "Short Rest" ->
@@ -551,6 +558,13 @@ defmodule Dndgame.Game do
     character = get_character_battle(game)
     spellName = Enum.at(character.spells, spellId)
 
+    game
+    |> use_specific_spell(spellName, targetId)
+    |> incrementOrderIndex
+    |> Map.replace(:battleAction, "placeholder")
+  end
+
+  def use_specific_spell(game, spellName, targetId) do
     cond do
       spellName == "Fire Bolt" ->
         fire_bolt(game, targetId)
@@ -608,10 +622,12 @@ defmodule Dndgame.Game do
       # replace less hp monster and update battleAction in game
       game
       |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
       to #{enemy.name} with #{attack.name}")
     else
       game
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{character.name} tried to attack
       #{enemy.name} with #{attack.name}, but it missed")
     end
@@ -640,12 +656,25 @@ defmodule Dndgame.Game do
       # replace the character in the game and update the battle action
       game
       |> update_battle_party(hitCharacter)
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to
                                    #{targetCharacter.name} with #{attack.name}")
     else
       # the roll wasn't higher than ac so attack missed, just update battleAction
       game
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{enemy.name} missed attack on #{targetCharacter.name}")
+    end
+  end
+
+  def incrementOrderIndex(game) do
+    newOrderIndex = game.orderIndex + 1
+    if newOrderIndex == length(game.orderArray) do
+      game
+      |> Map.put(:orderIndex, 0)
+    else
+      game
+      |> Map.put(:orderIndex, newOrderIndex)
     end
   end
 
