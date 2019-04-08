@@ -3,10 +3,10 @@ Meta
  - The app is deployed to our VPS and is available at dndgame.cstransky.me
  - The source code for our app is available at http://www.github.ccs.neu.edu/cstransky/dndgame
  - The app is deployed to the VPS and is fully functional
- - 	Bryce DeWitt – VP of Front End and API
-	Noah Kennedy – VP of GenServer/Channels/Sockets
-	Bach-An Nguyen – Co-President of Backend Logic, VP of Schema
-	Cristian Stransky – President of Schema, Co-President of Backend Logic
+ - 	Bryce DeWitt – VP of Front End and API President of National Outreach
+	Noah Kennedy – VP of GenServer/Channels and Co-President of Backend Logic
+	Bach-An Nguyen – Co-President of Frontend Logic, VP of Schema, Musical Director
+	Cristian Stransky – President of Schema, Co-President of Backend Logic, Game Director
 App
 
  - For our Project 2 app, we were initially torn between creating a productivity app that would give users some benefit provided through an external API that was not convenient to access directly through the external service itself, or alternatively creating a game app that would use external APIs in an unexpected but still practical way.  Ultimately, after considering the available APIs and the precompiled frameworks available for them, we decided to develop a game that could integrate multiple external data sources to dynamically alter a user’s game experience based on real-world conditions.  We created the “D&D Game” app to fulfill this goal by allowing our users to generate a game world based on the current weather conditions of the location they selected, and having the dynamic nature of that location’s weather alter the in-game logic over time. Our app offers a web-based implementation of the popular role playing game game, Dungeons & Dragons, allowing users to create customized characters for their party based on pre-determined frameworks and attributes, create a game based off various real-world locations, and ultimately move through that world and battle monsters until they reach the final boss.
