@@ -237,21 +237,21 @@ Repo.insert!(%Character{name: "Chuck", str: 10, dex: 20, int: 10, con: 20,
                 user: Users.get_user_by_email("Cristian")})
 
 ###### MONSTER ATTACKS ######
-Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "slash"})
-Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 2, target: "member", type: "bludgeon"})
-Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d8", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "fire"})
-Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d6", attack_bonus: 2,
+Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d4", attack_bonus: 2,
                     damage_bonus: 2, target: "member", type: "ice"})
-Repo.insert!(%Attack{name: "Bite", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Bite", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "pierce"})
-Repo.insert!(%Attack{name: "Lava Chomp", damage_dice: "1d8", attack_bonus: 2,
+Repo.insert!(%Attack{name: "Lava Chomp", damage_dice: "1d4", attack_bonus: 2,
                     damage_bonus: 2, target: "member", type: "fire"})
-Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "ice"})
-Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d6", attack_bonus: 7,
+Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d4", attack_bonus: 7,
                     damage_bonus: 4, target: "member", type: "slash"})
 Repo.insert!(%Attack{name: "Poison Breath", damage_dice: "3d8",
                     target: "party", type: "poison"})
