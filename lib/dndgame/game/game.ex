@@ -416,11 +416,12 @@ defmodule Dndgame.Game do
     allRolls = characterRolls ++ monsterRolls
 
     # sort using the initiative so that the highest comes first
-    sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end
+    sortedOrderArray = Enum.sort(allRolls, fn (x, y) -> x.init > y.init end)
     |> Enum.map(fn roll -> roll.name end)
     game
     |> Map.put(:orderArray, sortedOrderArray)
     |> Map.put(:orderIndex, 0)
+
   end
 
   def random_encounter(game) do
