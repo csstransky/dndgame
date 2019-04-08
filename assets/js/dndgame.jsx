@@ -319,6 +319,7 @@ class Dndgame extends React.Component {
     let monsters = this.state.monsters;
     let monsterCurrentSelection = this.state.monsterCurrentSelection;
     let battleAction = this.state.battleAction
+    let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
 
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
@@ -373,7 +374,7 @@ class Dndgame extends React.Component {
               break;
             case "monster":
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
+                ctx.fillText(addSelection("monster", index2), spaceBuffer + 150, 170);
               });
               break;
           }
@@ -412,7 +413,6 @@ class Dndgame extends React.Component {
       }
     }
 
-    let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
     // Draw monsters on the screen
     $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
@@ -523,7 +523,6 @@ class Dndgame extends React.Component {
           this.setState((state, props) => ({
             mainMenuCurrentSelection: (state.mainMenuCurrentSelection + 1) % state.mainMenuOptions.length,
           }));
-          console.log(this.state);
           break;
         case "sub":
           this.setState((state, props) => ({
@@ -575,41 +574,43 @@ class Dndgame extends React.Component {
     }
 
     // Depending on the current menu, this switch will generate the next menu and modify the state accordingly
-    console.log("starting switch with currently selected: " + this.state.currentMenu);
-    console.log(buildSubMenu(this.state.orderIndex, this.state.mainMenuCurrentSelection, this.state.party));
     switch (this.state.currentMenu) {
       case "main":
         this.setState((state, props) => ({
-          mainMenuCurrentSelection: 0,
-          subMenuCurrentSelection: 0,
+          buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
+         // mainMenuCurrentSelection: 0,
+          //subMenuCurrentSelection: 0,
           currentMenu: "sub",
-          subMenuOptions: buildSubMenu(this.state.orderIndex, this.state.mainMenuCurrentSelection, this.state.party),
-          buildMenuPath: [this.state.buildMenuPath.push(this.state.mainMenuCurrentSelection)],
+          subMenuOptions: buildSubMenu(state.orderIndex, state.mainMenuCurrentSelection, state.party),
         }));
         break;
       case "sub":
         this.setState((state, props) => ({
-          mainMenuCurrentSelection: 0,
-          subMenuCurrentSelection: 0,
+          //mainMenuCurrentSelection: 0,
+          //subMenuCurrentSelection: 0,
           currentMenu: "monster",
-          buildMenuPath: [this.state.buildMenuPath.push(this.state.subMenuCurrentSelection)],
+          buildMenuPath: state.buildMenuPath.concat([state.subMenuCurrentSelection]),
         }));
         break;
       case "monster":
         // If player has selected attack
         if (this.state.buildMenuPath[0] == 0) {
+          console.log("calling player attack");
           this.playerAttack();
         }
 
         // If player has selected spell
         if (this.state.buildMenuPath[0] == 1) {
-          this.playerSpell();
+          console.log("calling player skill");
+          this.playerSkill();
         }
 
         // If player has selected skill
-        if (this.state.buildMenuPath[2] == 2) {
-          this.playerSkill();
+        if (this.state.buildMenuPath[0] == 2) {
+          console.log("calling player spell");
+          this.playerSpell();
         }
+        break;
     }
   }
 
