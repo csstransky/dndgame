@@ -56,6 +56,7 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("use_skill", %{"skillId" => skillId, "enemyIndex" => enemyIndex}, socket) do
+    IO.inspect(enemyIndex)
     {skillId, _} = Integer.parse(skillId)
     {enemyIndex, _} = Integer.parse(enemyIndex)
     playerName = socket.assigns[:playerName]
