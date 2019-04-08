@@ -511,7 +511,7 @@ defmodule Dndgame.Game do
     monsterLength = length(game.monsters)
     removeList = Enum.map(game.monsters, fn monster ->
       if monster.hp <= 0 do
-        monsterLength = monsterLength -1
+        monsterLength = monsterLength - 1
         "monster#{monsterLength}"
       else
         ""
@@ -519,7 +519,7 @@ defmodule Dndgame.Game do
     end)
 
     newOrderArray = Enum.filter(game.orderArray, fn orderString ->
-        !(Enum.member?(removeList, orderString) end)))
+      !(Enum.member?(removeList, orderString)) end)
 
     # fold the list into 1 total number of xp to gain
     totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
