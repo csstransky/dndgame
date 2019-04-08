@@ -56,7 +56,6 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("use_skill", %{"skillId" => skillId, "enemyIndex" => enemyIndex}, socket) do
-    IO.inspect("can you see 1?!!?!?!?me")
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.use_skill(skillId, enemyIndex)
