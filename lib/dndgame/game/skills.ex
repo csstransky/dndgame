@@ -110,7 +110,7 @@ defmodule Dndgame.Game.Skills do
     type = enemy.type
     charIndex = get_character_index(game)
     char = Enum.at(game.staticParty, charIndex)
-    skill = DndGame.Skills.get_skill_by_name("Turn Undead")
+    skill = Dndgame.Skills.get_skill_by_name("Turn Undead")
     # update character by subtracting the sp cost of the move
     newChar = Map.replace(char, :sp, char.sp - skill.sp_cost)
 

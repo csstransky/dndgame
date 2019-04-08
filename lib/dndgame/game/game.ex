@@ -605,19 +605,20 @@ defmodule Dndgame.Game do
     skill = Enum.at(character.class.skills, skillId)
     skillName = skill.name
 
-    game
-    |> use_specific_skill(skillName, targetId)
-    |> remove_dead_monsters
-    |> incrementOrderIndex
-    |> Map.replace(:currentMenu, "main")
-    |> Map.replace(:battleAction, "placeholder")
+    if character.sp <= 0 do
+      game
+      |> Map.put(:currentMenu, "main")
+    else
+      game
+      |> use_specific_skill(skillName, targetId)
+      |> remove_dead_monsters
+      |> incrementOrderIndex
+      |> Map.replace(:currentMenu, "main")
+    end
   end
 
     def use_specific_skill(game, skillName, targetId) do
       # cond of all skills, goes to a function that deals with the logic of that skill
-  #    IO.puts("in use specific skill now, skillname = #{skillName}")
-    IO.inspect(skillName)
-    IO.puts("skill name above")
       cond do
         skillName == "Short Rest" ->
           Dndgame.Game.Skills.short_rest(game)
@@ -642,25 +643,29 @@ defmodule Dndgame.Game do
     spell = Enum.at(character.class.spells, spellId)
     spellName = spell.name
 
-    game
-    |> use_specific_spell(spellName, targetId)
-    |> remove_dead_monsters
-    |> incrementOrderIndex
-    |> Map.replace(:currentMenu, "main")
-    |> Map.replace(:battleAction, "placeholder")
+    if character.mp <= 0 do
+      game
+      |> Map.replace(:currentMenu, "main")
+    else
+      game
+      |> use_specific_spell(spellName, targetId)
+      |> remove_dead_monsters
+      |> incrementOrderIndex
+      |> Map.replace(:currentMenu, "main")
+    end
   end
 
   def use_specific_spell(game, spellName, targetId) do
-    cond do
-      spellName == "Fire Bolt" ->
-        Dndgame.Game.Spells.fire_bolt(game, targetId)
-      spellName == "Magic Missle" ->
-        Dndgame.Game.Spells.magic_missle(game)
-      spellName == "Cure Wounds" ->
-        Dndgame.Game.Spells.cure_wounds(game, targetId)
-      spellName == "Shield of Faith" ->
-        Dndgame.Game.Spells.shield_of_faith(game, targetId)
-    end
+      cond do
+        spellName == "Fire Bolt" ->
+          Dndgame.Game.Spells.fire_bolt(game, targetId)
+        spellName == "Magic Missle" ->
+          Dndgame.Game.Spells.magic_missle(game)
+        spellName == "Cure Wounds" ->
+          Dndgame.Game.Spells.cure_wounds(game, targetId)
+        spellName == "Shield of Faith" ->
+          Dndgame.Game.Spells.shield_of_faith(game, targetId)
+      end
   end
 
   def get_character_stat_mod(character) do
