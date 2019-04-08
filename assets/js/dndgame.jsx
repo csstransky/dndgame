@@ -428,7 +428,7 @@ class Dndgame extends React.Component {
 
     });
 
-    if (!this.state.battleAction == "") {
+    if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
       ctx.font = "35px Ariel";
       ctx.fillText("Press the Enter to continue", 400, 380);
     }
@@ -485,28 +485,33 @@ class Dndgame extends React.Component {
       this.runFromBattle();
     }
 
+
     if (ev.key == "Enter") {
+
       // If the battleAction string is not empty, the next key will be the "next" key
       if (!this.state.battleAction == "") {
         if (this.determineCurrentPlayerType() == "monster") {
 
-        //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
-        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
-        this.setState((state, props) => ({
-          battleAction: "",
-        }));
-        return;
-      } else {
-        console.log("Sending player attack command");
-        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
+          //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
+          this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+            .receive("ok", resp => {
+              this.setState(resp.game);
+            });
+          this.setState((state, props) => ({
+            battleAction: "",
+          }));
+          return;
+        }
+        //else {
+        //console.log("Sending player attack command");
+        //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+        //  .receive("ok", resp => {
+        //    this.setState(resp.game);
+        //  });
+        //}
       }
     }
+
 
     // First, check if "Enter" key has been received
     if (ev.key == "Enter") {
@@ -536,7 +541,7 @@ class Dndgame extends React.Component {
         }
       }
     }
-  }
+
 
   // This is the logic for tracking where in the menu system a player is, using an array to track historical selections
   // After "enter" is received when in the monster menu, the selected options are collected and sent to the server
