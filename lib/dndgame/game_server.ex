@@ -1,14 +1,11 @@
 defmodule Dndgame.GameServer do
-  use GenServer
 
-  alias Dndgame.BackupAgent
-  alias Dndgame.Game
   def reg(name) do
     {:via, Registry, {Dndgame.GameReg, name}}
   end
 
   def start(name) do
-    spec = Dndgame.GameServer.child_spec(name)
+    spec = Dndgame.child_spec(name)
     Dndgame.GameSup.start_child(spec)
   end
 
@@ -37,22 +34,7 @@ defmodule Dndgame.GameServer do
 
   def start_game(name) do
     GenServer.call(reg(name), {:start_game, name})
+
   end
 
-  def walk(playerName, worldName, direction) do
-    IO.inspect("CALLING WALK?")
-    GenServer.call(reg(playerName), {:walk, playerName, worldName, direction})
-  end
-
-
-  def handle_call({:walk, playerName, worldName, direction}, _from, _game) do
-    world = BackupAgent.get(worldName)
-    game = BackupAgent.get(playerName)
-    |> Game.walk(direction)
-    world = Map.put(world, :playerPosns, game.playerPosns)
-    BackupAgent.put(worldName, world)
-    BackupAgent.put(playerName, game)
-    DndgameWeb.Endpoint.broadcast!("games:#{worldName}", "update_players", world)
-    {:reply, playerName, game}
-  end
 end
