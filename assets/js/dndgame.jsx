@@ -80,7 +80,7 @@ class Dndgame extends React.Component {
 
   // This figures out what type of display to render in the canvas
   drawDisplay() {
-    if (this.state.monsters.length == 0) {
+    if (!this.state.monsters.length == 0) {
       this.drawGameMap();
     } else {
       this.drawBattleScreen();
@@ -89,8 +89,9 @@ class Dndgame extends React.Component {
 
   // Parses through the chracter order array based on the current player index to determine the type of the next player
   determineCurrentPlayerType() {
+    console.log(this.state);
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
-    if (currentPlayerString[0] == "c") {
+    if (currentPlayerString.charAt(0) == "c") {
       return "character";
     } else {
       return "monster";
@@ -100,10 +101,10 @@ class Dndgame extends React.Component {
   // Parses through the character array to determine the index (within the character or monster array) of the next chracter
   determineCurrentPlayerIndex() {
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
-    if (currentPlayerString[0] == "c") {
-      return currentPlayerString[9];
+    if (currentPlayerString.charAt(0) == "c") {
+      return currentPlayerString.charAt(9);
     } else {
-      return currentPlayerString[7];
+      return currentPlayerString.charAt(7);
     }
   }
 
@@ -244,32 +245,32 @@ class Dndgame extends React.Component {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     // x: 600, Y: 800
-    ctx.clearRect(0, 0, 1000, 600);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     // screen setup
-    ctx.rect(0, 0, 1000, 600);
+    ctx.rect(0, 0, WIDTH, HEIGHT);
     ctx.stroke();
 
     // divide up the bottom of the screen for menus
     ctx.beginPath();
     ctx.moveTo(0, 400);
-    ctx.lineTo(1000, 400);
+    ctx.lineTo(WIDTH, 400);
     ctx.stroke()
 
     ctx.beginPath();
-    ctx.moveTo(333, 400);
-    ctx.lineTo(333, 600);
+    ctx.moveTo((WIDTH / 3), 400);
+    ctx.lineTo((WIDTH / 3), HEIGHT);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(666, 400);
-    ctx.lineTo(666, 600);
+    ctx.moveTo((WIDTH / 3) * 2, 400);
+    ctx.lineTo((WIDTH / 3) * 2, HEIGHT);
     ctx.stroke();
 
     // add a header area for attack description text
     ctx.beginPath();
     ctx.moveTo(0, 50);
-    ctx.lineTo(1000, 50);
+    ctx.lineTo(WIDTH, 50);
     ctx.stroke();
 
     // can't use a "this" within the each statements, so saving as var out here
@@ -294,8 +295,7 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, (index * 333) + 260, 550, 50, 50);
       }, false);
-      //img.src = require('./images/' + value.name + '.png');
-      img.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
+      img.src = require("../static/character/ff_sprite.png")
 
       // This determines if the given "option" number matches the currently selected menu option and returns
       // a " <-" string to append to that menu option to indicate it has been selected.
@@ -365,8 +365,8 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, ((index * 333) + 70), 100, 150, 150);
       }, false);
-      // img.src = require('./images/' + value.name + '.png');
-      img.src = "https://cdn4.iconfinder.com/data/icons/cute-funny-monster-characters/66/35-512.png";
+      img.src = require("../static/character/ff_sprite.png")
+
       // stack party vertically based on order in array
       ctx.fillText("HP:" + value.hp, ((index * 333) + 110), 280);
 
@@ -381,7 +381,8 @@ class Dndgame extends React.Component {
     });
 
     if (!this.state.battleAction == "") {
-      // TODO: show a "press any key to continue" message
+      ctx.font = "35px Ariel";
+      ctx.fillText("Press any key to continue", 300, 50);
     }
 
     // Draw the headline text describing what is happening in the game
@@ -389,11 +390,6 @@ class Dndgame extends React.Component {
     ctx.fillText(this.state.battleAction, 20, 40);
   return canvas;
   }
-
-
-
-
-
 
 
   /////////////////////////////
@@ -434,12 +430,20 @@ class Dndgame extends React.Component {
 
     // If the battleAction string is not empty, the next key will be the "next" key
     if (!this.state.battleAction == "") {
-      console.log("Sending an okay command after a battleAction string was displayed");
-      this.channel.push("okay")
-        .receive("ok", resp => {
-          this.setState(resp.game);
-        });
-      return;
+      if (this.determineCurrentPlayerType() == "monster") {
+        console.log("Sending monster attack command");
+        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+          .receive("ok", resp => {
+            this.setState(resp.game);
+          });
+        return;
+      } else {
+        console.log("Sending player attack command");
+        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+          .receive("ok", resp => {
+            this.setState(resp.game);
+          });
+      }
     }
 
     // First, check if "Enter" key has been received
@@ -482,6 +486,7 @@ class Dndgame extends React.Component {
       return;
     }
 
+
     // This uses the currently selected index and the menu + party to return an array of what the next subMenu contains
     function buildSubMenu (orderIndex, menuSelection, party) {
       switch (menuSelection) {
@@ -518,12 +523,20 @@ class Dndgame extends React.Component {
         }));
         break;
       case "monster":
-        console.log("pushing the final command down the channel...Yay!");
-        console.log([this.state.buildMenuPath]);
-        this.channel.push([{option: this.state.subMenuCurrentSelection[this.state.buildMenuPath[1]], monster: this.state.monsterCurrentSelection}])
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
+        // If player has selected attack
+        if (buildMenuPath[0] == 0) {
+          this.playerAttack();
+        }
+
+        // If player has selected spell
+        if (buildMenuPath[0] == 1) {
+          this.playerSpell();
+        }
+
+        // If player has selected skill
+        if (buildMenuPath[2] == 2) {
+          this.playerSkill();
+        }
     }
   }
 
@@ -535,7 +548,29 @@ class Dndgame extends React.Component {
       });
   }
 
+  playerAttack() {
+    console.log("Sending player attack command through channel");
+    this.channel.push("run")
+      .receive("ok", resp => {
+        this.setState(resp.game);
+      });
+  }
 
+  playerSpell() {
+    console.log("Sending spell command");
+    this.channel.push("use_spell", {spellId: this.state.buildMenuPath[1], enemyIndex: this.state.buildMenuPath[2]})
+      .receive("ok", resp => {
+        this.setState(resp.game);
+      });
+  }
+
+  playerSkill() {
+    console.log("Sending skill command");
+    this.channel.push("use_skill", {skillId: this.state.buildMenuPath[1], enemyIndex: this.state.buildMenuPath[2]})
+      .receive("ok", resp => {
+        this.setState(resp.game);
+      });
+  }
 
 
   // render function down here, just renders the canvas
