@@ -33,6 +33,8 @@ defmodule Dndgame.Game do
                   %{x: @bossTopLeftX + 1, y: @bossTopLeftY},
                   %{x: @bossTopLeftX, y: @bossTopLeftY + 1},
                   %{x: @bossTopLeftX + 1, y: @bossTopLeftY + 1}],
+          x: @bossTopLeftX,
+          y: @bossTopLeftY,
         },
 
         orderArray: [], # fills up with strings of whose turn it is
