@@ -639,7 +639,6 @@ defmodule Dndgame.Game do
     character = Enum.at(game.battleParty, charIndex)
     spell = Enum.at(character.class.spells, spellId)
     spellName = spell.name
-  spellName = Enum.at(character.class.spells, spellId)
 
     game
     |> use_specific_spell(spellName, targetId)
