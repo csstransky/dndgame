@@ -411,13 +411,20 @@ class Dndgame extends React.Component {
     $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
       img.addEventListener('load', function() {
-        ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 100, 150);
+        if (monster.name.toLowerCase() == "young green dragon") {
+          ctx.drawImage(img, 350, 50, 350, 350);
+          // stack party vertically based on order in array
+          ctx.fillText("HP:" + monster.hp, 450, 390);
+        }
+        else {
+          ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 100, 150);
+          // stack party vertically based on order in array
+          ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
+        }
       }, false);
 
       img.src = getMonsterImage(monster);
 
-      // stack party vertically based on order in array
-      ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
 
       // Check if the current charcter's turn is a monster
       if (currentPlayerType == "monster") {
