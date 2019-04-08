@@ -3,9 +3,9 @@ defmodule Dndgame.Game do
   alias Dndgame.Game.World
   require Protocol
 
-  @boss_x 40
-  @boss_y 40
-  @max_steps_for_encounter 30
+  @boss_x 29
+  @boss_y 8
+  @max_steps_for_encounter 1000
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
@@ -13,8 +13,8 @@ defmodule Dndgame.Game do
   @nightColdTemp 20
   @dayHotTemp 90
   @dayColdTemp 30
-  @bossTopLeftX 40
-  @bossTopLeftY 40
+  @bossTopLeftX 29
+  @bossTopLeftY 8
   @bossName "Young Green Dragon"
 
   def new_game(world) do
@@ -314,10 +314,19 @@ defmodule Dndgame.Game do
         #check if the above square is walkable
         if World.is_walkable?(playerX, playerY - 1) do
           # update y in the posn and the direction
+          if check_boss_encounter(game, playerX, playerY - 1) do
+            IO.puts("here")
+            game
+            |> update_player_posn(playerX, playerY - 1, direction)
+            |> Map.put(:steps, game.steps + 1)
+            |> boss_encounter
+          else
+
           game
           |> update_player_posn(playerX, playerY - 1, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
+          end
         else
           # just update the direction
           update_player_posn(game, playerX, playerY, direction)
@@ -410,15 +419,16 @@ defmodule Dndgame.Game do
     |> add_order_array
     |> Map.put(:battleParty, battleParty)
     |> Map.put(:currentMenu, "main")
-    |> set_monster_encouter_battle_action()
+    |> set_monster_encounter_battle_action()
     |> Map.put(:steps, 0)
     IO.inspect("FUCKING WORK")
     IO.inspect(game.battleAction)
     game
   end
 
-  def set_monster_encouter_battle_action(game) do
+  def set_monster_encounter_battle_action(game) do
     cond do
+
       length(game.monsters) > 1 ->
         Map.put(game, :battleAction, "A group of monsters has appeared!")
       Enum.at(game.monsters, 0) == @bossName ->
@@ -463,23 +473,25 @@ defmodule Dndgame.Game do
     end
   end
 
-  def check_boss_encounter(game, x, y) do
-    bossPosn = game.boss
-    bossX = bossPosn.x
-    bossY = bossPosn.y
+  def boss_encounter(game) do
+  IO.inspect(Dndgame.Monsters.get_monster_by_name(@bossName))
+     battleArray = game.staticParty
 
-    cond do
-      bossX == x && bossY == y ->
-        true
-      bossX + 1 == x && bossY == y ->
-        true
-      bossX == x && bossY + 1 == y ->
-        true
-      bossX + 1 == x && bossY + 1 == y ->
-        true
-      true ->
-        false
-    end
+    game
+    |> Map.put(:monsters, [Dndgame.Monsters.get_monster_by_name(@bossName)])
+    |> add_order_array
+    |> Map.put(:battleParty, battleArray)
+    |> Map.put(:currentMenu, "main")
+    |> set_monster_encounter_battle_action() 
+  end 
+
+  def check_boss_encounter(game, x, y) do
+    IO.puts("in check boss encounter")
+    bossPosns = game.boss.posns
+    IO.inspect(bossPosns)
+    IO.puts(x)
+    IO.puts(y)
+    Enum.member?(bossPosns, %{x: x, y: y})
   end
 
   def remove_dead_monsters(game) do
