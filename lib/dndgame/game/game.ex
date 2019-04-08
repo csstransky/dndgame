@@ -435,7 +435,7 @@ defmodule Dndgame.Game do
 
       length(game.monsters) > 1 ->
         Map.put(game, :battleAction, "A group of monsters has appeared!")
-      Enum.at(game.monsters, 0) == @bossName ->
+      Enum.at(game.monsters, 0).name == @bossName ->
         Map.put(game, :battleAction, "You have challenged the " <> @bossName <> "!")
       true ->
         Map.put(game, :battleAction, "A monster has appeared!")
