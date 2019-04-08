@@ -436,7 +436,7 @@ class Dndgame extends React.Component {
 
     if (!this.state.battleAction == "") {
       ctx.font = "35px Ariel";
-      ctx.fillText("Press any key to continue", 400, 380);
+      ctx.fillText("Press the Enter to continue", 400, 380);
     }
 
     // Draw the headline text describing what is happening in the game
@@ -444,12 +444,6 @@ class Dndgame extends React.Component {
     ctx.fillText(this.state.battleAction, 20, 40);
   return canvas;
   }
-
-
-
-
-
-
 
   /////////////////////////////
   /// INTERACTIVE FUNCTIONS ///
@@ -484,34 +478,35 @@ class Dndgame extends React.Component {
         this.channel.push("walk", "right").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
       }
-
     }
 
     if (ev.key == "Escape") {
       this.runFromBattle();
     }
 
-    // If the battleAction string is not empty, the next key will be the "next" key
-    if (!this.state.battleAction == "") {
-      if (this.determineCurrentPlayerType() == "monster") {
+    if (ev.key == "Enter") {
+      // If the battleAction string is not empty, the next key will be the "next" key
+      if (!this.state.battleAction == "") {
+        if (this.determineCurrentPlayerType() == "monster") {
 
-        //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
-        //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-        //  .receive("ok", resp => {
-         //   this.setState(resp.game);
-         // });
+          //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
+          //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+          //  .receive("ok", resp => {
+           //   this.setState(resp.game);
+           // });
 
-        this.setState((state, props) => ({
-          battleAction: "",
-          orderIndex: (state.orderIndex + 1),
-        }));
-        return;
-      } else {
-        console.log("Sending player attack command");
-        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
+          this.setState((state, props) => ({
+            battleAction: "",
+            orderIndex: (state.orderIndex + 1),
+          }));
+          return;
+        } else {
+          console.log("Sending player attack command");
+          this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+            .receive("ok", resp => {
+              this.setState(resp.game);
+            });
+        }
       }
     }
 
@@ -582,13 +577,23 @@ class Dndgame extends React.Component {
     // Depending on the current menu, this switch will generate the next menu and modify the state accordingly
     switch (this.state.currentMenu) {
       case "main":
-        this.setState((state, props) => ({
-          buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
-         // mainMenuCurrentSelection: 0,
-          //subMenuCurrentSelection: 0,
-          currentMenu: "sub",
-          subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
-        }));
+        this.setState((state, props) => (
+          if (this.state.buildMenuPath[0] == 0) {
+            {
+              currentMenu: "monster",
+              buildMenuPath: state.buildMenuPath.concat([state.subMenuCurrentSelection]),
+            }
+          }
+          else {
+            {
+              buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
+             // mainMenuCurrentSelection: 0,
+              //subMenuCurrentSelection: 0,
+              currentMenu: "sub",
+              subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
+            }
+          }
+      ));
         break;
       case "sub":
         this.setState((state, props) => ({
@@ -630,7 +635,7 @@ class Dndgame extends React.Component {
 
   playerAttack() {
     console.log("Sending player attack command through channel");
-    this.channel.push("run")
+    this.channel.push("attack", {enemyIndex: this.state.buildMenuPath[2]})
       .receive("ok", resp => {
         this.setState(resp.game);
       });

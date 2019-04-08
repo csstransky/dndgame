@@ -7,8 +7,9 @@ defmodule Dndgame.Game.Skills do
     # refills mana to full for now
 
     # get the static_mp of the character to know what value to refill
-    character = get_character_battle(game)
-    static_char = get_character_static(game)
+    charIndex = get_character_index(game)
+    character = Enum.at(game.battleParty, charIndex)
+    static_char = Enum.at(game.staticParty, charIndex)
     static_mp = Dndgame.Characters.get_mp(static_char)
     # update the character to have full mana again
     updated_char = Map.replace(character, :mp, static_mp)
@@ -21,7 +22,8 @@ defmodule Dndgame.Game.Skills do
   def double_attack(game, targetId) do
     # simply do 2 attacks
     # get the character whose turn it is
-    character = get_character_battle(game)
+    charIndex = get_character_index(game)
+    character = Enum.at(game.battleParty, charIndex)
     enemy = Enum.at(game.monsters, targetId)
     doubleAttack = Dndgame.Skills.get_skill_by_name("Double Attack")
     # get the attack of this character
@@ -74,7 +76,8 @@ defmodule Dndgame.Game.Skills do
     # if str is greater than 30, set str to 30
 
     # get character and skill
-    char = get_character_battle(game)
+    charIndex = get_character_index(game)
+    char = Enum.at(game.battleParty, charIndex)
     skillRage = Dndgame.skills.get_skill_by_name("Rage")
 
     # calculate the buff and whether to set to max of 30 or not
@@ -105,7 +108,8 @@ defmodule Dndgame.Game.Skills do
 
     enemy = Enum.at(game.monsters, targetId)
     type = enemy.type
-    char = get_character_static(game)
+    charIndex = get_character_index(game)
+    char = Enum.at(game.staticParty, charIndex)
     skill = DndGame.Skills.get_skill_by_name("Turn Undead")
     # update character by subtracting the sp cost of the move
     newChar = Map.replace(char, :sp, char.sp - skill.sp_cost)
@@ -160,7 +164,8 @@ defmodule Dndgame.Game.Skills do
     # make sure our battle message shows whether or not the monster sees you
     # (stealth pass or fail message)
 
-    char = get_character_battle(game)
+    charIndex = get_character_index(game)
+    char = Enum.at(game.battleParty, charIndex)
     monster = Enum.at(game.monsters, targetId)
     skillStealth = Dndgame.Skills.get_skill_by_name("Sneak Attack")
     check = roll_dice(@d20) + get_character_stat_mod(char) + Dndgame.Characters.get_prof_bonus(char)
@@ -236,7 +241,8 @@ defmodule Dndgame.Game.Skills do
     # nothing, show you were caught with message
 
     # get character
-    char = get_character_battle(game)
+    charIndex = get_character_index(game)
+    char = Enum.at(game.battleParty, charIndex)
     skillHide = Dndgame.Skills.get_skill_by_name("Hide")
     # stealth check
     check = roll_dice(@d20) + get_character_stat_mod(char) + Dndgame.Characters.get_prof_bonus(char)
