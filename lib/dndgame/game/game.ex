@@ -17,13 +17,13 @@ defmodule Dndgame.Game do
   @bossTopLeftY 8
   @bossName "Young Green Dragon"
 
-  def new_game(world) do
+  def new_game(world, playerName) do
     # You're a new character, so this should be fine
     IO.inspect("WORLDCOUNTER")
     IO.inspect(world.playerCount)
-
     worldIndex = world.playerCount - 1
         IO.inspect(worldIndex)
+    Dndgame.GameServer.start(playerName)
     %{
         playerIndex: worldIndex,
         windSpeed: Map.get(world, "windSpeed"), # in MPH

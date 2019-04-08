@@ -13,7 +13,7 @@ defmodule DndgameWeb.GamesChannel do
       world = BackupAgent.get(name) || World.new_world(name)
       playerName = Map.get(payload, "user")
       world = World.join_world(world, playerName)
-      game = BackupAgent.get(playerName) || Game.new_game(world)
+      game = BackupAgent.get(playerName) || Game.new_game(world, playerName)
       IO.inspect(game)
       partyId1 = Map.get(payload, "partyId1")
       partyId2 = Map.get(payload, "partyId2")
@@ -38,13 +38,8 @@ defmodule DndgameWeb.GamesChannel do
   def handle_in("walk", direction, socket) do
     worldName = socket.assigns[:worldName]
     playerName = socket.assigns[:playerName]
-    world = BackupAgent.get(worldName)
+    Dndgame.GameServer.walk(playerName, worldName, direction)
     game = BackupAgent.get(playerName)
-    |> Game.walk(direction)
-    world = Map.put(world, :playerPosns, game.playerPosns)
-    BackupAgent.put(worldName, world)
-    BackupAgent.put(playerName, game)
-    update_players(worldName, playerName)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
@@ -100,10 +95,10 @@ defmodule DndgameWeb.GamesChannel do
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
-  def handle_out("update_players", %{"world" => world, "playerUpdaterName" => playerUpdaterName}, socket) do
+  def handle_out("update_players", world, socket) do
     playerName = socket.assigns[:playerName]
     worldName = socket.assigns[:worldName]
-    if playerName != playerUpdaterName && worldName do
+    if playerName && worldName do
       game = BackupAgent.get(playerName)
       |> Game.update_game_world(world)
       IO.inspect("I AM GETTING UPDATED")
@@ -121,12 +116,11 @@ defmodule DndgameWeb.GamesChannel do
   def update_players(worldName, playerName) do
 
     if playerName do
-      IO.inspect(playerName)
       IO.inspect("I AM UPDATING")
-      playerUpdaterName = playerName
+      IO.inspect(playerName)
       # I'm doing this here so backup agent is only called once for world
       world = BackupAgent.get(worldName)
-      DndgameWeb.Endpoint.broadcast!("games:#{worldName}", "update_players", %{"world" => world, "playerUpdaterName" => playerUpdaterName})
+      DndgameWeb.Endpoint.broadcast!("games:#{worldName}", "update_players", world)
       {:ok, world}
     end
   end
