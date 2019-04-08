@@ -416,7 +416,7 @@ class Dndgame extends React.Component {
     $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
       img.addEventListener('load', function() {
-        ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 200);
+        ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 100, 150);
       }, false);
 
       img.src = getMonsterImage(monster);
@@ -436,7 +436,7 @@ class Dndgame extends React.Component {
 
     if (!this.state.battleAction == "") {
       ctx.font = "35px Ariel";
-      ctx.fillText("Press any key to continue", 300, 50);
+      ctx.fillText("Press any key to continue", 400, 380);
     }
 
     // Draw the headline text describing what is happening in the game
@@ -494,11 +494,17 @@ class Dndgame extends React.Component {
     // If the battleAction string is not empty, the next key will be the "next" key
     if (!this.state.battleAction == "") {
       if (this.determineCurrentPlayerType() == "monster") {
-        console.log("Sending monster attack command");
-        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
+
+        //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
+        //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+        //  .receive("ok", resp => {
+         //   this.setState(resp.game);
+         // });
+
+        this.setState((state, props) => ({
+          battleAction: "",
+          orderIndex: (state.orderIndex + 1),
+        }));
         return;
       } else {
         console.log("Sending player attack command");
@@ -551,6 +557,7 @@ class Dndgame extends React.Component {
 
     // This uses the currently selected index and the menu + party to return an array of what the next subMenu contains
     function buildSubMenu (orderIndex, menuSelection, party) {
+      console.log(orderIndex)
       switch (menuSelection) {
         case 0:
           return ["no options"];
@@ -580,7 +587,7 @@ class Dndgame extends React.Component {
          // mainMenuCurrentSelection: 0,
           //subMenuCurrentSelection: 0,
           currentMenu: "sub",
-          subMenuOptions: buildSubMenu(state.orderIndex, state.mainMenuCurrentSelection, state.party),
+          subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
         }));
         break;
       case "sub":
