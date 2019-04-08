@@ -639,7 +639,7 @@ class Dndgame extends React.Component {
 
   playerAttack() {
     console.log("Sending player attack command through channel: "+ this.state.monsterCurrentSelection);
-    this.channel.push("attack", this.state.buildMenuPath[1])
+    this.channel.push("attack", this.state.monsterCurrentSelection)
       .receive("ok", resp => {
         this.setState(resp.game);
       });
@@ -647,6 +647,8 @@ class Dndgame extends React.Component {
 
   playerSpell() {
     console.log("Sending spell command");
+    console.log(this.state.buildMenuPath[1]);
+    console.log(this.state.monsterCurrentSelection);
     this.channel.push("use_spell", {spellId: this.state.buildMenuPath[1], enemyIndex: this.state.monsterCurrentSelection})
       .receive("ok", resp => {
         this.setState(resp.game);
