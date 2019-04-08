@@ -135,6 +135,7 @@ class Dndgame extends React.Component {
     ctx.drawImage(bossDrawing, 0-player.x*50,0-player.y*50, PLAYERSIZE, PLAYERSIZE);
 
 
+    var mainCharacter = this.state.playerPosns[this.state.playerIndex];
     for (let i = 0; i < this.state.playerPosns.length; i++) {
       let character = new Image();
       let currplayer = this.state.playerPosns[i];
@@ -160,7 +161,14 @@ class Dndgame extends React.Component {
         ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
 
       } else {
-        ctx.drawImage(character, PLAYERX - 100, PLAYERY - 100, PLAYERSIZE, PLAYERSIZE);
+        console.log(mainCharacter)
+        console.log(currplayer)
+        let diffDistanceX = mainCharacter.x - currplayer.x;
+        let diffDistanceY = mainCharacter.y - currplayer.y;
+        console.log(diffDistanceX)
+        console.log(diffDistanceY)
+        ctx.drawImage(character, PLAYERX - (diffDistanceX * PLAYERSIZE),
+                  PLAYERY - (diffDistanceY * PLAYERSIZE), PLAYERSIZE, PLAYERSIZE);
       }
     }
 
