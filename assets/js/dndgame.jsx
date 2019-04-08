@@ -655,7 +655,9 @@ class Dndgame extends React.Component {
 
   playerSkill() {
     console.log("Sending skill command");
-    this.channel.push("use_skill", {skillId: this.state.buildMenuPath[1], enemyIndex: this.state.buildMenuPath[2]})
+    console.log(this.state.buildMenuPath[1]);
+    console.log(this.state.monsterCurrentSelection);
+    this.channel.push("use_skill", {skillId: this.state.buildMenuPath[1], enemyIndex: this.state.monsterCurrentSelection})
       .receive("ok", resp => {
         this.setState(resp.game);
       });
