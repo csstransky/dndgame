@@ -360,12 +360,12 @@ class Dndgame extends React.Component {
           switch (currentMenu) {
               case "main":
                 $.each(mainMenuOptions, function (index2, value2) {
-                ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 18), ((index2 * 40) + 440));
+                ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 50), ((index2 * 40) + 440));
               });
               break;
             case "sub":
               $.each(subMenuOptions, function (index2, value2) {
-                ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 18), ((index2 * 40) + 440));
+                ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 50), ((index2 * 40) + 440));
               });
               break;
             case "monster":
