@@ -156,8 +156,12 @@ class Dndgame extends React.Component {
           console.log("broken");
           break;
       }
+      if (this.state.playerIndex === i) {
+        ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
 
-    ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
+      } else {
+        ctx.drawImage(character, PLAYERX - 100, PLAYERY - 100, PLAYERSIZE, PLAYERSIZE);
+      }
     }
 
     }
