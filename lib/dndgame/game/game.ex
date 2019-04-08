@@ -486,6 +486,7 @@ defmodule Dndgame.Game do
     |> add_order_array
     |> Map.put(:battleParty, battleArray)
     |> Map.put(:currentMenu, "main")
+    |> Map.put(:steps, 0)
     |> set_monster_encounter_battle_action()
   end
 
@@ -542,6 +543,30 @@ defmodule Dndgame.Game do
 
   end
 
+  def remove_dead_characters(game) do
+    charLength = length(game.battleParty)
+    removeList = Enum.map(game.battleParty, fn char ->
+      if char.hp <= 0 do
+        charLength = charLength - 1
+        "character#{charLength}"
+      else
+        ""
+      end
+    end)
+    newOrderArray = Enum.filter(game.orderArray, fn orderString ->
+      !(Enum.member?(removeList, orderString)) end)
+
+    # filter any dead monsters out of the list
+    removedDeadCharacters = Enum.filter(game.battleParty, fn char -> char.hp > 0 end)
+    if length(removedDeadCharacters) == 0 do
+      game
+      |> Map.replace(:monsters, [])
+    else
+      game
+      |> Map.replace(:battleParty, removedDeadCharacters)
+      |> Map.replace(:orderArray, newOrderArray)
+    end
+  end
   # Run from a battle
   def run(game) do
     # TODO: add rolling to decide on running
@@ -757,6 +782,7 @@ defmodule Dndgame.Game do
       game
       |> update_battle_party(hitCharacter)
       |> remove_dead_monsters
+      |> remove_dead_characters
       |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
       |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to #{targetCharacter.name} with #{attack.name}")
@@ -765,6 +791,7 @@ defmodule Dndgame.Game do
       game
       |> remove_dead_monsters
       |> incrementOrderIndex
+      |> remove_dead_characters
       |> Map.replace(:currentMenu, "main")
       |> Map.replace(:battleAction, "#{enemy.name} missed attack on #{targetCharacter.name}")
     end
