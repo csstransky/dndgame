@@ -376,7 +376,7 @@ class Dndgame extends React.Component {
             case "monster":
               console.log(spaceBuffer);
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), ((spaceBuffer) * (index2 + 1)) + 100, 170);
+                ctx.fillText(addSelection("monster", index2), ((spaceBuffer) * (index2 + 1)) + 150, 170);
               });
               break;
           }
@@ -446,7 +446,7 @@ class Dndgame extends React.Component {
 
     if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
       ctx.font = "35px Ariel";
-      ctx.fillText("Press Enter to continue", 700, 40);
+      ctx.fillText("Press Enter to continue", 710, 82);
     }
 
     // Draw the headline text describing what is happening in the game
