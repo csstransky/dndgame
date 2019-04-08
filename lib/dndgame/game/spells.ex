@@ -18,17 +18,15 @@ defmodule Dndgame.Game.Spells do
         new_enemy = Map.put(enemy, :hp, newHP)
 
         game
-        |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy)
-        |> Map.put(:battleAction, "#{character.name} did #{damage + damage} damage to
-                                      #{enemy.name} with Fire Bolt"))
+        |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
+        |> Map.put(:battleAction, "#{character.name} did #{damage + damage} damage to #{enemy.name} with Fire Bolt")
       else
         newHP = enemy.hp - damage
         new_enemy = Map.put(enemy, :hp, newHP)
 
         game
         |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
-        |> Map.put(:battleAction, "#{character.name} did #{damage} damage to
-                                      #{enemy.name} with Fire Bolt")
+        |> Map.put(:battleAction, "#{character.name} did #{damage} damage to #{enemy.name} with Fire Bolt")
       end
     end
 
