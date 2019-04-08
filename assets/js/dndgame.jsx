@@ -366,8 +366,9 @@ class Dndgame extends React.Component {
               });
               break;
             case "monster":
+              console.log(spaceBuffer);
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), spaceBuffer + 150, 170);
+                ctx.fillText(addSelection("monster", index2), (spaceBuffer + 100) * (index2 + 1), 170);
               });
               break;
           }
@@ -637,7 +638,7 @@ class Dndgame extends React.Component {
   }
 
   playerAttack() {
-    console.log("Sending player attack command through channel: "+ this.state.buildMenuPath);
+    console.log("Sending player attack command through channel: "+ this.state.monsterCurrentSelection);
     this.channel.push("attack", this.state.buildMenuPath[1])
       .receive("ok", resp => {
         this.setState(resp.game);
