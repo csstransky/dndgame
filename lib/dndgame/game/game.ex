@@ -517,10 +517,12 @@ defmodule Dndgame.Game do
         ""
       end
     end)
+    IO.inspect("HEY LISTEN")
+    IO.inspect(removeList)
 
     newOrderArray = Enum.filter(game.orderArray, fn orderString ->
       !(Enum.member?(removeList, orderString)) end)
-
+    IO.inspect(newOrderArray)
     # fold the list into 1 total number of xp to gain
     totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
     # update the characters with their xp
@@ -595,12 +597,12 @@ defmodule Dndgame.Game do
   def use_skill(game, skillId, targetId) do
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
-    skillName = Enum.at(character.skills, skillId)
+    skillName = Enum.at(character.class.skills, skillId)
 
     game
     |> use_specific_skill(skillName, targetId)
-    |> incrementOrderIndex
     |> remove_dead_monsters
+    |> incrementOrderIndex
     |> Map.replace(:currentMenu, "main")
     |> Map.replace(:battleAction, "placeholder")
   end
@@ -628,12 +630,12 @@ defmodule Dndgame.Game do
     # same as use skill but for spells
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
-    spellName = Enum.at(character.spells, spellId)
+    spellName = Enum.at(character.class.spells, spellId)
 
     game
     |> use_specific_spell(spellName, targetId)
-    |> incrementOrderIndex
     |> remove_dead_monsters
+    |> incrementOrderIndex
     |> Map.replace(:currentMenu, "main")
     |> Map.replace(:battleAction, "placeholder")
   end
@@ -697,14 +699,14 @@ defmodule Dndgame.Game do
       # replace less hp monster and update battleAction in game
       game
       |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
-      |> incrementOrderIndex
       |> remove_dead_monsters
+      |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
       |> Map.replace(:battleAction, "#{character.name} did #{damage} damage to #{enemy.name} with #{attack.name}")
     else
       game
-      |> incrementOrderIndex
       |> remove_dead_monsters
+      |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
       |> Map.replace(:battleAction, "#{character.name} tried to attack #{enemy.name} with #{attack.name}, but it missed")
     end
@@ -735,15 +737,15 @@ defmodule Dndgame.Game do
       # replace the character in the game and update the battle action
       game
       |> update_battle_party(hitCharacter)
-      |> incrementOrderIndex
       |> remove_dead_monsters
+      |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
       |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to #{targetCharacter.name} with #{attack.name}")
     else
       # the roll wasn't higher than ac so attack missed, just update battleAction
       game
-      |> incrementOrderIndex
       |> remove_dead_monsters
+      |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
       |> Map.replace(:battleAction, "#{enemy.name} missed attack on #{targetCharacter.name}")
     end
