@@ -360,36 +360,40 @@ defmodule Dndgame.Game do
     if @dawnTime < worldTime && worldTime < @duskTime do
       cond do
         game.temperature > @dayHotTemp ->
-          # TODO make this better in the future
           monster = Dndgame.Monsters.get_monster_by_name("Fire Goblin")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         game.temperature < @dayColdTemp ->
           monster = Dndgame.Monsters.get_monster_by_name("Ice Goblin")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         true ->
           monster = Dndgame.Monsters.get_monster_by_name("Goblin")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
       end
     else
       cond do
         game.temperature > @nightHotTemp ->
-          # TODO make this better in the future
           monster = Dndgame.Monsters.get_monster_by_name("Fire Zombie")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         game.temperature < @nightColdTemp ->
           monster = Dndgame.Monsters.get_monster_by_name("Ice Zombie")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         true ->
           monster = Dndgame.Monsters.get_monster_by_name("Zombie")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
       end
     end
+  end
+
+  def add_random_monsters(game, monster) do
+    monsterList = List.duplicate(monster, :rand.uniform(3))
+    game
+    |> Map.put(:monsters, monsterList)
   end
 
   def start_battle(game) do
@@ -457,6 +461,33 @@ defmodule Dndgame.Game do
     end
   end
 
+  def remove_dead_monsters(game) do
+    # map monsters, if 0 health map to xp, if > 0 map to 0 xp
+    # foldr the list of xp into one xp to add to all  Characters
+    # remove all monsters with below 0 health , update everything and return
+
+    # make a map of xp gained from any dead monsters
+    xpMap = Enum.map(game.monsters, fn monster ->
+      if monster.hp <= 0 do
+        monster.exp
+      else
+        0
+      end
+    end)
+
+    # fold the list into 1 total number of xp to gain
+    totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
+    # update the characters with their xp
+    updatedCharacters = Enum.map(game.battleParty, fn char ->
+                                  Map.replace(char, :xp, char.xp + totalXP) end)
+    # filter any dead monsters out of the list
+    removedDeadMonsters = Enum.filter(game.monsters, fn mon -> mon.hp > 0 end)
+
+    game
+    |> Map.replace(:monsters, removedDeadMonsters)
+    |> Map.replace(:battleParty, updatedCharacters)
+
+  end
 
   # Run from a battle
   def run(game) do
