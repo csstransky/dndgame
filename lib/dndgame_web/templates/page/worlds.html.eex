@@ -60,7 +60,7 @@
           location_desc = "Known for its volcanoes. GMT +3."
           break;
         case "everest":
-          location_desc = "A really tall mountain. Known for being really tall. And cold. GMT -5"
+          location_desc = "A really tall mountain. Known for being really tall. And cold. GMT -5."
           break;
         default:
           location_desc = "error"

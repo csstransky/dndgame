@@ -88,10 +88,11 @@ class Dndgame extends React.Component {
   // Parses through the chracter order array based on the current player index to determine the type of the next player
   determineCurrentPlayerType() {
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
+    console.log(currentPlayerString);
     if (currentPlayerString.charAt(0) == "c") {
       return "character";
     } else {
-      return "monster";
+      return "monster";//todo change back to monster
     }
   }
 
@@ -274,6 +275,7 @@ class Dndgame extends React.Component {
 
     // screen setup
     let date =  this.calcTime(this.state.timezone);
+    
     if (earlyDate < date && date < lateDate) {
       // DAY
       ctx.fillStyle = "#000000";
@@ -283,16 +285,17 @@ class Dndgame extends React.Component {
     }
     ctx.rect(0, 0, 1050, 650);
     ctx.stroke();
+    // add a header area for attack description text
+    ctx.beginPath();
+    ctx.moveTo(0, 50);
+    ctx.lineTo(1050, 50);
+    ctx.stroke();
+
 
     // divide up the bottom of the screen for menus
     ctx.beginPath();
-    ctx.moveTo(0, 400);
-    ctx.lineTo(1050, 400);
-    ctx.stroke()
-
-    ctx.beginPath();
     ctx.moveTo(350, 400);
-    ctx.lineTo(350, 650);
+    ctx.lineTo(350, 645);
     ctx.stroke();
 
     ctx.beginPath();
@@ -300,11 +303,10 @@ class Dndgame extends React.Component {
     ctx.lineTo(700, 650);
     ctx.stroke();
 
-    // add a header area for attack description text
     ctx.beginPath();
-    ctx.moveTo(0, 50);
-    ctx.lineTo(1050, 50);
-    ctx.stroke();
+    ctx.moveTo(0, 400);
+    ctx.stroke()
+
 
     // can't use a "this" within the each statements, so saving as var out here
     // not super elegant, and we can factor this out later, but it works decently
@@ -324,17 +326,11 @@ class Dndgame extends React.Component {
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
 
-      // This area renders the actual images for the characters in party
-      var img = new Image();
-      img.addEventListener('load', function() {
-        ctx.drawImage(img, (index * 333) + 260, 550, 50, 50);
-      }, false);
-
       // This determines if the given "option" number matches the currently selected menu option and returns
       // a " <-" string to append to that menu option to indicate it has been selected.
       function addSelection(type, option) {
         var x;
-        switch (type ) {
+        switch (type) {
           case "main":
             x = mainMenuCurrentSelection;
             break;
@@ -354,7 +350,7 @@ class Dndgame extends React.Component {
 
 
       // Wrapping this function in an if statement to only be triggered if it is a character's turn & statement string is empty
-      if (currentPlayerType == "character" && battleAction == "") {
+      if (currentPlayerType == "character") {
          // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
         ctx.font = "25px Helvetica";
 
@@ -363,12 +359,12 @@ class Dndgame extends React.Component {
           switch (currentMenu) {
               case "main":
                 $.each(mainMenuOptions, function (index2, value2) {
-                ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 5), ((index2 * 40) + 440));
+                ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 18), ((index2 * 40) + 440));
               });
               break;
             case "sub":
               $.each(subMenuOptions, function (index2, value2) {
-                ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 5), ((index2 * 40) + 440));
+                ctx.fillText(value2 + addSelection("sub", index2), ((index * 333) + 18), ((index2 * 40) + 440));
               });
               break;
             case "monster":
@@ -630,7 +626,7 @@ class Dndgame extends React.Component {
 
   playerAttack() {
     console.log("Sending player attack command through channel");
-    this.channel.push("run")
+    this.channel.push("attack")
       .receive("ok", resp => {
         this.setState(resp.game);
       });
