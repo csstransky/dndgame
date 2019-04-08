@@ -39,6 +39,8 @@ defmodule Dndgame.Game.Spells do
       char = Enum.at(game.battleParty, charIndex)
       magicMissle = Dndgame.Spells.get_spell_by_name("Magic Missle")
 
+      newChar = Map.replace(char, :mp, char.mp - magicMissle.mp_cost)
+
       # roll a 1d4 for damage and add the spells dice BONUS
       damage = roll_dice(magicMissle.dice) + magicMissle.dice_bonus
 
@@ -50,6 +52,7 @@ defmodule Dndgame.Game.Spells do
                                Map.replace(monster, :hp, monster.hp - damage) end)
 
       game
+      |> update_battle_party(newChar)
       |> Map.replace(:monsters, hitMonsters)
       |> Map.replace(:battleAction, "#{char.name} used Magic Missle and dealt
       #{damage} damage to all enemies")
@@ -66,25 +69,20 @@ defmodule Dndgame.Game.Spells do
       # get the character and the spell
       charIndex = get_character_index(game)
       char = Enum.at(game.battleParty, charIndex)
-      targetChar = Enum.at(game.battleParty, targetId)
-      staticChar = Enum.at(game.staticParty, targetId)
+      staticChar = Enum.at(game.staticParty, charIndex)
       staticHP = staticChar.hp
       cureWounds = Dndgame.Spells.get_spell_by_name("Cure Wounds")
       # get the stat modifier for the character
-      statMod = get_character_stat_mod(char.class.ability_modifier)
+      statMod = get_character_stat_mod(char)
       # calculate the hp buff given via dice roll + stat modifier
       buff = roll_dice(cureWounds.dice) + statMod
       # update the target characters hp
-      newHP = Enum.min([staticChar.hp, targetChar.hp + buff])
-      newTargetChar = Map.replace(targetChar, :hp, newHP)
-      # replace the character in the battle party and update the game
-      newBattleParty = List.replace_at(game.battleParty, targetId, newTargetChar)
-      # update the character using the move with less mp
-      newChar = Map.replace(char, :mp, char.mp - cureWounds.mp_cost)
-
+      newHP = Enum.min([staticChar.hp, char.hp + buff])
+      newChar = char
+      |> Map.replace(:hp, newHP)
+      |> Map.replace(:mp, char.mp - cureWounds.mp_cost)
       # give the game the new healed character, then the char with less mp
       game
-      |> Map.replace(:battleParty, newBattleParty)
       |> update_battle_party(newChar)
       |> Map.replace(:battleAction, "#{char.name} restored #{buff} hp with Cure Wounds")
     end
@@ -93,24 +91,18 @@ defmodule Dndgame.Game.Spells do
       # roll the "die" to add to the ac of the target
       # make sure that the ac is increased in the battle party
       charIndex = get_character_index(game)
-      thisChar = Enum.at(game.battleParty, charIndex)
-      targetChar = Enum.at(game.battleParty, targetId)
+      char = Enum.at(game.battleParty, charIndex)
       spellShield = Dndgame.Spells.get_spell_by_name("Shield of Faith")
       # get the increase in AC by rolling the spell's dice
       increase = roll_dice(spellShield.dice)
 
       # get haracter's index and replace the updated character into battleParty
-      charIndex = get_character_index(game)
-      newTargetChar = Map.replace(targetChar, :ac, targetChar.ac + increase)
-      newBattleParty = List.replace_at(game.battleParty, targetId, newTargetChar)
-
-      # update this characters mp to reflect cost
-      newThisChar = Map.replace(thisChar, :mp, thisChar.mp - spellShield.mp_cost)
+      newChar = char
+      |> Map.replace(:ac, char.ac + increase)
+      |> Map.replace(:mp, char.mp - spellShield.mp_cost)
 
       game
-      |> Map.replace(:battleParty, newBattleParty)
-      |> update_battle_party(newThisChar)
-      |> Map.replace(:battleAction, "#{thisChar.name} increased the ac of
-      #{targetChar.name} by #{increase} with Shield of Faith")
+      |> update_battle_party(newChar)
+      |> Map.replace(:battleAction, "#{newChar.name} increased their ac by #{increase} with Shield of Faith")
     end
 end
