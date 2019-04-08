@@ -106,6 +106,11 @@ class Dndgame extends React.Component {
     }
   }
 
+  blankIfNoSpells() {
+    if (this.state.party[this.state.orderIndex].spells) {
+    }
+  }
+
   //ATTRIBUTION: function to calc timezeone
   // stackoverflow.com/questions/8201655/get-time-of-specific-timezone
   calcTime(offset) {
@@ -250,6 +255,8 @@ class Dndgame extends React.Component {
     let currentPlayerType = this.determineCurrentPlayerType();
     let currentPlayerIndex = this.determineCurrentPlayerIndex();
 
+    this.blankIfNoSpells();
+
     // initialize canvas
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
@@ -321,6 +328,13 @@ class Dndgame extends React.Component {
     let battleAction = this.state.battleAction
     let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
 
+
+      if (this.state.party[this.state.orderIndex].spells) {
+        mainMenuOptions[2] = "";
+      }
+
+
+
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
 
@@ -368,7 +382,7 @@ class Dndgame extends React.Component {
             case "monster":
               console.log(spaceBuffer);
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), (spaceBuffer + 100) * (index2 + 1), 170);
+                ctx.fillText(addSelection("monster", index2), ((index2 + 1) * spaceBuffer) + 100, 170);
               });
               break;
           }
