@@ -606,7 +606,6 @@ defmodule Dndgame.Game do
     |> remove_dead_monsters
     |> incrementOrderIndex
     |> Map.replace(:currentMenu, "main")
-    |> Map.replace(:battleAction, "placeholder")
   end
 
     def use_specific_skill(game, skillName, targetId) do
@@ -643,7 +642,6 @@ defmodule Dndgame.Game do
     |> remove_dead_monsters
     |> incrementOrderIndex
     |> Map.replace(:currentMenu, "main")
-    |> Map.replace(:battleAction, "placeholder")
   end
 
   def use_specific_spell(game, spellName, targetId) do
