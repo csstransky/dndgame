@@ -1,6 +1,6 @@
 
 <%= if @current_user == nil do %>
-  <h6> Please log in to see your characters. </h6>
+  <h6> Please <a href="/login"><u>login</u></a> to make a party.</h6>
 <% else %>
   <h4>Listing Characters</h4>
   <table class="table">

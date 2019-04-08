@@ -21,6 +21,8 @@ defmodule DndgameWeb.SessionController do
 
   def get_and_auth_user(email, password) do
     user = Dndgame.Users.get_user_by_email(email)
+    IO.inspect("WHAT DO I GET ?!")
+    IO.inspect(Argon2.check_pass(user, password))
     case Argon2.check_pass(user, password) do
       {:ok, user} -> user
       _else       -> nil

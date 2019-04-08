@@ -3,8 +3,8 @@ defmodule Dndgame.Game do
   alias Dndgame.Game.World
   require Protocol
 
-  @boss_x 40
-  @boss_y 40
+  @bossTopLeftX 40
+  @bossTopLeftY 40
   @max_steps_for_encounter 30
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
@@ -13,6 +13,7 @@ defmodule Dndgame.Game do
   @nightColdTemp 20
   @dayHotTemp 90
   @dayColdTemp 30
+  @bossName "Young Green Dragon"
 
   def new_game(world) do
     # You're a new character, so this should be fine
@@ -28,8 +29,10 @@ defmodule Dndgame.Game do
         staticParty: [], # Will be added onto later
         monsters: [], # fills up when character encounters monsters
         boss: %{
-          x: @boss_x,
-          y: @boss_y,
+          posns: [%{x: @bossTopLeftX, y: @bossTopLeftY},
+                  %{x: @bossTopLeftX + 1, y: @bossTopLeftY},
+                  %{x: @bossTopLeftX, y: @bossTopLeftY + 1},
+                  %{x: @bossTopLeftX + 1, y: @bossTopLeftY + 1}],
         },
 
         orderArray: [], # fills up with strings of whose turn it is
@@ -399,8 +402,19 @@ defmodule Dndgame.Game do
     |> add_order_array
     |> Map.put(:battleParty, battleParty)
     |> Map.put(:currentMenu, "main")
-    |> Map.put(:battleAction, "")
+    |> set_monster_encouter_battle_action()
     |> Map.put(:steps, 0)
+  end
+
+  def set_monster_encouter_battle_action(game) do
+    cond do
+      length(game.monsters) > 1 ->
+        Map.put(game, :battleAction, "A group of monsters has appeared!")
+      Enum.at(game.monsters, 0) == @bossName ->
+        Map.put(game, :battleAction, "You have challenged the " <> @bossName <> "!")
+      true ->
+        Map.put(game, :battleAction, "A monster has appeared!")
+    end
   end
 
   def add_order_array(game) do

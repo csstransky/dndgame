@@ -15,15 +15,15 @@
         </div>
         <div class="col">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item ">
-              <a class="btn btn-secondary" href="/">Home</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home</a>
             </li>
 
             <li class="nav-item">
-              <a class="btn btn-secondary" href="/users">Users</a>
+              <a class="nav-link" href="/users">Users</a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-secondary" href="/characters">Characters</a>
+              <a class="nav-link" href="/characters">Characters</a>
             </li>
             <%= if @current_user do %>
               <li class="nav-item">

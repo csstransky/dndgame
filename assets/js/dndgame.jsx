@@ -326,8 +326,7 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, (index * 333) + 260, 550, 50, 50);
       }, false);
-      img.src = require("../static/character/ff_sprite.png")
-
+      
       // This determines if the given "option" number matches the currently selected menu option and returns
       // a " <-" string to append to that menu option to indicate it has been selected.
       function addSelection(type, option) {
