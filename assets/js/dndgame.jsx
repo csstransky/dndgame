@@ -94,7 +94,7 @@ class Dndgame extends React.Component {
     } else {
       return "monster";//todo change back to monster
     }
-  }
+  }//lol
 
   // Parses through the character array to determine the index (within the character or monster array) of the next chracter
   determineCurrentPlayerIndex() {
