@@ -118,11 +118,10 @@ class Dndgame extends React.Component {
   drawGameMap() {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, 1050, 650);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
     ctx.fillStyle = "#FFFFFF";
     ctx.strokeStyle = "#000000";
-    ctx.strokeRect(0, 0, 1000, 600);
-    ctx.fillRect(0, 0, 1000, 600);
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.characterIndex];
@@ -254,7 +253,7 @@ class Dndgame extends React.Component {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     // x: 600, Y: 800
-    ctx.clearRect(0, 0, 1050, 650);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.characterIndex];
@@ -300,11 +299,6 @@ class Dndgame extends React.Component {
     ctx.lineTo(700, 650);
     ctx.stroke();
 
-    // add a header area for attack description text
-    ctx.beginPath();
-    ctx.moveTo(0, 50);
-    ctx.lineTo(1050, 50);
-    ctx.stroke();
 
     // can't use a "this" within the each statements, so saving as var out here
     // not super elegant, and we can factor this out later, but it works decently
@@ -442,6 +436,13 @@ class Dndgame extends React.Component {
     // Draw the headline text describing what is happening in the game
     ctx.font = "25px Ariel";
     ctx.fillText(this.state.battleAction, 20, 40);
+
+    // add a header area for attack description text
+    ctx.beginPath();
+    ctx.moveTo(0, 50);
+    ctx.lineTo(1050, 50);
+    ctx.stroke();
+
   return canvas;
   }
 
@@ -496,14 +497,12 @@ class Dndgame extends React.Component {
       if (this.determineCurrentPlayerType() == "monster") {
 
         //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
-        //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-        //  .receive("ok", resp => {
-         //   this.setState(resp.game);
-         // });
-
+        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+          .receive("ok", resp => {
+            this.setState(resp.game);
+          });
         this.setState((state, props) => ({
           battleAction: "",
-          orderIndex: (state.orderIndex + 1),
         }));
         return;
       } else {

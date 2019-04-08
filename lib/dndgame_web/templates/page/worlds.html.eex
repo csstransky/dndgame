@@ -38,29 +38,29 @@
     <%= hidden_input func, :user_id, value: @current_user.id %>
     <%= hidden_input func, :world_name, value: "", id: "world_name" %>
     <br/>
-    <%= submit "Join Game TODO make me attractive" %>
+    <%= submit "Join Game", class: "btn btn-success" %>
   <% end %>
   <script>
     function desc(place) {
       location_desc = ""
       switch(place) {
         case "boston":
-          location_desc = "boston location_description"
+          location_desc = "State Capital of Massachusetts. Known for its cool weather. GMT -4."
           break;
         case "death-valley":
-          location_desc = "death valley location_description"
+          location_desc = "A land of extremes. Known for its scorching weather. GMT -7."
           break;
         case "greenland":
-          location_desc = "greenland location_descript"
+          location_desc = "Actually known for its ice. GMT -2."
           break;
         case "sydney":
-          location_desc = "sydney description"
+          location_desc = "Watch out for drop bears! Known for its warm weather. GMT +10."
           break;
         case "dallol":
-          location_desc = "dallol location_descirption"
+          location_desc = "Known for its volcanoes. GMT +3."
           break;
         case "everest":
-          location_desc = "everest location_description"
+          location_desc = "A really tall mountain. Known for being really tall. And cold. GMT -5"
           break;
         default:
           location_desc = "error"
