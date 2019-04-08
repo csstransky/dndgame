@@ -274,7 +274,7 @@ class Dndgame extends React.Component {
 
     // screen setup
     let date =  this.calcTime(this.state.timezone);
-    
+
     if (earlyDate < date && date < lateDate) {
       // DAY
       ctx.fillStyle = "#000000";
@@ -495,16 +495,18 @@ class Dndgame extends React.Component {
           .receive("ok", resp => {
             this.setState(resp.game);
           });
-        this.setState((state, props) => ({
-          battleAction: "",
-        }));
         return;
       } else {
-        console.log("Sending player attack command");
-        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
+        if (this.determineCurrentPlayerType() == "monster") {
+          console.log("Sending player attack command");
+          this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+            .receive("ok", resp => {
+              this.setState(resp.game);
+            });
+        }
+        else {
+          this.state.battleAction == "";
+        }
       }
     }
 
