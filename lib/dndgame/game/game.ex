@@ -438,6 +438,26 @@ defmodule Dndgame.Game do
     end
   end
 
+  def check_boss_encounter(game, x, y) do
+    bossPosn = game.boss
+    bossX = bossPosn.x
+    bossY = bossPosn.y
+
+    cond do
+      bossX == x && bossY == y ->
+        true
+      bossX + 1 == x && bossY == y ->
+        true
+      bossX == x && bossY + 1 == y ->
+        true
+      bossX + 1 == x && bossY + 1 == y ->
+        true
+      true ->
+        false
+    end
+  end
+
+
   # Run from a battle
   def run(game) do
     # TODO: add rolling to decide on running
