@@ -486,13 +486,14 @@ class Dndgame extends React.Component {
     }
 
 
+
     if (ev.key == "Enter") {
 
       // If the battleAction string is not empty, the next key will be the "next" key
       if (!this.state.battleAction == "") {
         if (this.determineCurrentPlayerType() == "monster") {
 
-          //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
+          console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
           this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
             .receive("ok", resp => {
               this.setState(resp.game);
@@ -582,7 +583,7 @@ class Dndgame extends React.Component {
       case "main":
         if (this.state.mainMenuCurrentSelection == 0) {
           this.setState((state, props) => ({
-            buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]).concat([0]),
+            buildMenuPath: state.buildMenuPath.concat([0]).concat([state.mainMenuCurrentSelection]),
             // mainMenuCurrentSelection: 0,
             //subMenuCurrentSelection: 0,
             currentMenu: "monster",
@@ -636,8 +637,8 @@ class Dndgame extends React.Component {
   }
 
   playerAttack() {
-    console.log("Sending player attack command through channel");
-    this.channel.push("attack", {enemyIndex: this.state.buildMenuPath[2]})
+    console.log("Sending player attack command through channel: "+ this.state.buildMenuPath);
+    this.channel.push("attack", this.state.buildMenuPath[1])
       .receive("ok", resp => {
         this.setState(resp.game);
       });
