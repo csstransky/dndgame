@@ -3,8 +3,8 @@ defmodule Dndgame.Game do
   alias Dndgame.Game.World
   require Protocol
 
-  @bossTopLeftX 40
-  @bossTopLeftY 40
+  @boss_x 40
+  @boss_y 40
   @max_steps_for_encounter 30
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
@@ -13,7 +13,6 @@ defmodule Dndgame.Game do
   @nightColdTemp 20
   @dayHotTemp 90
   @dayColdTemp 30
-  @bossName "Young Green Dragon"
 
   def new_game(world) do
     # You're a new character, so this should be fine
@@ -29,12 +28,8 @@ defmodule Dndgame.Game do
         staticParty: [], # Will be added onto later
         monsters: [], # fills up when character encounters monsters
         boss: %{
-          posns: [%{x: @bossTopLeftX, y: @bossTopLeftY},
-                  %{x: @bossTopLeftX + 1, y: @bossTopLeftY},
-                  %{x: @bossTopLeftX, y: @bossTopLeftY + 1},
-                  %{x: @bossTopLeftX + 1, y: @bossTopLeftY + 1}],
-          x: @bossTopLeftX,
-          y: @bossTopLeftY,
+          x: @boss_x,
+          y: @boss_y,
         },
 
         orderArray: [], # fills up with strings of whose turn it is
@@ -404,19 +399,8 @@ defmodule Dndgame.Game do
     |> add_order_array
     |> Map.put(:battleParty, battleParty)
     |> Map.put(:currentMenu, "main")
-    |> set_monster_encouter_battle_action()
+    |> Map.put(:battleAction, "")
     |> Map.put(:steps, 0)
-  end
-
-  def set_monster_encouter_battle_action(game) do
-    cond do
-      length(game.monsters) > 1 ->
-        Map.put(game, :battleAction, "A group of monsters has appeared!")
-      Enum.at(game.monsters, 0) == @bossName ->
-        Map.put(game, :battleAction, "You have challenged the " <> @bossName <> "!")
-      true ->
-        Map.put(game, :battleAction, "A monster has appeared!")
-    end
   end
 
   def add_order_array(game) do
@@ -453,6 +437,26 @@ defmodule Dndgame.Game do
       game
     end
   end
+
+  def check_boss_encounter(game, x, y) do
+    bossPosn = game.boss
+    bossX = bossPosn.x
+    bossY = bossPosn.y
+
+    cond do
+      bossX == x && bossY == y ->
+        true
+      bossX + 1 == x && bossY == y ->
+        true
+      bossX == x && bossY + 1 == y ->
+        true
+      bossX + 1 == x && bossY + 1 == y ->
+        true
+      true ->
+        false
+    end
+  end
+
 
   # Run from a battle
   def run(game) do
@@ -528,27 +532,20 @@ defmodule Dndgame.Game do
     character = get_character_battle(game)
     skillName = Enum.at(character.skills, skillId)
 
-    game
-    |> use_specific_skill(skillName, targetId)
-    |> incrementOrderIndex
-    |> Map.replace(:battleAction, "placeholder")
-  end
-
-  def use_specific_skill(game, skillName, targetId) do
     # cond of all skills, goes to a function that deals with the logic of that skill
     cond do
       skillName == "Short Rest" ->
-        short_rest(game)
+        Dndgame.Game.Skills.short_rest(game)
       skillName == "Double Attack" ->
-        double_attack(game, targetId)
+        Dndgame.Game.Skills.double_attack(game, targetId)
       skillName == "Rage" ->
-        rage(game)
+        Dndgame.Game.Skills.rage(game)
       skillName == "Turn Undead" ->
-        turn_undead(game, targetId)
+        Dndgame.Game.Skills.turn_undead(game, targetId)
       skillName == "Sneak Attack" ->
-        sneak_attack(game, targetId)
+        Dndgame.Game.Skills.sneak_attack(game, targetId)
       skillName == "Hide" ->
-        hide(game)
+        Dndgame.Game.Skills.hide(game)
     end
   end
 
@@ -558,22 +555,15 @@ defmodule Dndgame.Game do
     character = get_character_battle(game)
     spellName = Enum.at(character.spells, spellId)
 
-    game
-    |> use_specific_spell(spellName, targetId)
-    |> incrementOrderIndex
-    |> Map.replace(:battleAction, "placeholder")
-  end
-
-  def use_specific_spell(game, spellName, targetId) do
     cond do
       spellName == "Fire Bolt" ->
-        fire_bolt(game, targetId)
+        Dndgame.Game.Spells.fire_bolt(game, targetId)
       spellName == "Magic Missle" ->
-        magic_missle(game)
+        Dndgame.Game.Spells.magic_missle(game)
       spellName == "Cure Wounds" ->
-        cure_wounds(game, targetId)
+        Dndgame.Game.Spells.cure_wounds(game, targetId)
       spellName == "Shield of Faith" ->
-        shield_of_faith(game, targetId)
+        Dndgame.Game.Spells.shield_of_faith(game, targetId)
     end
   end
 
@@ -622,12 +612,10 @@ defmodule Dndgame.Game do
       # replace less hp monster and update battleAction in game
       game
       |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
-      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
       to #{enemy.name} with #{attack.name}")
     else
       game
-      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{character.name} tried to attack
       #{enemy.name} with #{attack.name}, but it missed")
     end
@@ -656,399 +644,12 @@ defmodule Dndgame.Game do
       # replace the character in the game and update the battle action
       game
       |> update_battle_party(hitCharacter)
-      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to
                                    #{targetCharacter.name} with #{attack.name}")
     else
       # the roll wasn't higher than ac so attack missed, just update battleAction
       game
-      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{enemy.name} missed attack on #{targetCharacter.name}")
     end
-  end
-
-  def incrementOrderIndex(game) do
-    newOrderIndex = game.orderIndex + 1
-    if newOrderIndex == length(game.orderArray) do
-      game
-      |> Map.put(:orderIndex, 0)
-    else
-      game
-      |> Map.put(:orderIndex, newOrderIndex)
-    end
-  end
-
-  ##### SKILL FUNCTIONS #####
-
-  def short_rest(game) do
-    # goes on self
-    # refills mana to full for now
-
-    # get the static_mp of the character to know what value to refill
-    character = get_character_battle(game)
-    static_char = get_character_static(game)
-    static_mp = Dndgame.Characters.get_mp(static_char)
-    # update the character to have full mana again
-    updated_char = Map.replace(character, :mp, static_mp)
-    # update the battle party in the game and the battleAction text
-    game
-    |> update_battle_party(updated_char)
-    |> Map.put(:battleAction, "#{updated_char.name} restored to #{static_mp} mana with Short Rest.")
-  end
-
-  def double_attack(game, targetId) do
-    # simply do 2 attacks
-    # get the character whose turn it is
-    character = get_character_battle(game)
-    enemy = Enum.at(game.monsters, targetId)
-    doubleAttack = Dndgame.Skills.get_skill_by_name("Double Attack")
-    # get the attack of this character
-    attack = character.weapon.attack
-    # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
-    attackRoll1 = roll_dice("1d20") + get_character_stat_mod(character)
-    + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
-    attackRoll2 = roll_dice("1d20") + get_character_stat_mod(character)
-    + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
-    # update the characters sp to reflect the cost of Double Attack
-    newChar = Map.replace(character, :sp, character.sp - doubleAttack.sp_cost)
-
-    cond do
-      # if both rolls are hits
-      attackRoll1 > enemy.ac && attackRoll2 > enemy.ac ->
-        # calculate damage
-        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
-        fullDamage = damage + damage
-        # take damage out of enemy hp
-        hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
-        # replace less hp monster and update battleAction in game
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, hitEnemy))
-        |> Map.replace(:battleAction, "#{character.name} did #{fullDamage} damage
-        to #{enemy.name} using Double Attack with #{attack.name}")
-
-      # if only one of the rolls hit
-      attackRoll1 > enemy.ac && attackRoll2 <= enemy.ac or attackRoll1 <= enemy.ac && attackRoll2 > enemy.ac ->
-        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
-        # take damage out of enemy hp
-        hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
-        # replace less hp monster and update battleAction in game
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, hitEnemy))
-        |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
-        to #{enemy.name} with one hit using Double Attack with #{attack.name}")
-
-      attackRoll1 <= enemy.ac && attackRoll2 <= enemy.ac ->
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{character.name} tried to Double Attack
-                              #{enemy.name} with #{attack.name}, but it missed")
-    end
-  end
-
-  def rage(game) do
-    # increase "dice" to character's strength
-    # if str is greater than 30, set str to 30
-
-    # get character and skill
-    char = get_character_battle(game)
-    skillRage = Dndgame.skills.get_skill_by_name("Rage")
-
-    # calculate the buff and whether to set to max of 30 or not
-    buff = roll_dice(skillRage.dice)
-    totalStr = Enum.min([30, char.str + buff])
-
-    # update the characters str and sp to reflect move
-    newChar = char
-    |> Map.replace(:str, totalStr)
-    |> Map.replace(:sp, char.sp - skillRage.sp_cost)
-
-    game
-    |> update_battle_party(newChar)
-    |> Map.replace(:battleAction, "#{char.name} used Rage to increase Strength by #{buff}")
-  end
-
-  def turn_undead(game, targetId) do
-    # check if the monster is undead
-    # if it is
-      # check if there is more than 1 monster
-      # if there's more than 1
-        # remove that monster
-      # if last monster
-        # bring health to 0
-        # our backend logic should make it so now you add exp, YOU WON
-    # if not
-      # do nothing
-
-      enemy = Enum.at(game.monsters, targetId)
-      type = enemy.type
-      char = get_character_static(game)
-      skill = DndGame.Skills.get_skill_by_name("Turn Undead")
-      # update character by subtracting the sp cost of the move
-      newChar = Map.replace(char, :sp, char.sp - skill.sp_cost)
-
-      if type == "undead" do
-        # if there is more than one monster in the battle array
-        if length(game.monsters) > 1 do
-          # remove the undead creature
-          newMonsters = List.delete_at(game.monsters, targetId)
-          # replace the array and update the battleAction text
-          game
-          |> Map.replace(:monsters, newMonsters)
-          |> update_battle_party(newChar)
-          |> Map.replace(:battleAction,
-                              "#{char.name} used Turn Undead on #{enemy.name}")
-        else
-          # if there is only 1 monster that is this undead, just kill it for xp
-          deadEnemy = Map.replace(enemy, :hp, 0)
-          # replace the monster in the array and update battleAction text
-          game
-          |> Map.replace(:monsters, List.replace_at(game.monsters, 0, deadEnemy))
-          |> update_battle_party(newChar)
-          |> Map.replace(:battleAction,
-                              "#{char.name} used Turn Undead on #{enemy.name}")
-        end
-      else
-        # if the selected creature is not undead, do nothing but remove sp
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:battleAction,
-              "#{char.name} attempted to use Turn Undead on the non-undead #{enemy.name}")
-      end
-  end
-
-  def sneak_attack(game, targetId) do
-    # HARDEST ONE TO DO
-
-    # do a stealth check
-      # roll a d20, add dexterity modifier, and then add proficiency bonus IF
-      # you have the "stealth" proficiency
-      # Compare that roll to the monster's Perception check (d20 + wis modifier)
-
-    # if succeed stealth check
-      # do TWO attack rolls, and pick the largest value (called "advantage")
-      # do weapon_damage + dex modifier + 1d6 * ceil(level / 2)
-
-    # if fail,
-      # (just a normal attack function)
-      # do normal attack
-      # do weapon_damage + dex modifier
-
-    # make sure our battle message shows whether or not the monster sees you
-    # (stealth pass or fail message)
-
-    char = get_character_battle(game)
-    monster = Enum.at(game.monsters, targetId)
-    skillStealth = Dndgame.Skills.get_skill_by_name("Sneak Attack")
-    check = roll_dice(@d20) + get_character_stat_mod(char) + Dndgame.Characters.get_prof_bonus(char)
-    monsterCheck = roll_dice(@d20) + Dndgame.Characters.get_stat_modifier(monster.wis)
-
-    attack = char.weapon.attack
-
-    if check > monsterCheck do
-      # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
-      attackRoll1 = roll_dice("1d20") + get_character_stat_mod(char)
-      + Dndgame.Characters.get_prof_bonus(char) + attack.attack_bonus
-      attackRoll2 = roll_dice("1d20") + get_character_stat_mod(char)
-      + Dndgame.Characters.get_prof_bonus(char) + attack.attack_bonus
-
-      highRoll = Enum.max([attackRoll1, attackRoll2])
-
-      if highRoll > monster.ac do
-        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(char) + (roll_dice("1d6") * ceil(char.level / 2))
-        hitMonster = Map.replace(monster, :hp, monster.hp - damage)
-        newMonsters = List.replace_at(game.monsters, targetId, hitMonster)
-
-        newChar = Map.replace(char, :sp, char.sp - skillStealth.sp_cost)
-
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:monsters, newMonsters)
-        |> Map.replace(:battleAction, "#{char.name} successfully Sneak Attacked #{monster.name} for #{damage} damage")
-      else
-        newChar = Map.replace(char, :sp, char.sp - skillStealth.sp_cost)
-
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{char.name} missed Sneak Attack on #{monster.name}")
-      end
-    else
-      attackRoll = roll_dice("1d20") + get_character_stat_mod(char)
-      + Dndgame.Characters.get_prof_bonus(char) + attack.attack_bonus
-
-      if attackRoll > monster.ac do
-        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(char)
-
-        hitMonster = Map.replace(monster, :hp, monster.hp - damage)
-        newMonsters = List.replace_at(game.monsters, targetId, hitMonster)
-
-        newChar = Map.replace(char, :sp, char.sp - skillStealth.sp_cost)
-
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:monsters, newMonsters)
-        |> Map.replace(:battleAction, "#{char.name} was caught by #{monster.name} but hit for #{damage} damage")
-      else
-        newChar = Map.replace(char, :sp, char.sp - skillStealth.sp_cost)
-
-        game
-        |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{char.name} missed Sneak Attack on #{monster.name}")
-      end
-    end
-  end
-
-  def hide(game) do
-    # do a stealth check
-      # roll a d20, add dexterity modifier, and then add proficiency bonus IF
-      # you have the "stealth" proficiency
-      # Compare that roll to ALL monsters' Perception check (d20 + wis modifier)
-      # basically, grab the highest wisdom check from monsters
-
-    # if succeed
-      # ac + 1
-      # dex + 3
-
-    # if fail
-      # nothing, show you were caught with message
-
-    # get character
-    char = get_character_battle(game)
-    skillHide = Dndgame.Skills.get_skill_by_name("Hide")
-    # stealth check
-    check = roll_dice(@d20) + get_character_stat_mod(char) + Dndgame.Characters.get_prof_bonus(char)
-    monsterCheck = Enum.max(Enum.map(game.monsters, fn x ->
-    roll_dice(@d20) + Dndgame.Characters.get_stat_modifier(x.wis) end))
-
-    if check > monsterCheck do
-      newChar = char
-      |> Map.replace(:ac, char.ac + 1)
-      |> Map.replace(:dex, char.dex + 3)
-      |> Map.replace(:sp, char.sp - skillHide.sp_cost)
-
-      game
-      |> update_battle_party(newChar)
-      |> Map.replace(:battleAction, "#{char.name} used Hide to increase ac by 1 and dex by 3")
-    else
-      newChar = char
-      |> Map.replace(:sp, char.sp - skillHide.sp_cost)
-
-      game
-      |> update_battle_party(newChar)
-      |> Map.replace(:battleAction, "#{char.name} was caught trying to hide, and did not receive any buffs")
-    end
-  end
-
-  ##### SPELL FUNCTIONS #####
-  def fire_bolt(game, targetId) do
-    character = get_character_battle(game)
-    spell = Dndgame.Spells.get_spell_by_name("Fire Bolt")
-
-    # double damage for ice type
-    damage = roll_dice(spell.dice)
-
-
-    enemy = List.at(game.monsters, targetId)
-
-    if enemy.element == "ice" do
-      # double damage for ice enemies
-      newHP = enemy.hp - damage - damage
-      new_enemy = Map.put(enemy, :hp, newHP)
-
-      game
-      |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy)
-      |> Map.put(:battleAction, "#{character.name} did #{damage + damage} damage to
-                                    #{enemy.name} with Fire Bolt"))
-    else
-      newHP = enemy.hp - damage
-      new_enemy = Map.put(enemy, :hp, newHP)
-
-      game
-      |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy)
-      |> Map.put(:battleAction, "#{character.name} did #{damage} damage to
-                                    #{enemy.name} with Fire Bolt"))
-    end
-  end
-
-  def magic_missle(game) do
-    # 1d4 + 1 force damage to all enemies
-    # USE THE SPELL'S HIT DIE AND DAMAGE BONUS
-
-    # get the character whose turn it is and the spell
-    char = get_character_battle(game)
-    magicMissle = Dndgame.Spells.get_spell_by_name("Magic Missle")
-
-    # roll a 1d4 for damage and add the spells dice BONUS
-    damage = roll_dice(magicMissle.dice) + magicMissle.dice_bonus
-
-    # deal that damage to all enemies
-    numEnemies = length(game.monsters)
-
-    # update all monsters health to reflect damage
-    hitMonsters = Enum.map(game.monsters, fn monster ->
-                             Map.replace(monster, :hp, monster.hp - damage) end)
-
-    game
-    |> Map.replace(:monsters, hitMonsters)
-    |> Map.replace(:battleAction, "#{char.name} used Magic Missle and dealt
-    #{damage} damage to all enemies")
-  end
-
-  def cure_wounds(game, targetId) do
-    # add hp to the chosen character 1d8 + your spellcasting ability modifier.
-
-    # the only person that does this is cleric, so look at character.class.ability_modifier
-    # and then get the modifier from that stat with get_stat_modifier(stat)
-    # example: ability_modifier: "CHA", cha: 12, roll: 5
-    # OUTPUT: 5 + 1 to chosen character
-
-    # get the character and the spell
-    char = get_character_battle(game)
-    targetChar = Enum.at(game.battleParty, targetId)
-    staticChar = Enum.at(game.staticParty, targetId)
-    staticHP = staticChar.hp
-    cureWounds = Dndgame.Spells.get_spell_by_name("Cure Wounds")
-    # get the stat modifier for the character
-    statMod = get_character_stat_mod(char.class.ability_modifier)
-    # calculate the hp buff given via dice roll + stat modifier
-    buff = roll_dice(cureWounds.dice) + statMod
-    # update the target characters hp
-    newHP = Enum.min([staticChar.hp, targetChar.hp + buff])
-    newTargetChar = Map.replace(targetChar, :hp, newHP)
-    # replace the character in the battle party and update the game
-    newBattleParty = List.replace_at(game.battleParty, targetId, newTargetChar)
-    # update the character using the move with less mp
-    newChar = Map.replace(char, :mp, char.mp - cureWounds.mp_cost)
-
-    # give the game the new healed character, then the char with less mp
-    game
-    |> Map.replace(:battleParty, newBattleParty)
-    |> update_battle_party(newChar)
-    |> Map.replace(:battleAction, "#{char.name} restored #{buff} hp with Cure Wounds")
-  end
-
-  def shield_of_faith(game, targetId) do
-    # roll the "die" to add to the ac of the target
-    # make sure that the ac is increased in the battle party
-    thisChar = get_character_battle(game)
-    targetChar = Enum.at(game.battleParty, targetId)
-    spellShield = Dndgame.Spells.get_spell_by_name("Shield of Faith")
-    # get the increase in AC by rolling the spell's dice
-    increase = roll_dice(spellShield.dice)
-
-    # get haracter's index and replace the updated character into battleParty
-    charIndex = get_character_index(game)
-    newTargetChar = Map.replace(targetChar, :ac, targetChar.ac + increase)
-    newBattleParty = List.replace_at(game.battleParty, targetId, newTargetChar)
-
-    # update this characters mp to reflect cost
-    newThisChar = Map.replace(thisChar, :mp, thisChar.mp - spellShield.mp_cost)
-
-    game
-    |> Map.replace(:battleParty, newBattleParty)
-    |> update_battle_party(newThisChar)
-    |> Map.replace(:battleAction, "#{thisChar.name} increased the ac of
-    #{targetChar.name} by #{increase} with Shield of Faith")
   end
 end
