@@ -5,7 +5,7 @@ defmodule Dndgame.Game do
 
   @boss_x 29
   @boss_y 8
-  @max_steps_for_encounter 1000
+  @max_steps_for_encounter 30
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
@@ -482,8 +482,8 @@ defmodule Dndgame.Game do
     |> add_order_array
     |> Map.put(:battleParty, battleArray)
     |> Map.put(:currentMenu, "main")
-    |> set_monster_encounter_battle_action() 
-  end 
+    |> set_monster_encounter_battle_action()
+  end
 
   def check_boss_encounter(game, x, y) do
     IO.puts("in check boss encounter")
