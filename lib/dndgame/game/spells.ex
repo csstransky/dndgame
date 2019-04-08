@@ -41,6 +41,8 @@ defmodule Dndgame.Game.Spells do
       char = Enum.at(game.battleParty, charIndex)
       magicMissle = Dndgame.Spells.get_spell_by_name("Magic Missle")
 
+      newChar = Map.replace(char, :mp, char.mp - magicMissle.mp_cost)
+
       # roll a 1d4 for damage and add the spells dice BONUS
       damage = roll_dice(magicMissle.dice) + magicMissle.dice_bonus
 
@@ -52,6 +54,7 @@ defmodule Dndgame.Game.Spells do
                                Map.replace(monster, :hp, monster.hp - damage) end)
 
       game
+      |> update_battle_party(newChar)
       |> Map.replace(:monsters, hitMonsters)
       |> Map.replace(:battleAction, "#{char.name} used Magic Missle and dealt
       #{damage} damage to all enemies")

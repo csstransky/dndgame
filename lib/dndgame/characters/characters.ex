@@ -63,6 +63,9 @@ defmodule Dndgame.Characters do
 
   def get_character(id), do: Repo.get(Character, id)
 
+  def get_character_by_name(name) do
+    Repo.get_by(Character, name: name)
+  end
   @doc """
   Creates a character.
 

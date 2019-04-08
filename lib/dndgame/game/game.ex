@@ -549,7 +549,11 @@ defmodule Dndgame.Game do
 
   # blank for now, will: clear battleParty, monsters, update xp,
   def end_battle(game) do
-    # TODO get this workoing
+    Enum.each(game.staticParty, fn char ->
+      dbchar = Dndgame.Characters.get_character_by_name(char.name)
+      attrs = %{exp: char.exp}
+      Dndgame.Characters.update_character(dbchar, attrs)
+    end)
   end
 
   # roll a death save for character
