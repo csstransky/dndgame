@@ -28,7 +28,6 @@ class Dndgame extends React.Component {
     this.channel = props.channel;
     this.state = {
       playerPosns: [],
-      characterIndex: 0,
       party: [],
       monsters: [],
       boss: {},
@@ -125,7 +124,7 @@ class Dndgame extends React.Component {
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
-    let player = this.state.playerPosns[this.state.characterIndex];
+    let player = this.state.playerPosns[this.state.playerIndex];
     let direction;
     if (player != null) {
 
@@ -257,7 +256,7 @@ class Dndgame extends React.Component {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
-    let player = this.state.playerPosns[this.state.characterIndex];
+    let player = this.state.playerPosns[this.state.playerIndex];
     ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
     ctx.stroke();
 
@@ -368,7 +367,7 @@ class Dndgame extends React.Component {
             case "monster":
               console.log(spaceBuffer);
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), (spaceBuffer + 100) * (index2 + 1), 170);
+                ctx.fillText(addSelection("monster", index2), ((spaceBuffer) * (index2 + 1)) + 100, 170);
               });
               break;
           }
@@ -438,7 +437,7 @@ class Dndgame extends React.Component {
 
     if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
       ctx.font = "35px Ariel";
-      ctx.fillText("Press the Enter to continue", 400, 380);
+      ctx.fillText("Press Enter to continue", 700, 40);
     }
 
     // Draw the headline text describing what is happening in the game
@@ -460,34 +459,27 @@ class Dndgame extends React.Component {
     let rightArrowCode = 39;
     let downArrowCode = 40;
     console.log(ev.key);
-
-    if (ev.key == "w" || ev.which == upArrowCode) {
-      if (this.state.monsters.length == 0) {
+    if (this.state.monsters.length == 0) {
+      if (ev.key == "w" || ev.which == upArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
         this.channel.push("walk", "up").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
-      } else {
-        this.moveThroughMenu(-1);
       }
-    }
-    else if ((ev.key == "a" || ev.which == leftArrowCode) && this.state.monsters.length == 0) {
-      let newPlayerPosns = this.state.playerPosns.slice();
-      this.channel.push("walk", "left").receive("ok", this.got_view.bind(this));
-      this.drawDisplay();
-    }
-    else if (ev.key == "s" || ev.which == downArrowCode) {
-      if (this.state.monsters.length == 0) {
+      else if (ev.key == "a" || ev.which == leftArrowCode) {
+        let newPlayerPosns = this.state.playerPosns.slice();
+        this.channel.push("walk", "left").receive("ok", this.got_view.bind(this));
+        this.drawDisplay();
+      }
+      else if (ev.key == "s" || ev.which == downArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
         this.channel.push("walk", "down").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
-      } else {
-        this.moveThroughMenu(1);
       }
-    }
-    else if ((ev.key == "d" || ev.which == rightArrowCode) && this.state.monsters.length == 0) {
-      let newPlayerPosns = this.state.playerPosns.slice();
-      this.channel.push("walk", "right").receive("ok", this.got_view.bind(this));
-      this.drawDisplay();
+      else if (ev.key == "d" || ev.which == rightArrowCode) {
+        let newPlayerPosns = this.state.playerPosns.slice();
+        this.channel.push("walk", "right").receive("ok", this.got_view.bind(this));
+        this.drawDisplay();
+      }
     }
 
     if (ev.key == "Escape") {
@@ -518,38 +510,28 @@ class Dndgame extends React.Component {
     if (ev.key == "Enter") {
       this.selectMenu();
       return;
-    }
-  }
+    } else {
 
-  moveThroughMenu(y) {
-    // If any other key than enter, check what menu we are in, and increment by one.
-    switch (this.state.currentMenu) {
-      case "main":
-        // Iterate through the current menu selection
-        if (this.state.mainMenuCurrentSelection + y < -1) {
-          // TODO ADD SOMETHING HERE TO BE ABLE TO LOOP TO THE BEGINNING
+      // If any other key than enter, check what menu we are in, and increment by one.
+      switch (this.state.currentMenu) {
+        case "main":
+          // Iterate through the current menu selection
+          this.setState((state, props) => ({
+            mainMenuCurrentSelection: (state.mainMenuCurrentSelection + 1) % state.mainMenuOptions.length,
+          }));
+          break;
+        case "sub":
+          this.setState((state, props) => ({
+            subMenuCurrentSelection: (state.subMenuCurrentSelection + 1) % state.subMenuOptions.length,
+          }));
+          console.log(this.state);
+          break;
+        case "monster":
+          this.setState((state, props) => ({
+            monsterCurrentSelection: (state.monsterCurrentSelection + 1) % state.monsters.length,
+          }));
+          break;
         }
-        this.setState((state, props) => ({
-          mainMenuCurrentSelection: (state.mainMenuCurrentSelection + y) % state.mainMenuOptions.length,
-        }));
-        break;
-      case "sub":
-        if (this.state.subMenuCurrentSelection + y < -1) {
-          // TODO ADD SOMETHING HERE TO BE ABLE TO LOOP TO THE BEGINNING
-        }
-        this.setState((state, props) => ({
-          subMenuCurrentSelection: (state.subMenuCurrentSelection + y) % state.subMenuOptions.length,
-        }));
-        console.log(this.state);
-        break;
-      case "monster":
-        if (this.state.monsterCurrentSelection + y < -1) {
-          // TODO ADD SOMETHING HERE TO BE ABLE TO LOOP TO THE BEGINNING
-        }
-        this.setState((state, props) => ({
-          monsterCurrentSelection: (state.monsterCurrentSelection + y) % state.monsters.length,
-        }));
-        break;
       }
     }
 
