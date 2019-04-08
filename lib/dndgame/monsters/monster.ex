@@ -17,6 +17,7 @@ defmodule Dndgame.Monsters.Monster do
     field :wis, :integer
     # Size = 0 is medium, size = -1 is small, size 1 is large, etc
     field :size, :integer, default: 0
+    field :exp, :integer, default: 35
     many_to_many :attacks, Dndgame.Attacks.Attack, join_through: "monster_attacks"
 
     timestamps()

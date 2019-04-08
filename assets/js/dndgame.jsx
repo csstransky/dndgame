@@ -21,7 +21,6 @@ let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMont
 // 6PM
 let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
 
-
 class Dndgame extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +45,6 @@ class Dndgame extends React.Component {
       buildMenuPath: [],
       timezone: 0
     };
-
 
     this.channel
       .join()
@@ -80,7 +78,7 @@ class Dndgame extends React.Component {
 
   // This figures out what type of display to render in the canvas
   drawDisplay() {
-    if (!this.state.monsters.length == 0) {
+    if (this.state.monsters.length == 0) {
       this.drawGameMap();
     } else {
       this.drawBattleScreen();
@@ -89,7 +87,6 @@ class Dndgame extends React.Component {
 
   // Parses through the chracter order array based on the current player index to determine the type of the next player
   determineCurrentPlayerType() {
-    console.log(this.state);
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
     if (currentPlayerString.charAt(0) == "c") {
       return "character";
@@ -126,73 +123,44 @@ class Dndgame extends React.Component {
     ctx.strokeRect(0, 0, 1000, 600);
     ctx.fillRect(0, 0, 1000, 600);
 
-
-    let drawing = new Image();
-
-    // time calculations
-    // current time, still need to do comparisons
-    let date =  this.calcTime(this.state.timezone);
-
-    ctx.drawImage(drawing, 0, 0, MAPSIZE, MAPSIZE);
-    // DAY
-    if (earlyDate < date && date < lateDate) {
-      // snow
-      if(this.state.weather.temperature < 30) {
-        drawing.src = require("../static/snow_day.png");
-      }
-       // hot
-      else if (this.state.weather.temperature > 90) {
-        drawing.src = require("../static/hot_day.png");
-      } // anything in between (day)
-      else {
-        drawing.src = require("../static/cool_day.png");
-      }
-    }
-    else { // NIGHT
-      if(this.state.weather.temperature < 20) {
-        drawing.src = require("../static/snow_night.png");
-      } // hot
-      else if (this.state.weather.temperature > 80) {
-        drawing.src = require("../static/hot_night.png");
-      } // anything in between (day)
-      else {
-        drawing.src = require("../static/cool_night.png");
-      }
-    }
-
+    let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.characterIndex];
     let direction;
     if (player != null) {
 
-    direction = player.direction;
     ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
-    let character = new Image();
-    
-    if (direction == "right") {
-      character.src = require("../static/character/playerMoveRight.png");
-    }
-    else  if (direction == "left") {
-      character.src = require("../static/character/playerMoveLeft.png");
-    }
-     else  if (direction == "up") {
-      character.src = require("../static/character/playerMoveUp.png");
-    }
-    else  if (direction == "down") {
-      character.src = require("../static/character/playerMoveDown.png");
-    }
+    let bossDrawing = new Image();
+    // TODO FOR NOAH
+    bossDrawing.src = require("../static/monsters/dragonBossMapSprite.png");
+    ctx.drawImage(bossDrawing, 0-player.x*50,0-player.y*50, PLAYERSIZE, PLAYERSIZE);
+
+
+    for (let i = 0; i < this.state.playerPosns.length; i++) {
+      let character = new Image();
+      let currplayer = this.state.playerPosns[i];
+      direction = currplayer.direction;
+      switch (direction){
+        case "right":
+          character.src = require("../static/character/playerMoveRight.png");
+          break;
+        case "left":
+          character.src = require("../static/character/playerMoveLeft.png");
+          break;
+        case "up":
+          character.src = require("../static/character/playerMoveUp.png");
+          break;
+        case "down":
+          character.src = require("../static/character/playerMoveDown.png");
+          break;
+        default:
+          console.log("broken");
+          break;
+      }
 
     ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
     }
-    /*character.onload = function () {
-      ctx.save(); //saves the state of canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
-      ctx.translate(character.width, character.height); //let's translate
-      ctx.rotate(Math.PI / 180 * (character.direction)); //increment the angle and rotate the image
-      ctx.drawImage(character, character.x, character.y, 10, 10);
-      ctx.restore(); //restore the state of canvas}
-    };*/
 
-
+    }
 
 
     /*let boss = new Image();
@@ -226,6 +194,10 @@ class Dndgame extends React.Component {
 
 */
     ctx.font = "25px Arial";
+    ctx.fillStyle = "#70a4be";
+    ctx.fillRect(0, 0, 180, 120);
+    ctx.stroke();
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillText("Visibility:" + this.state.weather.visibility, 10,30);
     ctx.fillText("Temp:" + this.state.weather.temperature, 10, 65);
     ctx.fillText("Wind:" + this.state.weather.wind, 10, 100);
@@ -233,6 +205,41 @@ class Dndgame extends React.Component {
     return canvas;
 
   };
+
+  getEnvironmentMap() {
+    let drawing = new Image();
+
+    // time calculations
+    // current time, still need to do comparisons
+    let date =  this.calcTime(this.state.timezone);
+
+    // DAY
+    if (earlyDate < date && date < lateDate) {
+      // snow
+      if(this.state.weather.temperature < 30) {
+        drawing.src = require("../static/snow_day.png");
+      }
+       // hot
+      else if (this.state.weather.temperature > 90) {
+        drawing.src = require("../static/hot_day.png");
+      } // anything in between (day)
+      else {
+        drawing.src = require("../static/cool_day.png");
+      }
+    }
+    else { // NIGHT
+      if(this.state.weather.temperature < 20) {
+        drawing.src = require("../static/snow_night.png");
+      } // hot
+      else if (this.state.weather.temperature > 80) {
+        drawing.src = require("../static/hot_night.png");
+      } // anything in between (day)
+      else {
+        drawing.src = require("../static/cool_night.png");
+      }
+    }
+    return drawing;
+  }
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
@@ -245,32 +252,56 @@ class Dndgame extends React.Component {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     // x: 600, Y: 800
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx.clearRect(0, 0, 1050, 650);
+
+    let drawing = this.getEnvironmentMap();
+    let player = this.state.playerPosns[this.state.characterIndex];
+    ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+    ctx.stroke();
+
+    // Top background for header
+    ctx.fillStyle = "#70a4be";
+    ctx.fillRect(0, 0, 1050, 50);
+    ctx.stroke();
+
+    // Bottom background for party
+    ctx.fillRect(0, 400, 1050, 650);
+    ctx.stroke();
+
+    // divide up the bottom of the screen for menus
 
     // screen setup
-    ctx.rect(0, 0, WIDTH, HEIGHT);
+    let date =  this.calcTime(this.state.timezone);
+    if (earlyDate < date && date < lateDate) {
+      // DAY
+      ctx.fillStyle = "#000000";
+    }
+    else {
+      ctx.fillStyle = "#FFFFFF";
+    }
+    ctx.rect(0, 0, 1050, 650);
     ctx.stroke();
 
     // divide up the bottom of the screen for menus
     ctx.beginPath();
     ctx.moveTo(0, 400);
-    ctx.lineTo(WIDTH, 400);
+    ctx.lineTo(1050, 400);
     ctx.stroke()
 
     ctx.beginPath();
-    ctx.moveTo((WIDTH / 3), 400);
-    ctx.lineTo((WIDTH / 3), HEIGHT);
+    ctx.moveTo(350, 400);
+    ctx.lineTo(350, 650);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo((WIDTH / 3) * 2, 400);
-    ctx.lineTo((WIDTH / 3) * 2, HEIGHT);
+    ctx.moveTo(700, 400);
+    ctx.lineTo(700, 650);
     ctx.stroke();
 
     // add a header area for attack description text
     ctx.beginPath();
     ctx.moveTo(0, 50);
-    ctx.lineTo(WIDTH, 50);
+    ctx.lineTo(1050, 50);
     ctx.stroke();
 
     // can't use a "this" within the each statements, so saving as var out here
@@ -322,15 +353,14 @@ class Dndgame extends React.Component {
 
       // Wrapping this function in an if statement to only be triggered if it is a character's turn & statement string is empty
       if (currentPlayerType == "character" && battleAction == "") {
-
-        // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
+         // This determines which menu to display, using the stored string in this.state.currentMenu, then draws it
         ctx.font = "25px Helvetica";
 
         // Determines if the current player in the each loop is equal to the character who's turn it currently is
         if (currentPlayerIndex == index) {
           switch (currentMenu) {
-            case "main":
-              $.each(mainMenuOptions, function (index2, value2) {
+              case "main":
+                $.each(mainMenuOptions, function (index2, value2) {
                 ctx.fillText(value2 + addSelection("main", index2), ((index * 333) + 5), ((index2 * 40) + 440));
               });
               break;
@@ -358,22 +388,45 @@ class Dndgame extends React.Component {
 
     });
 
+    function getMonsterImage(monster) {
+      switch (monster.name.toLowerCase()){
+        case "goblin":
+          return require("../static/monsters/goblin.png");
+        case "fire goblin":
+          return require("../static/monsters/fireGoblin.png");
+        case "ice goblin":
+          return require("../static/monsters/iceGoblin.png");
+        case "zombie":
+          return require("../static/monsters/zombie.png");
+        case "fire zombie":
+          return require("../static/monsters/fireZombie.png");
+        case "ice zombie":
+          return require("../static/monsters/iceZombie.png");
+        case "young green dragon":
+          return require("../static/monsters/dragonBossBattleSprite.png");
+        default:
+          console.log("monster does not have image loaded for it");
+          return null;
+      }
+    }
 
+    let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
     // Draw monsters on the screen
-    $.each(this.state.monsters, function (index, value) {
+    $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
       img.addEventListener('load', function() {
-        ctx.drawImage(img, ((index * 333) + 70), 100, 150, 150);
+        ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 200);
       }, false);
-      img.src = require("../static/character/ff_sprite.png")
+
+      img.src = getMonsterImage(monster);
 
       // stack party vertically based on order in array
-      ctx.fillText("HP:" + value.hp, ((index * 333) + 110), 280);
+      ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
 
       // Check if the current charcter's turn is a monster
       if (currentPlayerType == "monster") {
-        // Check if the current character matches the index
-        if (currentPlayerIndex == index) {
+        // Check if the current character matches the monsterIndex
+        if (currentPlayerIndex == monsterIndex) {
           // TODO: add some graphics here to indicate which monster is selected
         }
       }
@@ -390,6 +443,11 @@ class Dndgame extends React.Component {
     ctx.fillText(this.state.battleAction, 20, 40);
   return canvas;
   }
+
+
+
+
+
 
 
   /////////////////////////////
