@@ -89,6 +89,7 @@ defmodule DndgameWeb.GamesChannel do
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.enemy_attack(characterIndex)
+
     BackupAgent.put(playerName, game)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
