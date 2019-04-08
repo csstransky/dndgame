@@ -10,7 +10,7 @@ defmodule Dndgame.Game.Spells do
       damage = roll_dice(spell.dice)
 
 
-      enemy = List.at(game.monsters, targetId)
+      enemy = Enum.at(game.monsters, targetId)
 
       if enemy.element == "ice" do
         # double damage for ice enemies
@@ -26,9 +26,9 @@ defmodule Dndgame.Game.Spells do
         new_enemy = Map.put(enemy, :hp, newHP)
 
         game
-        |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy)
+        |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
         |> Map.put(:battleAction, "#{character.name} did #{damage} damage to
-                                      #{enemy.name} with Fire Bolt"))
+                                      #{enemy.name} with Fire Bolt")
       end
     end
 

@@ -526,15 +526,17 @@ defmodule Dndgame.Game do
     # fold the list into 1 total number of xp to gain
     totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
     # update the characters with their xp
-    updatedCharacters = Enum.map(game.battleParty, fn char ->
+    updatedCharacters = Enum.map(game.staticParty, fn char ->
                                   Map.replace(char, :exp, char.exp + totalXP) end)
+
+    areAnyDead = Enum.member?(Enum.map(game.monsters, fn mon -> mon.hp < 0 end), true)
+
     # filter any dead monsters out of the list
     removedDeadMonsters = Enum.filter(game.monsters, fn mon -> mon.hp > 0 end)
 
     game
     |> Map.replace(:monsters, removedDeadMonsters)
     |> Map.replace(:staticParty, updatedCharacters)
-    |> Map.replace(:orderArray, newOrderArray)
 
   end
 
@@ -595,9 +597,11 @@ defmodule Dndgame.Game do
 
   # use a specific skill on a certain enemy
   def use_skill(game, skillId, targetId) do
+  #  IO.puts("in use_skill, skillID = #{skillId} and targetId = #{targetId}")
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
-    skillName = Enum.at(character.class.skills, skillId)
+    skill = Enum.at(character.class.skills, skillId)
+    skillName = skill.name
 
     game
     |> use_specific_skill(skillName, targetId)
@@ -609,6 +613,9 @@ defmodule Dndgame.Game do
 
     def use_specific_skill(game, skillName, targetId) do
       # cond of all skills, goes to a function that deals with the logic of that skill
+  #    IO.puts("in use specific skill now, skillname = #{skillName}")
+    IO.inspect(skillName)
+    IO.puts("skill name above")
       cond do
         skillName == "Short Rest" ->
           Dndgame.Game.Skills.short_rest(game)
@@ -630,7 +637,9 @@ defmodule Dndgame.Game do
     # same as use skill but for spells
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
-    spellName = Enum.at(character.class.spells, spellId)
+    spell = Enum.at(character.class.spells, spellId)
+    spellName = spell.name
+  spellName = Enum.at(character.class.spells, spellId)
 
     game
     |> use_specific_spell(spellName, targetId)
