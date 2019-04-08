@@ -2,7 +2,8 @@ defmodule Dndgame.Game.Spells do
   import Dndgame.Game
     ##### SPELL FUNCTIONS #####
     def fire_bolt(game, targetId) do
-      character = get_character_battle(game)
+      charIndex = get_character_index(game)
+      character = Enum.at(game.battleParty, charIndex)
       spell = Dndgame.Spells.get_spell_by_name("Fire Bolt")
 
       # double damage for ice type
@@ -36,7 +37,8 @@ defmodule Dndgame.Game.Spells do
       # USE THE SPELL'S HIT DIE AND DAMAGE BONUS
 
       # get the character whose turn it is and the spell
-      char = get_character_battle(game)
+      charIndex = get_character_index(game)
+      char = Enum.at(game.battleParty, charIndex)
       magicMissle = Dndgame.Spells.get_spell_by_name("Magic Missle")
 
       # roll a 1d4 for damage and add the spells dice BONUS
@@ -64,7 +66,8 @@ defmodule Dndgame.Game.Spells do
       # OUTPUT: 5 + 1 to chosen character
 
       # get the character and the spell
-      char = get_character_battle(game)
+      charIndex = get_character_index(game)
+      char = Enum.at(game.battleParty, charIndex)
       targetChar = Enum.at(game.battleParty, targetId)
       staticChar = Enum.at(game.staticParty, targetId)
       staticHP = staticChar.hp
@@ -91,7 +94,8 @@ defmodule Dndgame.Game.Spells do
     def shield_of_faith(game, targetId) do
       # roll the "die" to add to the ac of the target
       # make sure that the ac is increased in the battle party
-      thisChar = get_character_battle(game)
+      charIndex = get_character_index(game)
+      thisChar = Enum.at(game.battleParty, charIndex)
       targetChar = Enum.at(game.battleParty, targetId)
       spellShield = Dndgame.Spells.get_spell_by_name("Shield of Faith")
       # get the increase in AC by rolling the spell's dice

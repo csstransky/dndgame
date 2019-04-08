@@ -13,6 +13,9 @@ defmodule Dndgame.Game do
   @nightColdTemp 20
   @dayHotTemp 90
   @dayColdTemp 30
+  @bossTopLeftX 40
+  @bossTopLeftY 40
+  @bossName "Young Green Dragon"
 
   def new_game(world) do
     # You're a new character, so this should be fine
@@ -28,8 +31,12 @@ defmodule Dndgame.Game do
         staticParty: [], # Will be added onto later
         monsters: [], # fills up when character encounters monsters
         boss: %{
-          x: @boss_x,
-          y: @boss_y,
+          posns: [%{x: @bossTopLeftX, y: @bossTopLeftY},
+                  %{x: @bossTopLeftX + 1, y: @bossTopLeftY},
+                  %{x: @bossTopLeftX, y: @bossTopLeftY + 1},
+                  %{x: @bossTopLeftX + 1, y: @bossTopLeftY + 1}],
+          x: @bossTopLeftX,
+          y: @bossTopLeftY,
         },
 
         orderArray: [], # fills up with strings of whose turn it is
@@ -360,47 +367,65 @@ defmodule Dndgame.Game do
     if @dawnTime < worldTime && worldTime < @duskTime do
       cond do
         game.temperature > @dayHotTemp ->
-          # TODO make this better in the future
           monster = Dndgame.Monsters.get_monster_by_name("Fire Goblin")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         game.temperature < @dayColdTemp ->
           monster = Dndgame.Monsters.get_monster_by_name("Ice Goblin")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         true ->
           monster = Dndgame.Monsters.get_monster_by_name("Goblin")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
       end
     else
       cond do
         game.temperature > @nightHotTemp ->
-          # TODO make this better in the future
           monster = Dndgame.Monsters.get_monster_by_name("Fire Zombie")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         game.temperature < @nightColdTemp ->
           monster = Dndgame.Monsters.get_monster_by_name("Ice Zombie")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
         true ->
           monster = Dndgame.Monsters.get_monster_by_name("Zombie")
           game
-          |> Map.put(:monsters, [monster])
+          |> add_random_monsters(monster)
       end
     end
   end
 
+  def add_random_monsters(game, monster) do
+    monsterList = List.duplicate(monster, :rand.uniform(3))
+    game
+    |> Map.put(:monsters, monsterList)
+  end
+
   def start_battle(game) do
     battleParty = game.staticParty
-    game
+    game = game
     |> add_environment_monsters
     |> add_order_array
     |> Map.put(:battleParty, battleParty)
     |> Map.put(:currentMenu, "main")
-    |> Map.put(:battleAction, "")
+    |> set_monster_encouter_battle_action()
     |> Map.put(:steps, 0)
+    IO.inspect("FUCKING WORK")
+    IO.inspect(game.battleAction)
+    game
+  end
+
+  def set_monster_encouter_battle_action(game) do
+    cond do
+      length(game.monsters) > 1 ->
+        Map.put(game, :battleAction, "A group of monsters has appeared!")
+      Enum.at(game.monsters, 0) == @bossName ->
+        Map.put(game, :battleAction, "You have challenged the " <> @bossName <> "!")
+      true ->
+        Map.put(game, :battleAction, "A monster has appeared!")
+    end
   end
 
   def add_order_array(game) do
@@ -457,6 +482,33 @@ defmodule Dndgame.Game do
     end
   end
 
+  def remove_dead_monsters(game) do
+    # map monsters, if 0 health map to xp, if > 0 map to 0 xp
+    # foldr the list of xp into one xp to add to all  Characters
+    # remove all monsters with below 0 health , update everything and return
+
+    # make a map of xp gained from any dead monsters
+    xpMap = Enum.map(game.monsters, fn monster ->
+      if monster.hp <= 0 do
+        monster.exp
+      else
+        0
+      end
+    end)
+
+    # fold the list into 1 total number of xp to gain
+    totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
+    # update the characters with their xp
+    updatedCharacters = Enum.map(game.battleParty, fn char ->
+                                  Map.replace(char, :xp, char.xp + totalXP) end)
+    # filter any dead monsters out of the list
+    removedDeadMonsters = Enum.filter(game.monsters, fn mon -> mon.hp > 0 end)
+
+    game
+    |> Map.replace(:monsters, removedDeadMonsters)
+    |> Map.replace(:battleParty, updatedCharacters)
+
+  end
 
   # Run from a battle
   def run(game) do
@@ -495,26 +547,12 @@ defmodule Dndgame.Game do
     end
   end
 
-  def get_character_battle(game) do
-    # get character from game state and spell name
-    # use a cond to go through and call a specific function for every skill we use
-    charString = Enum.at(game.orderArray, game.orderIndex)
-    charIndex = String.replace(charString, ~r/[^\d]/, "")
-    Enum.at(game.battleParty, charIndex)
-  end
-
-  def get_character_static(game) do
-    # get character from game state and spell name
-    # use a cond to go through and call a specific function for every skill we use
-    charString = Enum.at(game.orderArray, game.orderIndex)
-    charIndex = String.replace(charString, ~r/[^\d]/, "")
-    Enum.at(game.staticParty, charIndex)
-  end
-
   # get the index of the character whose turn it is
   def get_character_index(game) do
     charString = Enum.at(game.orderArray, game.orderIndex)
-    characterIndex = String.replace(charString, ~r/[^\d]/, "")
+    charIndexString = String.replace(charString, ~r/[^\d]/, "")
+    {charIndex, _} = Integer.parse(charIndexString)
+    charIndex
   end
 
   # updates the given newChar into the battleParty for the game
@@ -529,32 +567,48 @@ defmodule Dndgame.Game do
 
   # use a specific skill on a certain enemy
   def use_skill(game, skillId, targetId) do
-    character = get_character_battle(game)
+    charIndex = get_character_index(game)
+    character = Enum.at(game.battleParty, charIndex)
     skillName = Enum.at(character.skills, skillId)
 
-    # cond of all skills, goes to a function that deals with the logic of that skill
-    cond do
-      skillName == "Short Rest" ->
-        Dndgame.Game.Skills.short_rest(game)
-      skillName == "Double Attack" ->
-        Dndgame.Game.Skills.double_attack(game, targetId)
-      skillName == "Rage" ->
-        Dndgame.Game.Skills.rage(game)
-      skillName == "Turn Undead" ->
-        Dndgame.Game.Skills.turn_undead(game, targetId)
-      skillName == "Sneak Attack" ->
-        Dndgame.Game.Skills.sneak_attack(game, targetId)
-      skillName == "Hide" ->
-        Dndgame.Game.Skills.hide(game)
-    end
+    game
+    |> use_specific_skill(skillName, targetId)
+    |> incrementOrderIndex
+    |> Map.replace(:battleAction, "placeholder")
   end
+
+    def use_specific_skill(game, skillName, targetId) do
+      # cond of all skills, goes to a function that deals with the logic of that skill
+      cond do
+        skillName == "Short Rest" ->
+          Dndgame.Game.Skills.short_rest(game)
+        skillName == "Double Attack" ->
+          Dndgame.Game.Skills.double_attack(game, targetId)
+        skillName == "Rage" ->
+          Dndgame.Game.Skills.rage(game)
+        skillName == "Turn Undead" ->
+          Dndgame.Game.Skills.turn_undead(game, targetId)
+        skillName == "Sneak Attack" ->
+          Dndgame.Game.Skills.sneak_attack(game, targetId)
+        skillName == "Hide" ->
+          Dndgame.Game.Skills.hide(game)
+      end
+    end
 
   # use a specific skill on an enemy
   def use_spell(game, spellId, targetId) do
     # same as use skill but for spells
-    character = get_character_battle(game)
+    charIndex = get_character_index(game)
+    character = Enum.at(game.battleParty, charIndex)
     spellName = Enum.at(character.spells, spellId)
 
+    game
+    |> use_specific_spell(spellName, targetId)
+    |> incrementOrderIndex
+    |> Map.replace(:battleAction, "placeholder")
+  end
+
+  def use_specific_spell(game, spellName, targetId) do
     cond do
       spellName == "Fire Bolt" ->
         Dndgame.Game.Spells.fire_bolt(game, targetId)
@@ -595,7 +649,8 @@ defmodule Dndgame.Game do
     # return game
 
     # get the character whose turn it is
-    character = get_character_battle(game)
+    charIndex = get_character_index(game)
+    character = Enum.at(game.battleParty, charIndex)
     enemy = Enum.at(game.monsters, enemyId)
 
     # get the attack of this character
@@ -612,10 +667,12 @@ defmodule Dndgame.Game do
       # replace less hp monster and update battleAction in game
       game
       |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
       to #{enemy.name} with #{attack.name}")
     else
       game
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{character.name} tried to attack
       #{enemy.name} with #{attack.name}, but it missed")
     end
@@ -623,8 +680,7 @@ defmodule Dndgame.Game do
 
   def enemy_attack(game, characterId) do
     # get current enemy
-    enemyString = Enum.at(game.orderArray, game.orderIndex)
-    enemyIndex = String.replace(enemyString, ~r/[^\d]/, "")
+    enemyIndex = get_character_index(game)
     enemy = Enum.at(game.monsters, enemyIndex)
 
     # get the target character of the attack
@@ -632,7 +688,7 @@ defmodule Dndgame.Game do
     # get the list of this enemy's available attacks
     attackList = enemy.attacks
     # pick a random attack to use this turn, based off length of attackList
-    attack = List.at(attackList, :rand.uniform(length(attackList)) - 1)
+    attack = Enum.at(attackList, :rand.uniform(length(attackList)) - 1)
     attackRoll = roll_dice("1d20") + attack.attack_bonus
 
     # if it is indeed a hit based off the attackRoll
@@ -644,12 +700,25 @@ defmodule Dndgame.Game do
       # replace the character in the game and update the battle action
       game
       |> update_battle_party(hitCharacter)
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to
                                    #{targetCharacter.name} with #{attack.name}")
     else
       # the roll wasn't higher than ac so attack missed, just update battleAction
       game
+      |> incrementOrderIndex
       |> Map.replace(:battleAction, "#{enemy.name} missed attack on #{targetCharacter.name}")
+    end
+  end
+
+  def incrementOrderIndex(game) do
+    newOrderIndex = game.orderIndex + 1
+    if newOrderIndex == length(game.orderArray) do
+      game
+      |> Map.put(:orderIndex, 0)
+    else
+      game
+      |> Map.put(:orderIndex, newOrderIndex)
     end
   end
 end

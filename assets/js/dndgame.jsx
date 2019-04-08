@@ -119,11 +119,10 @@ class Dndgame extends React.Component {
   drawGameMap() {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, 1050, 650);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
     ctx.fillStyle = "#FFFFFF";
     ctx.strokeStyle = "#000000";
-    ctx.strokeRect(0, 0, 1000, 600);
-    ctx.fillRect(0, 0, 1000, 600);
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.characterIndex];
@@ -255,7 +254,7 @@ class Dndgame extends React.Component {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     // x: 600, Y: 800
-    ctx.clearRect(0, 0, 1050, 650);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.characterIndex];
@@ -306,7 +305,6 @@ class Dndgame extends React.Component {
     ctx.beginPath();
     ctx.moveTo(0, 400);
     ctx.stroke()
-
 
     // can't use a "this" within the each statements, so saving as var out here
     // not super elegant, and we can factor this out later, but it works decently
@@ -432,20 +430,21 @@ class Dndgame extends React.Component {
 
     if (!this.state.battleAction == "") {
       ctx.font = "35px Ariel";
-      ctx.fillText("Press any key to continue", 400, 380);
+      ctx.fillText("Press the Enter to continue", 400, 380);
     }
 
     // Draw the headline text describing what is happening in the game
     ctx.font = "25px Ariel";
     ctx.fillText(this.state.battleAction, 20, 40);
+
+    // add a header area for attack description text
+    ctx.beginPath();
+    ctx.moveTo(0, 50);
+    ctx.lineTo(1050, 50);
+    ctx.stroke();
+
   return canvas;
   }
-
-
-
-
-
-
 
   /////////////////////////////
   /// INTERACTIVE FUNCTIONS ///
@@ -480,26 +479,24 @@ class Dndgame extends React.Component {
         this.channel.push("walk", "right").receive("ok", this.got_view.bind(this));
         this.drawDisplay();
       }
-
     }
 
     if (ev.key == "Escape") {
       this.runFromBattle();
     }
 
-    // If the battleAction string is not empty, the next key will be the "next" key
-    if (!this.state.battleAction == "") {
-      if (this.determineCurrentPlayerType() == "monster") {
+    if (ev.key == "Enter") {
+      // If the battleAction string is not empty, the next key will be the "next" key
+      if (!this.state.battleAction == "") {
+        if (this.determineCurrentPlayerType() == "monster") {
 
         //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
-        //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-        //  .receive("ok", resp => {
-         //   this.setState(resp.game);
-         // });
-
+        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+          .receive("ok", resp => {
+            this.setState(resp.game);
+          });
         this.setState((state, props) => ({
           battleAction: "",
-          orderIndex: (state.orderIndex + 1),
         }));
         return;
       } else {
@@ -536,6 +533,7 @@ class Dndgame extends React.Component {
             monsterCurrentSelection: (state.monsterCurrentSelection + 1) % state.monsters.length,
           }));
           break;
+        }
       }
     }
   }
@@ -543,7 +541,6 @@ class Dndgame extends React.Component {
   // This is the logic for tracking where in the menu system a player is, using an array to track historical selections
   // After "enter" is received when in the monster menu, the selected options are collected and sent to the server
   selectMenu() {
-
     // Before running the rest of this function, check if
     if (this.state.mainMenuCurrentSelection == 3) {
       this.runFromBattle();
@@ -578,13 +575,22 @@ class Dndgame extends React.Component {
     // Depending on the current menu, this switch will generate the next menu and modify the state accordingly
     switch (this.state.currentMenu) {
       case "main":
-        this.setState((state, props) => ({
-          buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
-         // mainMenuCurrentSelection: 0,
-          //subMenuCurrentSelection: 0,
-          currentMenu: "sub",
-          subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
-        }));
+        if (this.state.mainMenuCurrentSelection == 0) {
+          this.setState((state, props) => ({
+            buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]).concat([0]),
+            // mainMenuCurrentSelection: 0,
+            //subMenuCurrentSelection: 0,
+            currentMenu: "monster",
+          }));
+        } else {
+          this.setState((state, props) => ({
+            buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
+            // mainMenuCurrentSelection: 0,
+            //subMenuCurrentSelection: 0,
+            currentMenu: "sub",
+            subMenuOptions: buildSubMenu(this.determineCurrentPlayerIndex(), state.mainMenuCurrentSelection, state.party),
+          }));
+        }
         break;
       case "sub":
         this.setState((state, props) => ({
@@ -626,7 +632,7 @@ class Dndgame extends React.Component {
 
   playerAttack() {
     console.log("Sending player attack command through channel");
-    this.channel.push("attack")
+    this.channel.push("attack", {enemyIndex: this.state.buildMenuPath[2]})
       .receive("ok", resp => {
         this.setState(resp.game);
       });
