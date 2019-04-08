@@ -78,7 +78,7 @@ defmodule Dndgame.Game.Skills do
     # get character and skill
     charIndex = get_character_index(game)
     char = Enum.at(game.battleParty, charIndex)
-    skillRage = Dndgame.skills.get_skill_by_name("Rage")
+    skillRage = Dndgame.Skills.get_skill_by_name("Rage")
 
     # calculate the buff and whether to set to max of 30 or not
     buff = roll_dice(skillRage.dice)
@@ -116,29 +116,21 @@ defmodule Dndgame.Game.Skills do
 
     if type == "undead" do
       # if there is more than one monster in the battle array
-      if length(game.monsters) > 1 do
-        # remove the undead creature
-        newMonsters = List.delete_at(game.monsters, targetId)
-        # replace the array and update the battleAction text
-        game
-        |> Map.replace(:monsters, newMonsters)
-        |> update_battle_party(newChar)
-        |> Map.replace(:battleAction,
-        "#{char.name} used Turn Undead on #{enemy.name}")
-      else
         # if there is only 1 monster that is this undead, just kill it for xp
         deadEnemy = Map.replace(enemy, :hp, 0)
         # replace the monster in the array and update battleAction text
         game
-        |> Map.replace(:monsters, List.replace_at(game.monsters, 0, deadEnemy))
+        |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, deadEnemy))
         |> update_battle_party(newChar)
+        |> remove_dead_monsters
         |> Map.replace(:battleAction,
         "#{char.name} used Turn Undead on #{enemy.name}")
-      end
+
     else
       # if the selected creature is not undead, do nothing but remove sp
       game
       |> update_battle_party(newChar)
+      |> remove_dead_monsters
       |> Map.replace(:battleAction,
       "#{char.name} attempted to use Turn Undead on the non-undead #{enemy.name}")
     end
