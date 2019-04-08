@@ -683,6 +683,9 @@ defmodule Dndgame.Game do
     enemyIndex = get_character_index(game)
     enemy = Enum.at(game.monsters, enemyIndex)
 
+    characterId = Enum.random(0..length(game.battleParty)-1)
+      IO.inspect("ASODKAOSDKSAOKD")
+      IO.inspect(characterId)
     # get the target character of the attack
     targetCharacter = Enum.at(game.battleParty, characterId)
     # get the list of this enemy's available attacks

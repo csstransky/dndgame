@@ -274,7 +274,7 @@ class Dndgame extends React.Component {
 
     // screen setup
     let date =  this.calcTime(this.state.timezone);
-    
+
     if (earlyDate < date && date < lateDate) {
       // DAY
       ctx.fillStyle = "#000000";
