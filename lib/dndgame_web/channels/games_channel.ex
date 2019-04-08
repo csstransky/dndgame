@@ -48,7 +48,6 @@ defmodule DndgameWeb.GamesChannel do
   def handle_in("attack", enemyIndex, socket) do
     IO.inspect("RICK ROSS")
     IO.inspect(enemyIndex)
-    {enemyIndex, _} = Integer.parse(enemyIndex)
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.attack(enemyIndex)

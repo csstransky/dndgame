@@ -366,8 +366,9 @@ class Dndgame extends React.Component {
               });
               break;
             case "monster":
+              console.log(spaceBuffer);
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), spaceBuffer + 150, 170);
+                ctx.fillText(addSelection("monster", index2), (spaceBuffer + 100) * (index2 + 1), 170);
               });
               break;
           }
@@ -428,7 +429,7 @@ class Dndgame extends React.Component {
 
     });
 
-    if (!this.state.battleAction == "") {
+    if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
       ctx.font = "35px Ariel";
       ctx.fillText("Press the Enter to continue", 400, 380);
     }
@@ -485,30 +486,34 @@ class Dndgame extends React.Component {
       this.runFromBattle();
     }
 
+
+
     if (ev.key == "Enter") {
+
       // If the battleAction string is not empty, the next key will be the "next" key
       if (!this.state.battleAction == "") {
         if (this.determineCurrentPlayerType() == "monster") {
 
-        //console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
-        this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
-          .receive("ok", resp => {
-            this.setState(resp.game);
-          });
-        return;
-      } else {
-        if (this.determineCurrentPlayerType() == "monster") {
-          console.log("Sending player attack command");
+          console.log("Sending monster attack command" + this.determineCurrentPlayerIndex());
           this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
             .receive("ok", resp => {
               this.setState(resp.game);
             });
+          this.setState((state, props) => ({
+            battleAction: "",
+          }));
+          return;
         }
-        else {
-          this.state.battleAction == "";
-        }
+        //else {
+        //console.log("Sending player attack command");
+        //this.channel.push("enemy_attack", this.determineCurrentPlayerIndex(),)
+        //  .receive("ok", resp => {
+        //    this.setState(resp.game);
+        //  });
+        //}
       }
     }
+
 
     // First, check if "Enter" key has been received
     if (ev.key == "Enter") {
@@ -538,7 +543,7 @@ class Dndgame extends React.Component {
         }
       }
     }
-  }
+
 
   // This is the logic for tracking where in the menu system a player is, using an array to track historical selections
   // After "enter" is received when in the monster menu, the selected options are collected and sent to the server
@@ -579,7 +584,7 @@ class Dndgame extends React.Component {
       case "main":
         if (this.state.mainMenuCurrentSelection == 0) {
           this.setState((state, props) => ({
-            buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]).concat([0]),
+            buildMenuPath: state.buildMenuPath.concat([0]).concat([state.mainMenuCurrentSelection]),
             // mainMenuCurrentSelection: 0,
             //subMenuCurrentSelection: 0,
             currentMenu: "monster",
@@ -633,8 +638,8 @@ class Dndgame extends React.Component {
   }
 
   playerAttack() {
-    console.log("Sending player attack command through channel");
-    this.channel.push("attack", {enemyIndex: this.state.buildMenuPath[2]})
+    console.log("Sending player attack command through channel: "+ this.state.monsterCurrentSelection);
+    this.channel.push("attack", this.state.buildMenuPath[1])
       .receive("ok", resp => {
         this.setState(resp.game);
       });
