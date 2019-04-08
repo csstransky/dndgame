@@ -118,6 +118,7 @@ class Dndgame extends React.Component {
   drawGameMap() {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, 1050, 650);
     ctx.fillStyle = "#FFFFFF";
     ctx.strokeStyle = "#000000";
     ctx.strokeRect(0, 0, 1000, 600);
@@ -243,6 +244,7 @@ class Dndgame extends React.Component {
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
+    console.log(this.state);
 
     // There will be used later to render the appropriate menu
     let currentPlayerType = this.determineCurrentPlayerType();
@@ -317,6 +319,7 @@ class Dndgame extends React.Component {
     let monsters = this.state.monsters;
     let monsterCurrentSelection = this.state.monsterCurrentSelection;
     let battleAction = this.state.battleAction
+    let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
 
     // draw party on right of screen
     $.each(this.state.party, function (index, value) {
@@ -326,7 +329,7 @@ class Dndgame extends React.Component {
       img.addEventListener('load', function() {
         ctx.drawImage(img, (index * 333) + 260, 550, 50, 50);
       }, false);
-      
+
       // This determines if the given "option" number matches the currently selected menu option and returns
       // a " <-" string to append to that menu option to indicate it has been selected.
       function addSelection(type, option) {
@@ -370,7 +373,7 @@ class Dndgame extends React.Component {
               break;
             case "monster":
               $.each(monsters, function (index2, value2) {
-                ctx.fillText(addSelection("monster", index2), ((index2 * 333) + 220), 170);
+                ctx.fillText(addSelection("monster", index2), spaceBuffer + 150, 170);
               });
               break;
           }
@@ -409,7 +412,6 @@ class Dndgame extends React.Component {
       }
     }
 
-    let spaceBuffer = WIDTH / (this.state.monsters.length + 1);
     // Draw monsters on the screen
     $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
@@ -485,6 +487,10 @@ class Dndgame extends React.Component {
 
     }
 
+    if (ev.key == "Escape") {
+      this.runFromBattle();
+    }
+
     // If the battleAction string is not empty, the next key will be the "next" key
     if (!this.state.battleAction == "") {
       if (this.determineCurrentPlayerType() == "monster") {
@@ -516,7 +522,6 @@ class Dndgame extends React.Component {
           this.setState((state, props) => ({
             mainMenuCurrentSelection: (state.mainMenuCurrentSelection + 1) % state.mainMenuOptions.length,
           }));
-          console.log(this.state);
           break;
         case "sub":
           this.setState((state, props) => ({
@@ -550,9 +555,17 @@ class Dndgame extends React.Component {
         case 0:
           return ["no options"];
         case 1:
-          return party[orderIndex].skills;
+          let temp = [];
+          $.each(party[orderIndex].skills, function ( index, value ) {
+            temp.push(value.name);
+          });
+          return temp;
         case 2:
-          return party[orderIndex].spells;
+          let temp2 = [];
+          $.each(party[orderIndex].spells, function ( index, value ) {
+            temp2.push(value.name);
+          });
+          return temp2;
         case 3:
           // There should never be an option 3 down here because of the if statement above, but leaving for testing
           return ["no options"];
@@ -563,37 +576,40 @@ class Dndgame extends React.Component {
     switch (this.state.currentMenu) {
       case "main":
         this.setState((state, props) => ({
-          mainMenuCurrentSelection: 0,
-          subMenuCurrentSelection: 0,
+          buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
+         // mainMenuCurrentSelection: 0,
+          //subMenuCurrentSelection: 0,
           currentMenu: "sub",
           subMenuOptions: buildSubMenu(state.orderIndex, state.mainMenuCurrentSelection, state.party),
-          buildMenuPath: [state.buildMenuPath.concat[state.mainMenuCurrentSelection]],
         }));
-        console.log(this.state);
         break;
       case "sub":
         this.setState((state, props) => ({
-          mainMenuCurrentSelection: 0,
-          subMenuCurrentSelection: 0,
+          //mainMenuCurrentSelection: 0,
+          //subMenuCurrentSelection: 0,
           currentMenu: "monster",
-          buildMenuPath: [state.buildMenuPath.concat[state.subMenuCurrentSelection]],
+          buildMenuPath: state.buildMenuPath.concat([state.subMenuCurrentSelection]),
         }));
         break;
       case "monster":
         // If player has selected attack
-        if (buildMenuPath[0] == 0) {
+        if (this.state.buildMenuPath[0] == 0) {
+          console.log("calling player attack");
           this.playerAttack();
         }
 
         // If player has selected spell
-        if (buildMenuPath[0] == 1) {
-          this.playerSpell();
+        if (this.state.buildMenuPath[0] == 1) {
+          console.log("calling player skill");
+          this.playerSkill();
         }
 
         // If player has selected skill
-        if (buildMenuPath[2] == 2) {
-          this.playerSkill();
+        if (this.state.buildMenuPath[0] == 2) {
+          console.log("calling player spell");
+          this.playerSpell();
         }
+        break;
     }
   }
 
