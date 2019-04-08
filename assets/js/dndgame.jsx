@@ -540,7 +540,6 @@ class Dndgame extends React.Component {
   // This is the logic for tracking where in the menu system a player is, using an array to track historical selections
   // After "enter" is received when in the monster menu, the selected options are collected and sent to the server
   selectMenu() {
-
     // Before running the rest of this function, check if
     if (this.state.mainMenuCurrentSelection == 3) {
       this.runFromBattle();
