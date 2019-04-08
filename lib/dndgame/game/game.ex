@@ -528,15 +528,13 @@ defmodule Dndgame.Game do
     # update the characters with their xp
     updatedCharacters = Enum.map(game.staticParty, fn char ->
                                   Map.replace(char, :exp, char.exp + totalXP) end)
-
-    areAnyDead = Enum.member?(Enum.map(game.monsters, fn mon -> mon.hp < 0 end), true)
-
     # filter any dead monsters out of the list
     removedDeadMonsters = Enum.filter(game.monsters, fn mon -> mon.hp > 0 end)
 
     game
     |> Map.replace(:monsters, removedDeadMonsters)
     |> Map.replace(:staticParty, updatedCharacters)
+    |> Map.replace(:orderArray, newOrderArray)
 
   end
 
@@ -597,9 +595,9 @@ defmodule Dndgame.Game do
 
   # use a specific skill on a certain enemy
   def use_skill(game, skillId, targetId) do
-  #  IO.puts("in use_skill, skillID = #{skillId} and targetId = #{targetId}")
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
+    skillName = Enum.at(character.class.skills, skillId)
     skill = Enum.at(character.class.skills, skillId)
     skillName = skill.name
 
@@ -761,7 +759,7 @@ defmodule Dndgame.Game do
 
   def incrementOrderIndex(game) do
     newOrderIndex = game.orderIndex + 1
-    if newOrderIndex == length(game.orderArray) do
+    if newOrderIndex >= length(game.orderArray) do
       game
       |> Map.put(:orderIndex, 0)
     else
