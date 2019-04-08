@@ -753,7 +753,7 @@ defmodule Dndgame.Game do
 
   def incrementOrderIndex(game) do
     newOrderIndex = game.orderIndex + 1
-    if newOrderIndex == length(game.orderArray) do
+    if newOrderIndex >= length(game.orderArray) do
       game
       |> Map.put(:orderIndex, 0)
     else
