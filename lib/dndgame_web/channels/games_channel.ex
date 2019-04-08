@@ -56,9 +56,7 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("use_skill", %{"skillId" => skillId, "enemyIndex" => enemyIndex}, socket) do
-    IO.inspect(enemyIndex)
-    {skillId, _} = Integer.parse(skillId)
-    {enemyIndex, _} = Integer.parse(enemyIndex)
+    IO.inspect("can you see 1?!!?!?!?me")
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.use_skill(skillId, enemyIndex)
@@ -67,8 +65,7 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("use_spell", %{"spellId" => spellId, "enemyIndex" => enemyIndex}, socket) do
-    {spellId, _} = Integer.parse(spellId)
-    {enemyIndex, _} = Integer.parse(enemyIndex)
+
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.use_spell(spellId, enemyIndex)
@@ -93,7 +90,6 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def handle_in("enemy_attack", characterIndex, socket) do
-    {characterIndex, _} = Integer.parse(characterIndex)
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.enemy_attack(characterIndex)
