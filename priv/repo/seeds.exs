@@ -232,19 +232,19 @@ Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
                 user: Users.get_user_by_email("Cristian")})
 
 ###### MONSTER ATTACKS ######
-Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d6", attack_bonus: 3,
+Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d6", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "slash"})
-Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d6", attack_bonus: 3,
+Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d6", attack_bonus: 1,
                     damage_bonus: 2, target: "member", type: "bludgeon"})
-Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d8", attack_bonus: 3,
+Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d8", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "fire"})
-Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d6", attack_bonus: 4,
+Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d6", attack_bonus: 2,
                     damage_bonus: 2, target: "member", type: "ice"})
-Repo.insert!(%Attack{name: "Bite", damage_dice: "1d6", attack_bonus: 3,
+Repo.insert!(%Attack{name: "Bite", damage_dice: "1d6", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "pierce"})
 Repo.insert!(%Attack{name: "Lava Chomp", damage_dice: "1d8", attack_bonus: 2,
                     damage_bonus: 2, target: "member", type: "fire"})
-Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d6", attack_bonus: 3,
+Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d6", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "ice"})
 Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d6", attack_bonus: 7,
                     damage_bonus: 4, target: "member", type: "slash"})
@@ -254,21 +254,21 @@ Repo.insert!(%Attack{name: "Chomp", damage_dice: "2d10", damage_bonus: 4,
                     attack_bonus: 5, target: "member", type: "pierce"})
 
 ###### MONSTERS ######
-Repo.insert!(%Monster{name: "Goblin", hp: 13, ac: 12,
+Repo.insert!(%Monster{name: "Goblin", hp: 13, ac: 5,
                       type: "goblin", element: "normal", str: 8, dex: 14,
                       int: 10, con: 10, cha: 8, wis: 8})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Goblin"),
                                 attack: Attacks.get_attack_by_name("Swipe")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Goblin"),
                                 attack: Attacks.get_attack_by_name("Headbutt")})
-Repo.insert!(%Monster{name: "Ice Goblin", hp: 13, ac: 12,
+Repo.insert!(%Monster{name: "Ice Goblin", hp: 13, ac: 6,
                       type: "goblin", element: "ice", str: 8, dex: 14, int: 10,
                       con: 10, cha: 8, wis: 8})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Goblin"),
                                 attack: Attacks.get_attack_by_name("Swipe")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Goblin"),
                                 attack: Attacks.get_attack_by_name("Ice Punch")})
-Repo.insert!(%Monster{name: "Fire Goblin", hp: 13, ac: 12,
+Repo.insert!(%Monster{name: "Fire Goblin", hp: 13, ac: 7,
                       type: "goblin", element: "fire", str: 8, dex: 14, int: 10,
                       con: 10, cha: 8, wis: 8})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Goblin"),
@@ -276,28 +276,28 @@ Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Gobli
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Goblin"),
                                 attack: Attacks.get_attack_by_name("Fire Throw")})
 
-Repo.insert!(%Monster{name: "Zombie", hp: 25, ac: 8,
+Repo.insert!(%Monster{name: "Zombie", hp: 25, ac: 4,
                       type: "undead", element: "normal", str: 13, dex: 6,
                       int: 3, con: 16, cha: 5, wis: 6})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Zombie"),
                                 attack: Attacks.get_attack_by_name("Swipe")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Zombie"),
                                 attack: Attacks.get_attack_by_name("Bite")})
-Repo.insert!(%Monster{name: "Ice Zombie", hp: 25, ac: 8,
+Repo.insert!(%Monster{name: "Ice Zombie", hp: 25, ac: 5,
                       type: "undead", element: "ice", str: 13, dex: 6,
                       int: 3, con: 16, cha: 5, wis: 6})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Zombie"),
                                 attack: Attacks.get_attack_by_name("Bite")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Zombie"),
                                 attack: Attacks.get_attack_by_name("Frostbite")})
-Repo.insert!(%Monster{name: "Fire Zombie", hp: 25, ac: 8,
+Repo.insert!(%Monster{name: "Fire Zombie", hp: 25, ac: 7,
                       type: "undead", element: "fire", str: 13, dex: 6,
                       int: 3, con: 16, cha: 5, wis: 6})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombie"),
                                 attack: Attacks.get_attack_by_name("Bite")})
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombie"),
                                 attack: Attacks.get_attack_by_name("Lava Chomp")})
-Repo.insert!(%Monster{name: "Young Green Dragon", hp: 136, ac: 18, type: "dragon",
+Repo.insert!(%Monster{name: "Young Green Dragon", hp: 136, ac: 15, type: "dragon",
                       element: "poison", size: 1, str: 19, dex: 12, con: 17,
                       int: 16, wis: 13, cha: 15}, exp: 10000)
 Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
