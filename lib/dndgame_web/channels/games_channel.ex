@@ -14,7 +14,6 @@ defmodule DndgameWeb.GamesChannel do
       playerName = Map.get(payload, "user")
       world = World.join_world(world, playerName)
       game = BackupAgent.get(playerName) || Game.new_game(world)
-      IO.inspect(game)
       partyId1 = Map.get(payload, "partyId1")
       partyId2 = Map.get(payload, "partyId2")
       partyId3 = Map.get(payload, "partyId3")

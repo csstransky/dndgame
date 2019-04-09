@@ -61,10 +61,11 @@ Repo.insert!(%Spell{name: "Fire Bolt", dice: "1d10",
         level_req: 1, target: "enemy", type: "fire", mp_cost: 0})
 Repo.insert!(%Spell{name: "Magic Missle", dice: "1d4", dice_bonus: 1,
         level_req: 1, target: "enemies", type: "force", mp_cost: 1})
+# TODO: Make these "member" in the future and deal with it
 Repo.insert!(%Spell{name: "Cure Wounds", dice: "1d8",
-        level_req: 1, target: "member", type: "heal", mp_cost: 1})
+        level_req: 1, target: "self", type: "heal", mp_cost: 1})
 Repo.insert!(%Spell{name: "Shield of Faith", dice: "2d1",
-        level_req: 1, target: "member", type: "buff", buff_stat: "AC", mp_cost: 1})
+        level_req: 1, target: "self", type: "buff", buff_stat: "AC", mp_cost: 1})
 
 ###### SKILLS ######
 Repo.insert!(%Skill{name: "Short Rest", level_req: 1, type: "rest",
@@ -84,7 +85,7 @@ Repo.insert!(%Skill{name: "Hide", level_req: 1, type: "buff",
 barbarian_profs = ["Athletics", "Intimidation"]
 barbarian_saves = ["STR", "CON"]
 barbarian_wpns = ["Simple", "Martial"]
-barbarian_armor = ["Light", "Medium"]
+barbarian_armor = ["Light", "Medium", "Heavy"]
 Repo.insert!(%Class{name: "Barbarian", hit_die: 12, ability_modifier: "STR", prof_array: barbarian_profs,
                     save_array: barbarian_saves, weapon_prof_array: barbarian_wpns,
                     armor_prof_array: barbarian_armor})
@@ -237,21 +238,21 @@ Repo.insert!(%Character{name: "Chuck", str: 10, dex: 20, int: 10, con: 20,
                 user: Users.get_user_by_email("Cristian")})
 
 ###### MONSTER ATTACKS ######
-Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "slash"})
-Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 2, target: "member", type: "bludgeon"})
-Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d8", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "fire"})
-Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d6", attack_bonus: 2,
+Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d4", attack_bonus: 2,
                     damage_bonus: 2, target: "member", type: "ice"})
-Repo.insert!(%Attack{name: "Bite", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Bite", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "pierce"})
-Repo.insert!(%Attack{name: "Lava Chomp", damage_dice: "1d8", attack_bonus: 2,
+Repo.insert!(%Attack{name: "Lava Chomp", damage_dice: "1d4", attack_bonus: 2,
                     damage_bonus: 2, target: "member", type: "fire"})
-Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d6", attack_bonus: 1,
+Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d4", attack_bonus: 1,
                     damage_bonus: 1, target: "member", type: "ice"})
-Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d6", attack_bonus: 7,
+Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d4", attack_bonus: 7,
                     damage_bonus: 4, target: "member", type: "slash"})
 Repo.insert!(%Attack{name: "Poison Breath", damage_dice: "3d8",
                     target: "party", type: "poison"})

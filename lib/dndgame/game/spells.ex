@@ -19,14 +19,14 @@ defmodule Dndgame.Game.Spells do
 
         game
         |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
-        |> Map.put(:battleAction, "#{character.name} did #{damage + damage} damage to #{enemy.name} with Fire Bolt")
+        |> Map.put(:battleAction, "#{character.name} did #{damage + damage} damage to #{enemy.name} with Fire Bolt! It was super effective!")
       else
         newHP = enemy.hp - damage
         new_enemy = Map.put(enemy, :hp, newHP)
 
         game
         |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
-        |> Map.put(:battleAction, "#{character.name} did #{damage} damage to #{enemy.name} with Fire Bolt")
+        |> Map.put(:battleAction, "#{character.name} did #{damage} damage to #{enemy.name} with Fire Bolt!")
       end
     end
 
@@ -54,8 +54,8 @@ defmodule Dndgame.Game.Spells do
       game
       |> update_battle_party(newChar)
       |> Map.replace(:monsters, hitMonsters)
-      |> Map.replace(:battleAction, "#{char.name} used Magic Missle and dealt
-      #{damage} damage to all enemies")
+      |> Map.replace(:battleAction,
+        "#{char.name} used Magic Missle and dealt #{damage} damage to all enemies!")
     end
 
     def cure_wounds(game, targetId) do
@@ -84,7 +84,7 @@ defmodule Dndgame.Game.Spells do
       # give the game the new healed character, then the char with less mp
       game
       |> update_battle_party(newChar)
-      |> Map.replace(:battleAction, "#{char.name} restored #{buff} hp with Cure Wounds")
+      |> Map.replace(:battleAction, "#{char.name} restored #{buff} HP with Cure Wounds.")
     end
 
     def shield_of_faith(game, targetId) do
@@ -103,6 +103,6 @@ defmodule Dndgame.Game.Spells do
 
       game
       |> update_battle_party(newChar)
-      |> Map.replace(:battleAction, "#{newChar.name} increased their ac by #{increase} with Shield of Faith")
+      |> Map.replace(:battleAction, "#{newChar.name} increased their AC by #{increase} with Shield of Faith.")
     end
 end

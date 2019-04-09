@@ -5,7 +5,7 @@ defmodule Dndgame.Game do
 
   @boss_x 29
   @boss_y 8
-  @max_steps_for_encounter 30
+  @max_steps_for_encounter 45
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
@@ -417,17 +417,13 @@ defmodule Dndgame.Game do
   end
 
   def start_battle(game) do
-    battleParty = game.staticParty
-    game = game
+    game
     |> add_environment_monsters
     |> add_order_array
-    |> Map.put(:battleParty, battleParty)
+    |> Map.put(:battleParty, game.staticParty)
     |> Map.put(:currentMenu, "main")
     |> set_monster_encounter_battle_action()
     |> Map.put(:steps, 0)
-    IO.inspect("FUCKING WORK")
-    IO.inspect(game.battleAction)
-    game
   end
 
   def set_monster_encounter_battle_action(game) do
@@ -435,7 +431,7 @@ defmodule Dndgame.Game do
 
       length(game.monsters) > 1 ->
         Map.put(game, :battleAction, "A group of monsters has appeared!")
-      Enum.at(game.monsters, 0) == @bossName ->
+      Enum.at(game.monsters, 0).name == @bossName ->
         Map.put(game, :battleAction, "You have challenged the " <> @bossName <> "!")
       true ->
         Map.put(game, :battleAction, "A monster has appeared!")
@@ -512,6 +508,7 @@ defmodule Dndgame.Game do
         0
       end
     end)
+    IO.inspect(xpMap)
 
     monsterLength = length(game.monsters)
     removeList = Enum.map(game.monsters, fn monster ->
@@ -522,12 +519,9 @@ defmodule Dndgame.Game do
         ""
       end
     end)
-    IO.inspect("HEY LISTEN")
-    IO.inspect(removeList)
 
     newOrderArray = Enum.filter(game.orderArray, fn orderString ->
       !(Enum.member?(removeList, orderString)) end)
-    IO.inspect(newOrderArray)
     # fold the list into 1 total number of xp to gain
     totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
     # update the characters with their xp
@@ -733,7 +727,8 @@ defmodule Dndgame.Game do
     attack = character.weapon.attack
     # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
     attackRoll = roll_dice("1d20") + get_character_stat_mod(character)
-    + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+      + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+    attackMessage = "#{character.name} used #{attack.name} on #{enemy.name} with #{character.weapon.name}"
     # if it is a hit
     if attackRoll > enemy.ac do
       # calculate damage
@@ -746,13 +741,13 @@ defmodule Dndgame.Game do
       |> remove_dead_monsters
       |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, "#{character.name} did #{damage} damage to #{enemy.name} with #{attack.name}")
+      |> Map.replace(:battleAction, attackMessage <> ", and did #{damage} damage!")
     else
       game
       |> remove_dead_monsters
       |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, "#{character.name} tried to attack #{enemy.name} with #{attack.name}, but it missed")
+      |> Map.replace(:battleAction, attackMessage <> ", but it missed!")
     end
   end
 
@@ -771,6 +766,8 @@ defmodule Dndgame.Game do
     # pick a random attack to use this turn, based off length of attackList
     attack = Enum.at(attackList, :rand.uniform(length(attackList)) - 1)
     attackRoll = roll_dice("1d20") + attack.attack_bonus
+    
+    enemyAttackMessage = "#{enemy.name} used #{attack.name} on #{targetCharacter.name}"
 
     # if it is indeed a hit based off the attackRoll
     if attackRoll > targetCharacter.ac do
@@ -785,7 +782,7 @@ defmodule Dndgame.Game do
       |> remove_dead_characters
       |> incrementOrderIndex
       |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, "#{enemy.name} did #{damage} damage to #{targetCharacter.name} with #{attack.name}")
+      |> Map.replace(:battleAction, enemyAttackMessage <> ", and did #{damage} damage!")
     else
       # the roll wasn't higher than ac so attack missed, just update battleAction
       game
@@ -793,7 +790,7 @@ defmodule Dndgame.Game do
       |> incrementOrderIndex
       |> remove_dead_characters
       |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, "#{enemy.name} missed attack on #{targetCharacter.name}")
+      |> Map.replace(:battleAction, enemyAttackMessage <> ", but missed!")
     end
   end
 

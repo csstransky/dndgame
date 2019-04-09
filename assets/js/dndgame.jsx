@@ -16,6 +16,8 @@ let PLAYERX = 500;
 let PLAYERY = 300;
 let PLAYERSIZE = 50;
 let MAPSIZE = 4000;
+let ORIGINALEXP = 0;
+let UPDATEDEXP = 0;
 
 // 6AM
 let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DAWNHOUR, 0, 0));
@@ -117,6 +119,7 @@ class Dndgame extends React.Component {
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
+    UPDATEDEXP = Math.max(this.state.party.map(character => character.exp))
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -264,6 +267,7 @@ class Dndgame extends React.Component {
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
+    ORIGINALEXP = Math.max(this.state.party.map(character => character.exp))
     console.log(this.state);
 
     // There will be used later to render the appropriate menu
