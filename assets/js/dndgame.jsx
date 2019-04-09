@@ -127,13 +127,30 @@ class Dndgame extends React.Component {
     let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.playerIndex];
     let direction;
-    if (player != null) {
 
-    ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+    // This should be changed to to a closure statement b/c super inefficient,
+    // but leaving this for now
+    let visibility = this.state.weather.visibility;
+    let temp = this.state.weather.temperature;
+    let wind = this.state.weather.wind;
+
+    if (player != null) {
+      drawing.onload = function() {
+        ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+        ctx.font = "25px Arial";
+        ctx.fillStyle = "#70a4be";
+        ctx.fillRect(0, 0, 180, 120);
+        ctx.stroke();
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText("Visibility:" + visibility, 10,30);
+        ctx.fillText("Temp:" + temp, 10, 65);
+        ctx.fillText("Wind:" + wind, 10, 100);
+      };
     let bossDrawing = new Image();
-    // TODO FOR NOAH
+    bossDrawing.onload = function () {
+      ctx.drawImage(bossDrawing, 0-player.x*50,0-player.y*50, PLAYERSIZE, PLAYERSIZE);
+    };
     bossDrawing.src = require("../static/monsters/dragonBossMapSprite.png");
-    ctx.drawImage(bossDrawing, 0-player.x*50,0-player.y*50, PLAYERSIZE, PLAYERSIZE);
 
 
     var mainCharacter = this.state.playerPosns[this.state.playerIndex];
@@ -159,13 +176,16 @@ class Dndgame extends React.Component {
           break;
       }
       if (this.state.playerIndex === i) {
-        ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
-
+        character.onload = function() {
+          ctx.drawImage(character, PLAYERX, PLAYERY, PLAYERSIZE, PLAYERSIZE);
+        };
       } else {
         let diffDistanceX = mainCharacter.x - currplayer.x;
         let diffDistanceY = mainCharacter.y - currplayer.y;
-        ctx.drawImage(character, PLAYERX - (diffDistanceX * PLAYERSIZE),
-                  PLAYERY - (diffDistanceY * PLAYERSIZE), PLAYERSIZE, PLAYERSIZE);
+        character.onload = function() {
+          ctx.drawImage(character, PLAYERX - (diffDistanceX * PLAYERSIZE),
+            PLAYERY - (diffDistanceY * PLAYERSIZE), PLAYERSIZE, PLAYERSIZE);
+        };
       }
     }
 
@@ -202,14 +222,6 @@ class Dndgame extends React.Component {
     });
 
 */
-    ctx.font = "25px Arial";
-    ctx.fillStyle = "#70a4be";
-    ctx.fillRect(0, 0, 180, 120);
-    ctx.stroke();
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillText("Visibility:" + this.state.weather.visibility, 10,30);
-    ctx.fillText("Temp:" + this.state.weather.temperature, 10, 65);
-    ctx.fillText("Wind:" + this.state.weather.wind, 10, 100);
 
     return canvas;
 
@@ -456,12 +468,16 @@ class Dndgame extends React.Component {
   return canvas;
   }
 
-  /////////////////////////////
-  /// INTERACTIVE FUNCTIONS ///
-  /////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////// INTERACTIVE FUNCTIONS ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   // Receives the keyDown events and sorts based on menu
   onKeyDown(ev) {
+
+    ////////////////////////////////
+    // WORLD NAVIGATION FUNCTIONS //
+    ////////////////////////////////
     ev.preventDefault();
     let leftArrowCode = 37;
     let upArrowCode = 38;
@@ -491,6 +507,9 @@ class Dndgame extends React.Component {
       }
     }
 
+    //////////////////////
+    // BATTLE FUNCTIONS //
+    //////////////////////
     if (ev.key == "Escape") {
       this.runFromBattle();
     }
