@@ -5,7 +5,7 @@ defmodule Dndgame.Game do
 
   @boss_x 29
   @boss_y 8
-  @max_steps_for_encounter 45
+  @max_steps_for_encounter 35
   @d20 "1d20"
   @duskTime ~T[18:00:00.0]
   @dawnTime ~T[06:00:00.0]
@@ -23,7 +23,7 @@ defmodule Dndgame.Game do
     IO.inspect(world.playerCount)
 
     worldIndex = world.playerCount - 1
-        IO.inspect(worldIndex)
+    IO.inspect(worldIndex)
     %{
         playerIndex: worldIndex,
         windSpeed: Map.get(world, "windSpeed"), # in MPH
@@ -529,12 +529,27 @@ defmodule Dndgame.Game do
                                   Map.replace(char, :exp, char.exp + totalXP) end)
     # filter any dead monsters out of the list
     removedDeadMonsters = Enum.filter(game.monsters, fn mon -> mon.hp > 0 end)
+    if length(removedDeadMonsters) <= 0 do
+      game
+      |> Map.replace(:monsters, removedDeadMonsters)
+      |> Map.replace(:staticParty, updatedCharacters)
+      |> Map.replace(:orderArray, newOrderArray)
+      |> update_database_character_exp
+    else
+      game
+      |> Map.replace(:monsters, removedDeadMonsters)
+      |> Map.replace(:staticParty, updatedCharacters)
+      |> Map.replace(:orderArray, newOrderArray)
+    end
+  end
 
+  def update_database_character_exp(game) do
+    Enum.map(game.staticParty, fn character ->
+      Dndgame.Characters.get_character(character.id)
+      |> Ecto.Changeset.change(%{exp: character.exp})
+      |> Dndgame.Repo.update()
+    end)
     game
-    |> Map.replace(:monsters, removedDeadMonsters)
-    |> Map.replace(:staticParty, updatedCharacters)
-    |> Map.replace(:orderArray, newOrderArray)
-
   end
 
   def remove_dead_characters(game) do
@@ -766,7 +781,7 @@ defmodule Dndgame.Game do
     # pick a random attack to use this turn, based off length of attackList
     attack = Enum.at(attackList, :rand.uniform(length(attackList)) - 1)
     attackRoll = roll_dice("1d20") + attack.attack_bonus
-    
+
     enemyAttackMessage = "#{enemy.name} used #{attack.name} on #{targetCharacter.name}"
 
     # if it is indeed a hit based off the attackRoll
