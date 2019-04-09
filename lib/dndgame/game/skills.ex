@@ -48,8 +48,8 @@ defmodule Dndgame.Game.Skills do
         game
         |> update_battle_party(newChar)
         |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, hitEnemy))
-        |> Map.replace(:battleAction, "#{character.name} did #{fullDamage} damage
-        to #{enemy.name} using Double Attack with #{attack.name}")
+        |> Map.replace(:battleAction,
+          "#{character.name} did #{fullDamage} damage to #{enemy.name} using Double Attack with #{character.weapon.name}!")
 
         # if only one of the rolls hit
         attackRoll1 > enemy.ac && attackRoll2 <= enemy.ac or attackRoll1 <= enemy.ac && attackRoll2 > enemy.ac ->
@@ -60,14 +60,14 @@ defmodule Dndgame.Game.Skills do
           game
           |> update_battle_party(newChar)
           |> Map.replace(:monsters, List.replace_at(game.monsters, targetId, hitEnemy))
-          |> Map.replace(:battleAction, "#{character.name} did #{damage} damage
-          to #{enemy.name} with one hit using Double Attack with #{attack.name}")
+          |> Map.replace(:battleAction,
+            "#{character.name} did #{damage} damage to #{enemy.name} with one hit using Double Attack with #{character.weapon.name}!")
 
           attackRoll1 <= enemy.ac && attackRoll2 <= enemy.ac ->
             game
             |> update_battle_party(newChar)
-            |> Map.replace(:battleAction, "#{character.name} tried to Double Attack
-            #{enemy.name} with #{attack.name}, but it missed")
+            |> Map.replace(:battleAction,
+              "#{character.name} tried to Double Attack #{enemy.name} with #{character.weapon.name}, but it missed!")
           end
         end
 
@@ -91,7 +91,7 @@ defmodule Dndgame.Game.Skills do
 
     game
     |> update_battle_party(newChar)
-    |> Map.replace(:battleAction, "#{char.name} used Rage to increase Strength by #{buff}")
+    |> Map.replace(:battleAction, "#{char.name} used Rage to increase STR by #{buff}!")
   end
 
   def turn_undead(game, targetId) do
@@ -124,7 +124,7 @@ defmodule Dndgame.Game.Skills do
         |> update_battle_party(newChar)
         |> remove_dead_monsters
         |> Map.replace(:battleAction,
-        "#{char.name} used Turn Undead on #{enemy.name}")
+          "#{char.name} used Turn Undead on #{enemy.name}!")
 
     else
       # if the selected creature is not undead, do nothing but remove sp
@@ -132,7 +132,7 @@ defmodule Dndgame.Game.Skills do
       |> update_battle_party(newChar)
       |> remove_dead_monsters
       |> Map.replace(:battleAction,
-      "#{char.name} attempted to use Turn Undead on the non-undead #{enemy.name}")
+        "#{char.name} attempted to use Turn Undead on the non-undead #{enemy.name}, and failed!")
     end
   end
 
@@ -184,13 +184,15 @@ defmodule Dndgame.Game.Skills do
         game
         |> update_battle_party(newChar)
         |> Map.replace(:monsters, newMonsters)
-        |> Map.replace(:battleAction, "#{char.name} successfully Sneak Attacked #{monster.name} for #{damage} damage")
+        |> Map.replace(:battleAction,
+          "#{char.name} successfully Sneak Attacked #{monster.name} for #{damage} damage!")
       else
         newChar = Map.replace(char, :sp, char.sp - skillStealth.sp_cost)
 
         game
         |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{char.name} missed Sneak Attack on #{monster.name}")
+        |> Map.replace(:battleAction,
+          "#{char.name} failed to Sneak Attack the #{monster.name}.")
       end
     else
       attackRoll = roll_dice("1d20") + get_character_stat_mod(char)
@@ -207,13 +209,15 @@ defmodule Dndgame.Game.Skills do
         game
         |> update_battle_party(newChar)
         |> Map.replace(:monsters, newMonsters)
-        |> Map.replace(:battleAction, "#{char.name} was caught by #{monster.name} but hit for #{damage} damage")
+        |> Map.replace(:battleAction,
+          "#{char.name} was caught by #{monster.name}, but hit for #{damage} damage!")
       else
         newChar = Map.replace(char, :sp, char.sp - skillStealth.sp_cost)
 
         game
         |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{char.name} missed Sneak Attack on #{monster.name}")
+        |> Map.replace(:battleAction,
+          "#{char.name} missed Sneak Attack on #{monster.name}.")
       end
     end
   end
@@ -249,14 +253,16 @@ defmodule Dndgame.Game.Skills do
 
         game
         |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{char.name} used Hide to increase ac by 1 and dex by 3")
+        |> Map.replace(:battleAction,
+          "#{char.name} used Hide to increase AC by 1 and DEX by 3!")
       else
         newChar = char
         |> Map.replace(:sp, char.sp - skillHide.sp_cost)
 
         game
         |> update_battle_party(newChar)
-        |> Map.replace(:battleAction, "#{char.name} was caught trying to hide, and did not receive any buffs")
+        |> Map.replace(:battleAction,
+          "#{char.name} was caught trying to hide!")
       end
     end
 end

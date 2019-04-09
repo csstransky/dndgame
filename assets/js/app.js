@@ -41,6 +41,8 @@ $(function () {
   })
 
   $('#roll').click((ev) => {
+    update_armors();
+    update_weapons();
     update_stats();
   });
 
@@ -275,7 +277,8 @@ function show_armor(armor) {
     + category
     + base
     + dex_bonus
-    + stealth_disadvantage;
+    + stealth_disadvantage
+    + str_min;
 }
 
 function show_list(string_array) {
