@@ -537,7 +537,21 @@ defmodule Dndgame.Game do
   end
 
   def set_battle_win_string(game) do
-    battleOverArray = ["You have won!"]
+    expArray = Enum.map(Enum.with_index(game.staticParty),
+      fn {character, index} ->
+        originalExp = Enum.at(game.battleParty, index).exp
+        newExp = character.exp
+        expGain = newExp - originalExp
+
+        currLevel = character.level
+        newLevel = Dndgame.Characters.get_level(character)
+        if currLevel < newLevel do
+          "#{character.name} has gained #{expGain} experience, and increased to level #{newLevel}!"
+        else
+          "#{character.name} has gained #{expGain} experience!"
+        end
+      end)
+    battleOverArray = ["You have won!"] ++ expArray
     game
     |> Map.put(:battleOverArray, battleOverArray)
   end
