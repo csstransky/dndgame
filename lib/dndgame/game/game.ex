@@ -842,7 +842,7 @@ defmodule Dndgame.Game do
     enemyIndex = get_character_index(game)
     enemy = Enum.at(game.monsters, enemyIndex)
     if enemy do
-
+      # TODO fix this tomorrow cristian
       characterId = Enum.random(0..length(game.battleParty)-1)
       # get the target character of the attack
       targetCharacter = Enum.at(game.battleParty, characterId)
@@ -862,7 +862,7 @@ defmodule Dndgame.Game do
         hitCharacter = Map.put(targetCharacter, :hp, targetCharacter.hp - damage)
         # replace the character in the game and update the battle action
         game
-        |> update_battle_party(hitCharacter)
+        |> Map.put(:battleParty, List.replace_at(game.battleParty, characterId, hitCharacter))
         |> remove_dead_monsters
         |> check_battle_lost
         |> incrementOrderIndex
