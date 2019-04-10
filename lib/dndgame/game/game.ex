@@ -594,12 +594,21 @@ defmodule Dndgame.Game do
 
   # Run from a battle
   def run(game) do
-    # TODO: add rolling to decide on running
     # dexterity check for each player & monster, compare largest of each
-    game
-    |> Map.put(:battle_party, [])
-    |> Map.put(:monsters, [])
-    |> Map.put(:battleOverString, "You have run away!")
+    maxPartyDexRoll = Enum.max(Enum.map(game.battleParty,
+      fn char -> roll_dice(@d20) + Dndgame.Characters.get_stat_modifier(char.dex) end))
+    maxMonstersDexRoll = Enum.max(Enum.map(game.monsters,
+      fn monster -> roll_dice(@d20) + Dndgame.Characters.get_stat_modifier(monster.dex) end))
+    if maxPartyDexRoll >= maxMonstersDexRoll do
+      game
+      |> Map.put(:battle_party, [])
+      |> Map.put(:monsters, [])
+      |> Map.put(:battleOverString, "You run away!")
+    else
+      game
+      |> Map.put(:battleAction, "You tried to run away, but failed!")
+      |> incrementOrderIndex
+    end
   end
 
   # blank for now, will: clear battleParty, monsters, update xp,
