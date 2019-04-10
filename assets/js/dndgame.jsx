@@ -650,7 +650,7 @@ class Dndgame extends React.Component {
           return;
         }
         // Check if character has enough mp and sp to perform spells
-        if ((this.state.party[this.state.orderIndex].mp <= 0) && (this.state.mainMenuCurrentSelection == 2)) {
+        if ((this.state.party[this.determineCurrentPlayerIndex()].mp <= 0) && (this.state.mainMenuCurrentSelection == 2)) {
           this.setState((state, props) => ({
             battleAction: "Sorry, you don't have enough MP for "  + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
           }));
@@ -658,7 +658,7 @@ class Dndgame extends React.Component {
         }
 
         // Check if character has enough mp and sp to perform spells
-        if ((this.state.party[this.state.orderIndex].sp <= 0) && (this.state.mainMenuCurrentSelection == 1)) {
+        if ((this.state.party[this.determineCurrentPlayerIndex()].sp <= 0) && (this.state.mainMenuCurrentSelection == 1)) {
           this.setState((state, props) => ({
             battleAction: "Sorry, you don't have enough SP for " + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
           }));
