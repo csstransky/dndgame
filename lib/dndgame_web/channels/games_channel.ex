@@ -19,7 +19,7 @@ defmodule DndgameWeb.GamesChannel do
       partyId3 = Map.get(payload, "partyId3")
       game = game
       |> Game.create_party(partyId1, partyId2, partyId3)
-      |> Game.update_game_world(world)
+      |> Game.update_game_world(world, playerName)
       BackupAgent.put(name, world)
       BackupAgent.put(playerName, game)
       update_players(name, playerName)

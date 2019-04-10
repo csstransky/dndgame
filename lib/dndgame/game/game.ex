@@ -18,19 +18,8 @@ defmodule Dndgame.Game do
   @bossName "Young Green Dragon"
 
   def new_game(world) do
-    # You're a new character, so this should be fine
-    IO.inspect("WORLDCOUNTER")
-    IO.inspect(world.playerCount)
-
-    worldIndex = world.playerCount - 1
-    IO.inspect(worldIndex)
+    # Still need to add playerIndex by joining the world
     %{
-        playerIndex: worldIndex,
-        windSpeed: Map.get(world, "windSpeed"), # in MPH
-        temperature: Map.get(world, "apparentTemperature"), # in F
-        visibility: Map.get(world, "visibility"),
-        timezone: world.timezone, # the difference from UTC, Boston = -4
-
         battleParty: [],
         staticParty: [], # Will be added onto later
         monsters: [], # fills up when character encounters monsters
@@ -82,8 +71,11 @@ defmodule Dndgame.Game do
     end
   end
 
-  def update_game_world(game, world) do
+  def update_game_world(game, world, playerName) do
+    playerIndex = Enum.find_index(world.playerPosns,
+      fn playerPosn -> playerPosn.name == playerName end)
     game
+    |> Map.put(:playerIndex, playerIndex)
     |> Map.put(:playerPosns, world.playerPosns)
     |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
     |> Map.put(:temperature, Map.get(world, "apparentTemperature"))

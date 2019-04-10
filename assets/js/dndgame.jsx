@@ -314,7 +314,7 @@ class Dndgame extends React.Component {
     let date =  this.calcTime(this.state.timezone);
 
     // DAY
-    if (DAWNHOUR < date.getHours() && date.getHours() < DUSKHOUR) {
+    if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
       // DAY
       ctx.fillStyle = "#000000";
     }
