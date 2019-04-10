@@ -38,7 +38,8 @@ class Dndgame extends React.Component {
       currentMenu: "main",
       battleAction: "",
       buildMenuPath: [],
-      timezone: 0
+      timezone: 0,
+      battleOverString: "",
     };
 
     this.channel
@@ -72,7 +73,7 @@ class Dndgame extends React.Component {
 
   // This figures out what type of display to render in the canvas
   drawDisplay() {
-    if (this.state.monsters.length == 0) {
+    if ((this.state.monsters.length == 0) && (this.state.battleOverString == "")) {
       this.drawGameMap();
     } else {
       this.drawBattleScreen();
@@ -485,6 +486,9 @@ class Dndgame extends React.Component {
     ctx.font = "25px Ariel";
     ctx.fillText(this.state.battleAction, 20, 40);
 
+
+
+
   return canvas;
   }
 
@@ -494,6 +498,13 @@ class Dndgame extends React.Component {
 
   // Receives the keyDown events and sorts based on menu
   onKeyDown(ev) {
+
+    if ((!this.state.battleOverString == "") && (ev.key = "Enter")) {
+      this.setState((state, props) => ({
+        battleOverString: "",
+      }));
+      return;
+    };
 
     ////////////////////////////////
     // WORLD NAVIGATION FUNCTIONS //
