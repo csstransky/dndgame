@@ -165,7 +165,7 @@ defmodule Dndgame.Game.Skills do
 
     attack = char.weapon.attack
 
-    if check > monsterCheck do
+    if check >= monsterCheck do
       # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
       attackRoll1 = roll_dice("1d20") + get_character_stat_mod(char)
       + Dndgame.Characters.get_prof_bonus(char) + attack.attack_bonus

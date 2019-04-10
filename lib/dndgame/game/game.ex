@@ -319,7 +319,7 @@ defmodule Dndgame.Game do
             |> update_player_posn(playerX, playerY - 1, direction)
             |> Map.put(:steps, game.steps + 1)
             |> random_encounter
-            |> Map.put(:battleoverarray, [])
+            |> Map.put(:battleOverArray, [])
           end
         else
           # just update the direction
@@ -333,7 +333,7 @@ defmodule Dndgame.Game do
           |> update_player_posn(playerX + 1, playerY, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
-          |> Map.put(:battleoverarray, [])
+          |> Map.put(:battleOverArray, [])
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -344,7 +344,7 @@ defmodule Dndgame.Game do
           update_player_posn(game, playerX, playerY + 1, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
-          |> Map.put(:battleoverarray, [])
+          |> Map.put(:battleOverArray, [])
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -355,7 +355,7 @@ defmodule Dndgame.Game do
           update_player_posn(game, playerX - 1, playerY, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
-          |> Map.put(:battleoverarray, [])
+          |> Map.put(:battleOverArray, [])
         else
           update_player_posn(game, playerX, playerY, direction)
         end
