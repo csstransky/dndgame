@@ -153,10 +153,12 @@ class Dndgame extends React.Component {
     if (player != null) {
       drawing.onload = function() {
         ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
+        ctx.globalAlpha = 0.75;
         ctx.font = "25px Arial";
         ctx.fillStyle = "#70a4be";
         ctx.fillRect(0, 0, 220, 150);
         ctx.stroke();
+        ctx.globalAlpha = 1;
         ctx.fillStyle = "#FFFFFF";
         ctx.fillText("VSBY: " + visibility + " Miles", 10,30);
         ctx.fillText("Temp: " + temp + "°F", 10, 65);
