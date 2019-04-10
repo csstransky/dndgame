@@ -19,11 +19,6 @@ let MAPSIZE = 4000;
 let ORIGINALEXP = 0;
 let UPDATEDEXP = 0;
 
-// 6AM
-let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DAWNHOUR, 0, 0));
-// 6PM
-let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
-
 class Dndgame extends React.Component {
   constructor(props) {
     super(props);
@@ -114,7 +109,9 @@ class Dndgame extends React.Component {
     var d = new Date();
     var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     var nd = new Date(utc + (3600000 * offset));
-    return Date.parse(nd.toLocaleString());
+    console.log(nd.toLocaleString());
+    //return Date.parse(nd.toLocaleString()); # TODO use this for clock
+    return nd;
   }
 
   // Here's the big function for drawing the game world when character is not in battle
@@ -232,13 +229,14 @@ class Dndgame extends React.Component {
 
   getEnvironmentMap() {
     let drawing = new Image();
-
+    let offset = this.state.timezone;
+    this.calcTime(offset)
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
 
     // DAY
-    if (earlyDate < date && date < lateDate) {
+    if (DAWNHOUR < date.getHours() && date.getHours() < DUSKHOUR) {
       // snow
       if(this.state.weather.temperature < 30) {
         drawing.src = require("../static/snow_day.png");
@@ -299,7 +297,8 @@ class Dndgame extends React.Component {
     // screen setup
     let date =  this.calcTime(this.state.timezone);
 
-    if (earlyDate < date && date < lateDate) {
+    // DAY
+    if (DAWNHOUR < date.getHours() && date.getHours() < DUSKHOUR) {
       // DAY
       ctx.fillStyle = "#000000";
     }
