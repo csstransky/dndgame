@@ -16,8 +16,6 @@ let PLAYERX = 500;
 let PLAYERY = 300;
 let PLAYERSIZE = 50;
 let MAPSIZE = 4000;
-let ORIGINALEXP = 0;
-let UPDATEDEXP = 0;
 
 class Dndgame extends React.Component {
   constructor(props) {
@@ -112,10 +110,27 @@ class Dndgame extends React.Component {
     return nd;
   }
 
+  getDisplayTime() {
+    let time = this.calcTime(this.state.timezone)
+    if (time.getHours() > 12) {
+      if (time.getMinutes() < 10) {
+        return (time.getHours() - 12) + ":0" + time.getMinutes() + " pm";
+      } else {
+        return (time.getHours() - 12) + ":" + time.getMinutes() + " pm";
+      }
+       return
+    } else {
+      if (time.getMinutes() < 10) {
+        return time.getHours() + ":0" + time.getMinutes() + " am";
+      } else {
+        return time.getHours() + ":" + time.getMinutes() + " am";
+      }
+    }
+  }
+
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
     console.log(this.state);
-    UPDATEDEXP = Math.max(this.state.party.map(character => character.exp))
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     //ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -133,17 +148,20 @@ class Dndgame extends React.Component {
     let temp = this.state.weather.temperature;
     let wind = this.state.weather.wind;
 
+    let displayTime = this.getDisplayTime();
+
     if (player != null) {
       drawing.onload = function() {
         ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
         ctx.font = "25px Arial";
         ctx.fillStyle = "#70a4be";
-        ctx.fillRect(0, 0, 180, 120);
+        ctx.fillRect(0, 0, 220, 150);
         ctx.stroke();
         ctx.fillStyle = "#FFFFFF";
-        ctx.fillText("Visibility:" + visibility, 10,30);
-        ctx.fillText("Temp:" + temp, 10, 65);
-        ctx.fillText("Wind:" + wind, 10, 100);
+        ctx.fillText("VSBY: " + visibility + " Miles", 10,30);
+        ctx.fillText("Temp: " + temp + "°F", 10, 65);
+        ctx.fillText("Wind: " + wind + " MPH", 10, 100);
+        ctx.fillText("Time: "+ displayTime, 10, 135);
       };
     let bossDrawing = new Image();
     bossDrawing.onload = function () {
@@ -264,7 +282,6 @@ class Dndgame extends React.Component {
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
-    ORIGINALEXP = Math.max(this.state.party.map(character => character.exp))
     console.log(this.state);
 
     // There will be used later to render the appropriate menu
