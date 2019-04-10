@@ -36,7 +36,7 @@ defmodule Dndgame.Game do
         orderIndex: 0, # who's turn it is
 
         isBossDead: "", # name of person who killed boss
-        battleOverString: "",
+        battleOverArray: [],
 
         currentMenu: "main", # main, skill, spell, monsterSelect, deathSaves
         battleAction: "",
@@ -104,7 +104,7 @@ defmodule Dndgame.Game do
       orderArray: game.orderArray, # fills up with strings of whose turn it is
       orderIndex: game.orderIndex, # who's turn it is
 
-      battleOverString: game.battleOverString,
+      battleOverArray: game.battleOverArray,
       isBossDead: game.isBossDead, # name of person who killed boss
 
       currentMenu: game.currentMenu, # main, skill, spell, monsterSelect, deathSaves
@@ -313,13 +313,13 @@ defmodule Dndgame.Game do
             |> update_player_posn(playerX, playerY - 1, direction)
             |> Map.put(:steps, game.steps + 1)
             |> boss_encounter
-            |> Map.put(:battleOverString, "")
+            |> Map.put(:battleOverArray, [])
           else
             game
             |> update_player_posn(playerX, playerY - 1, direction)
             |> Map.put(:steps, game.steps + 1)
             |> random_encounter
-            |> Map.put(:battleOverString, "")
+            |> Map.put(:battleoverarray, [])
           end
         else
           # just update the direction
@@ -333,7 +333,7 @@ defmodule Dndgame.Game do
           |> update_player_posn(playerX + 1, playerY, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
-          |> Map.put(:battleOverString, "")
+          |> Map.put(:battleoverarray, [])
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -344,7 +344,7 @@ defmodule Dndgame.Game do
           update_player_posn(game, playerX, playerY + 1, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
-          |> Map.put(:battleOverString, "")
+          |> Map.put(:battleoverarray, [])
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -355,7 +355,7 @@ defmodule Dndgame.Game do
           update_player_posn(game, playerX - 1, playerY, direction)
           |> Map.put(:steps, game.steps + 1)
           |> random_encounter
-          |> Map.put(:battleOverString, "")
+          |> Map.put(:battleoverarray, [])
         else
           update_player_posn(game, playerX, playerY, direction)
         end
@@ -537,16 +537,16 @@ defmodule Dndgame.Game do
   end
 
   def set_battle_win_string(game) do
-    battleOverString = "You have won!"
+    battleOverArray = ["You have won!"]
     game
-    |> Map.put(:battleOverString, battleOverString)
+    |> Map.put(:battleOverArray, battleOverArray)
   end
 
   def check_battle_lost(game) do
     if Enum.all?(game.battleParty, fn char -> char.hp <= 0 end) do
-      battleOverString = "You have lost!"
+      battleOverArray = ["You have lost!"]
       game
-      |> Map.put(:battleOverString, battleOverString)
+      |> Map.put(:battleOverArray, battleOverArray)
       |> Map.put(:monsters, [])
       |> update_database_character_exp("lose")
     else
@@ -603,7 +603,7 @@ defmodule Dndgame.Game do
       game
       |> Map.put(:battle_party, [])
       |> Map.put(:monsters, [])
-      |> Map.put(:battleOverString, "You run away!")
+      |> Map.put(:battleOverArray, ["You run away!"])
     else
       game
       |> Map.put(:battleAction, "You tried to run away, but failed!")
