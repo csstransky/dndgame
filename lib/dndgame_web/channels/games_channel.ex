@@ -102,7 +102,7 @@ defmodule DndgameWeb.GamesChannel do
     worldName = socket.assigns[:worldName]
     if playerName != playerUpdaterName && worldName do
       game = BackupAgent.get(playerName)
-      |> Game.update_game_world(world, playerUpdaterName)
+      |> Game.update_game_world(world, playerName)
       IO.inspect("I AM GETTING UPDATED")
       IO.inspect(playerName)
       IO.inspect(game.playerIndex)

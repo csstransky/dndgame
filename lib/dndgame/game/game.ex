@@ -75,6 +75,9 @@ defmodule Dndgame.Game do
   def update_game_world(game, world, playerName) do
     playerIndex = Enum.find_index(world.playerPosns,
       fn playerPosn -> playerPosn.name == playerName end)
+    IO.inspect("CHECK CORRECT INDEX")
+    IO.inspect(playerName)
+    IO.inspect(playerIndex)
     game
     |> Map.put(:playerIndex, playerIndex)
     |> Map.put(:playerPosns, world.playerPosns)
@@ -632,7 +635,7 @@ defmodule Dndgame.Game do
       game
       |> Map.put(:battle_party, [])
       |> Map.put(:monsters, [])
-      |> Map.put(:battleOverArray, ["You run away!"])
+      |> Map.put(:battleOverArray, ["You successfully ran away!"])
     else
       game
       |> Map.put(:battleAction, "You tried to run away, but failed!")

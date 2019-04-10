@@ -202,9 +202,20 @@ class Dndgame extends React.Component {
       } else {
         let diffDistanceX = mainCharacter.x - currplayer.x;
         let diffDistanceY = mainCharacter.y - currplayer.y;
+        let date = this.calcTime(this.state.timezone)
         character.onload = function() {
+          // DAY
+          if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
+            // DAY
+            ctx.fillStyle = "#000000";
+          } else {
+            ctx.fillStyle = "#FFFFFF";
+          }
           ctx.drawImage(character, PLAYERX - (diffDistanceX * PLAYERSIZE),
             PLAYERY - (diffDistanceY * PLAYERSIZE), PLAYERSIZE, PLAYERSIZE);
+          ctx.fillText(currplayer.name,
+            (PLAYERX - (diffDistanceX * PLAYERSIZE)),
+            (PLAYERY - (diffDistanceY * PLAYERSIZE)));
         };
       }
     }
@@ -464,7 +475,6 @@ class Dndgame extends React.Component {
       ctx.fillText(battleOverArray[2], 245,250);
       ctx.fillText(battleOverArray[3], 245,280);
 
-
       // DAY
       if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
         // DAY
@@ -666,7 +676,7 @@ class Dndgame extends React.Component {
         // Check if character has enough mp and sp to perform spells
         if ((this.state.party[this.determineCurrentPlayerIndex()].mp <= 0) && (this.state.mainMenuCurrentSelection == 2)) {
           this.setState((state, props) => ({
-            battleAction: "Sorry, you don't have enough MP for "  + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
+            battleAction: "Not enough MP for "  + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
           }));
           return;
         }
@@ -674,7 +684,7 @@ class Dndgame extends React.Component {
         // Check if character has enough mp and sp to perform spells
         if ((this.state.party[this.determineCurrentPlayerIndex()].sp <= 0) && (this.state.mainMenuCurrentSelection == 1)) {
           this.setState((state, props) => ({
-            battleAction: "Sorry, you don't have enough SP for " + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
+            battleAction: "Not have enough SP for " + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
           }));
           return;
         }
