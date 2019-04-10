@@ -16,13 +16,6 @@ let PLAYERX = 500;
 let PLAYERY = 300;
 let PLAYERSIZE = 50;
 let MAPSIZE = 4000;
-let ORIGINALEXP = 0;
-let UPDATEDEXP = 0;
-
-// 6AM
-let earlyDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DAWNHOUR, 0, 0));
-// 6PM
-let lateDate = Date.parse(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), DUSKHOUR, 0, 0));
 
 class Dndgame extends React.Component {
   constructor(props) {
@@ -112,13 +105,32 @@ class Dndgame extends React.Component {
     var d = new Date();
     var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     var nd = new Date(utc + (3600000 * offset));
-    return Date.parse(nd.toLocaleString());
+    console.log(nd.toLocaleString());
+    //return Date.parse(nd.toLocaleString()); # TODO use this for clock
+    return nd;
+  }
+
+  getDisplayTime() {
+    let time = this.calcTime(this.state.timezone)
+    if (time.getHours() > 12) {
+      if (time.getMinutes() < 10) {
+        return (time.getHours() - 12) + ":0" + time.getMinutes() + " pm";
+      } else {
+        return (time.getHours() - 12) + ":" + time.getMinutes() + " pm";
+      }
+       return
+    } else {
+      if (time.getMinutes() < 10) {
+        return time.getHours() + ":0" + time.getMinutes() + " am";
+      } else {
+        return time.getHours() + ":" + time.getMinutes() + " am";
+      }
+    }
   }
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
     console.log(this.state);
-    UPDATEDEXP = Math.max(this.state.party.map(character => character.exp))
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
     //ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -136,17 +148,20 @@ class Dndgame extends React.Component {
     let temp = this.state.weather.temperature;
     let wind = this.state.weather.wind;
 
+    let displayTime = this.getDisplayTime();
+
     if (player != null) {
       drawing.onload = function() {
         ctx.drawImage(drawing, 0-player.x*50,0-player.y*50, MAPSIZE, MAPSIZE);
         ctx.font = "25px Arial";
         ctx.fillStyle = "#70a4be";
-        ctx.fillRect(0, 0, 180, 120);
+        ctx.fillRect(0, 0, 220, 150);
         ctx.stroke();
         ctx.fillStyle = "#FFFFFF";
-        ctx.fillText("Visibility:" + visibility, 10,30);
-        ctx.fillText("Temp:" + temp, 10, 65);
-        ctx.fillText("Wind:" + wind, 10, 100);
+        ctx.fillText("VSBY: " + visibility + " Miles", 10,30);
+        ctx.fillText("Temp: " + temp + "°F", 10, 65);
+        ctx.fillText("Wind: " + wind + " MPH", 10, 100);
+        ctx.fillText("Time: "+ displayTime, 10, 135);
       };
     let bossDrawing = new Image();
     bossDrawing.onload = function () {
@@ -231,13 +246,14 @@ class Dndgame extends React.Component {
 
   getEnvironmentMap() {
     let drawing = new Image();
-
+    let offset = this.state.timezone;
+    this.calcTime(offset)
     // time calculations
     // current time, still need to do comparisons
     let date =  this.calcTime(this.state.timezone);
 
     // DAY
-    if (earlyDate < date && date < lateDate) {
+    if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
       // snow
       if(this.state.weather.temperature < 30) {
         drawing.src = require("../static/snow_day.png");
@@ -266,7 +282,6 @@ class Dndgame extends React.Component {
 
   // Giant function for drawing the battle scene, as well as handling a little logic.
   drawBattleScreen() {
-    ORIGINALEXP = Math.max(this.state.party.map(character => character.exp))
     console.log(this.state);
 
     // There will be used later to render the appropriate menu
@@ -298,7 +313,8 @@ class Dndgame extends React.Component {
     // screen setup
     let date =  this.calcTime(this.state.timezone);
 
-    if (earlyDate < date && date < lateDate) {
+    // DAY
+    if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
       // DAY
       ctx.fillStyle = "#000000";
     }

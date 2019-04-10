@@ -85,4 +85,4 @@
 </div>
 </td>
 </tr>
-<span><%= link "Back", to: Routes.character_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.character_path(@conn, :index), class: "btn btn-secondary" %></span>

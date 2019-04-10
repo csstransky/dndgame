@@ -9,7 +9,6 @@ defmodule Dndgame.Game.World do
   def new_world(worldName) do
     weatherInfo = call_weather_api(worldName)
     |> Map.put_new(:playerPosns, [])
-    |> Map.put_new(:playerCount, 0)
   end
 
   def call_weather_api(worldName) do
@@ -51,7 +50,6 @@ defmodule Dndgame.Game.World do
       newPlayer = init_new_player(playerName)
       world
       |> Map.put(:playerPosns, world.playerPosns ++ [newPlayer])
-      |> Map.put(:playerCount, world.playerCount + 1)
     end
   end
 

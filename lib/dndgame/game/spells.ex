@@ -39,7 +39,7 @@ defmodule Dndgame.Game.Spells do
       char = Enum.at(game.battleParty, charIndex)
       magicMissle = Dndgame.Spells.get_spell_by_name("Magic Missle")
 
-      newChar = Map.replace(char, :mp, char.mp - magicMissle.mp_cost)
+      newChar = Map.put(char, :mp, char.mp - magicMissle.mp_cost)
 
       # roll a 1d4 for damage and add the spells dice BONUS
       damage = roll_dice(magicMissle.dice) + magicMissle.dice_bonus
@@ -49,12 +49,12 @@ defmodule Dndgame.Game.Spells do
 
       # update all monsters health to reflect damage
       hitMonsters = Enum.map(game.monsters, fn monster ->
-                               Map.replace(monster, :hp, monster.hp - damage) end)
+                               Map.put(monster, :hp, monster.hp - damage) end)
 
       game
       |> update_battle_party(newChar)
-      |> Map.replace(:monsters, hitMonsters)
-      |> Map.replace(:battleAction,
+      |> Map.put(:monsters, hitMonsters)
+      |> Map.put(:battleAction,
         "#{char.name} used Magic Missle and dealt #{damage} damage to all enemies!")
     end
 
@@ -79,12 +79,12 @@ defmodule Dndgame.Game.Spells do
       # update the target characters hp
       newHP = Enum.min([staticChar.hp, char.hp + buff])
       newChar = char
-      |> Map.replace(:hp, newHP)
-      |> Map.replace(:mp, char.mp - cureWounds.mp_cost)
+      |> Map.put(:hp, newHP)
+      |> Map.put(:mp, char.mp - cureWounds.mp_cost)
       # give the game the new healed character, then the char with less mp
       game
       |> update_battle_party(newChar)
-      |> Map.replace(:battleAction, "#{char.name} restored #{buff} HP with Cure Wounds.")
+      |> Map.put(:battleAction, "#{char.name} restored #{buff} HP with Cure Wounds.")
     end
 
     def shield_of_faith(game, targetId) do
@@ -98,11 +98,11 @@ defmodule Dndgame.Game.Spells do
 
       # get haracter's index and replace the updated character into battleParty
       newChar = char
-      |> Map.replace(:ac, char.ac + increase)
-      |> Map.replace(:mp, char.mp - spellShield.mp_cost)
+      |> Map.put(:ac, char.ac + increase)
+      |> Map.put(:mp, char.mp - spellShield.mp_cost)
 
       game
       |> update_battle_party(newChar)
-      |> Map.replace(:battleAction, "#{newChar.name} increased their AC by #{increase} with Shield of Faith.")
+      |> Map.put(:battleAction, "#{newChar.name} increased their AC by #{increase} with Shield of Faith.")
     end
 end

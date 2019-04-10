@@ -18,19 +18,8 @@ defmodule Dndgame.Game do
   @bossName "Young Green Dragon"
 
   def new_game(world) do
-    # You're a new character, so this should be fine
-    IO.inspect("WORLDCOUNTER")
-    IO.inspect(world.playerCount)
-
-    worldIndex = world.playerCount - 1
-    IO.inspect(worldIndex)
+    # Still need to add playerIndex by joining the world
     %{
-        playerIndex: worldIndex,
-        windSpeed: Map.get(world, "windSpeed"), # in MPH
-        temperature: Map.get(world, "apparentTemperature"), # in F
-        visibility: Map.get(world, "visibility"),
-        timezone: world.timezone, # the difference from UTC, Boston = -4
-
         battleParty: [],
         staticParty: [], # Will be added onto later
         monsters: [], # fills up when character encounters monsters
@@ -46,9 +35,8 @@ defmodule Dndgame.Game do
         orderArray: [], # fills up with strings of whose turn it is
         orderIndex: 0, # who's turn it is
 
-        isLevelUp: [0,0,0], # flag to show a level screen or not
         isBossDead: "", # name of person who killed boss
-        isGameOver: false, # flag to show a gameover screen
+        battleOverString: "",
 
         currentMenu: "main", # main, skill, spell, monsterSelect, deathSaves
         battleAction: "",
@@ -60,15 +48,15 @@ defmodule Dndgame.Game do
     characterListItem1 = create_character_list_item(party_id_1)
     characterListItem2 = create_character_list_item(party_id_2)
     characterListItem3 = create_character_list_item(party_id_3)
-    newParty = characterListItem1 ++ characterListItem2 ++ characterListItem3
+    newParty = [characterListItem1] ++ [characterListItem2] ++ [characterListItem3]
+    |> Enum.filter(& !is_nil(&1))
     game
     |> Map.put(:staticParty, newParty)
   end
 
-  # NOTE: Returns a list of 1 character
   def create_character_list_item(party_id) do
     if party_id == "" do
-      []
+      nil
     else
       character = Dndgame.Characters.get_character!(party_id)
       character = character
@@ -80,12 +68,14 @@ defmodule Dndgame.Game do
       |> Map.put(:sp, Characters.get_sp(character))
       |> Map.put(:level, Characters.get_level(character))
       |> Map.put(:initiative, Characters.get_initiative(character))
-      [character]
     end
   end
 
-  def update_game_world(game, world) do
+  def update_game_world(game, world, playerName) do
+    playerIndex = Enum.find_index(world.playerPosns,
+      fn playerPosn -> playerPosn.name == playerName end)
     game
+    |> Map.put(:playerIndex, playerIndex)
     |> Map.put(:playerPosns, world.playerPosns)
     |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
     |> Map.put(:temperature, Map.get(world, "apparentTemperature"))
@@ -114,9 +104,8 @@ defmodule Dndgame.Game do
       orderArray: game.orderArray, # fills up with strings of whose turn it is
       orderIndex: game.orderIndex, # who's turn it is
 
-      isLevelUp: game.isLevelUp, # flag to show a level screen or not
+      battleOverString: game.battleOverString,
       isBossDead: game.isBossDead, # name of person who killed boss
-      isGameOver: game.isGameOver, # flag to show a gameover screen
 
       currentMenu: game.currentMenu, # main, skill, spell, monsterSelect, deathSaves
       battleAction: game.battleAction,
@@ -526,56 +515,79 @@ defmodule Dndgame.Game do
     totalXP = List.foldr(xpMap, 0, fn x, acc -> x + acc end)
     # update the characters with their xp
     updatedCharacters = Enum.map(game.staticParty, fn char ->
-                                  Map.replace(char, :exp, char.exp + totalXP) end)
+                                  Map.put(char, :exp, char.exp + totalXP) end)
     # filter any dead monsters out of the list
     removedDeadMonsters = Enum.filter(game.monsters, fn mon -> mon.hp > 0 end)
     if length(removedDeadMonsters) <= 0 do
       game
-      |> Map.replace(:monsters, removedDeadMonsters)
-      |> Map.replace(:staticParty, updatedCharacters)
-      |> Map.replace(:orderArray, newOrderArray)
-      |> update_database_character_exp
+      |> Map.put(:staticParty, updatedCharacters)
+      |> Map.put(:monsters, removedDeadMonsters)
+      |> set_battle_win_string
+      |> update_database_character_exp("win")
     else
       game
-      |> Map.replace(:monsters, removedDeadMonsters)
-      |> Map.replace(:staticParty, updatedCharacters)
-      |> Map.replace(:orderArray, newOrderArray)
+      |> Map.put(:monsters, removedDeadMonsters)
+      |> Map.put(:staticParty, updatedCharacters)
+      |> Map.put(:orderArray, newOrderArray)
     end
   end
 
-  def update_database_character_exp(game) do
-    Enum.map(game.staticParty, fn character ->
-      Dndgame.Characters.get_character(character.id)
-      |> Ecto.Changeset.change(%{exp: character.exp})
-      |> Dndgame.Repo.update()
-    end)
+  def set_battle_win_string(game) do
+    battleOverString = "You have won!"
     game
+    |> Map.put(:battleOverString, battleOverString)
   end
 
-  def remove_dead_characters(game) do
-    charLength = length(game.battleParty)
-    removeList = Enum.map(game.battleParty, fn char ->
-      if char.hp <= 0 do
-        charLength = charLength - 1
-        "character#{charLength}"
-      else
-        ""
-      end
-    end)
-    newOrderArray = Enum.filter(game.orderArray, fn orderString ->
-      !(Enum.member?(removeList, orderString)) end)
-
-    # filter any dead monsters out of the list
-    removedDeadCharacters = Enum.filter(game.battleParty, fn char -> char.hp > 0 end)
-    if length(removedDeadCharacters) == 0 do
+  def check_battle_lost(game) do
+    if Enum.all?(game.battleParty, fn char -> char.hp <= 0 end) do
+      battleOverString = "You have lost!"
       game
-      |> Map.replace(:monsters, [])
+      |> Map.put(:battleOverString, battleOverString)
+      |> Map.put(:monsters, [])
+      |> update_database_character_exp("lose")
     else
       game
-      |> Map.replace(:battleParty, removedDeadCharacters)
-      |> Map.replace(:orderArray, newOrderArray)
     end
   end
+
+  def update_database_character_exp(game, gameConditionString) do
+    cond do
+      gameConditionString == "win" ->
+        Enum.map(game.staticParty, fn character ->
+          Dndgame.Characters.get_character(character.id)
+          |> Ecto.Changeset.change(%{exp: character.exp})
+          |> Dndgame.Repo.update()
+
+          currLevel = character.level
+          newLevel = Dndgame.Characters.get_level(character)
+          if currLevel < newLevel do
+            create_character_list_item(character.id)
+          else
+            character
+          end
+        end)
+        game
+      gameConditionString == "lose" || gameConditionString == "loss" ->
+        Enum.map(game.staticParty, fn character ->
+          # You will lose 20% of your exp if all your members die
+          Dndgame.Characters.get_character(character.id)
+          |> Ecto.Changeset.change(%{exp: ceil(character.exp * 0.80)})
+          |> Dndgame.Repo.update()
+
+          currLevel = character.level
+          newLevel = Dndgame.Characters.get_level(character)
+          if currLevel > newLevel do
+            create_character_list_item(character.id)
+          else
+            character = Map.put(character, :exp, ceil(character.exp * 0.80))
+          end
+        end)
+        game
+      true ->
+        "Did not recognize your gameConditionString string: " <> gameConditionString
+    end
+  end
+
   # Run from a battle
   def run(game) do
     # TODO: add rolling to decide on running
@@ -583,6 +595,7 @@ defmodule Dndgame.Game do
     game
     |> Map.put(:battle_party, [])
     |> Map.put(:monsters, [])
+    |> Map.put(:battleOverString, "You have run away!")
   end
 
   # blank for now, will: clear battleParty, monsters, update xp,
@@ -632,7 +645,7 @@ defmodule Dndgame.Game do
     newBattleParty = List.replace_at(game.battleParty, idx, newChar)
 
     game
-    |> Map.replace(:battleParty, newBattleParty)
+    |> Map.put(:battleParty, newBattleParty)
   end
 
   # use a specific skill on a certain enemy
@@ -641,17 +654,21 @@ defmodule Dndgame.Game do
     character = Enum.at(game.battleParty, charIndex)
     skillName = Enum.at(character.class.skills, skillId)
     skill = Enum.at(character.class.skills, skillId)
-    skillName = skill.name
+    target = get_ability_target(game, skill, targetId)
 
-    if character.sp <= 0 do
-      game
-      |> Map.put(:currentMenu, "main")
+    if target do
+      if character.sp <= 0 do
+        game
+        |> Map.put(:currentMenu, "main")
+      else
+        game
+        |> use_specific_skill(skill.name, targetId)
+        |> remove_dead_monsters
+        |> incrementOrderIndex
+        |> Map.put(:currentMenu, "main")
+      end
     else
       game
-      |> use_specific_skill(skillName, targetId)
-      |> remove_dead_monsters
-      |> incrementOrderIndex
-      |> Map.replace(:currentMenu, "main")
     end
   end
 
@@ -679,18 +696,23 @@ defmodule Dndgame.Game do
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
     spell = Enum.at(character.class.spells, spellId)
-    spellName = spell.name
+    target = get_ability_target(game, spell, targetId)
 
-    if character.mp <= 0 do
-      game
-      |> Map.replace(:currentMenu, "main")
+    if target do
+      if character.mp <= 0 do
+        game
+        |> Map.put(:currentMenu, "main")
+      else
+        game
+        |> use_specific_spell(spell.name, targetId)
+        |> remove_dead_monsters
+        |> incrementOrderIndex
+        |> Map.put(:currentMenu, "main")
+      end
     else
       game
-      |> use_specific_spell(spellName, targetId)
-      |> remove_dead_monsters
-      |> incrementOrderIndex
-      |> Map.replace(:currentMenu, "main")
     end
+
   end
 
   def use_specific_spell(game, spellName, targetId) do
@@ -698,7 +720,7 @@ defmodule Dndgame.Game do
         spellName == "Fire Bolt" ->
           Dndgame.Game.Spells.fire_bolt(game, targetId)
         spellName == "Magic Missle" ->
-          Dndgame.Game.Spells.magic_missle(game)
+          Dndgame.Game.Spells.magic_missle(game, targetId)
         spellName == "Cure Wounds" ->
           Dndgame.Game.Spells.cure_wounds(game, targetId)
         spellName == "Shield of Faith" ->
@@ -737,32 +759,36 @@ defmodule Dndgame.Game do
     charIndex = get_character_index(game)
     character = Enum.at(game.battleParty, charIndex)
     enemy = Enum.at(game.monsters, enemyId)
+    if enemy do
 
-    # get the attack of this character
-    attack = character.weapon.attack
-    # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
-    attackRoll = roll_dice("1d20") + get_character_stat_mod(character)
-      + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
-    attackMessage = "#{character.name} used #{attack.name} on #{enemy.name} with #{character.weapon.name}"
-    # if it is a hit
-    if attackRoll > enemy.ac do
-      # calculate damage
-      damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
-      # take damage out of enemy hp
-      hitEnemy = Map.replace(enemy, :hp, enemy.hp - damage)
-      # replace less hp monster and update battleAction in game
-      game
-      |> Map.replace(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
-      |> remove_dead_monsters
-      |> incrementOrderIndex
-      |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, attackMessage <> ", and did #{damage} damage!")
+      # get the attack of this character
+      attack = character.weapon.attack
+      # attack: 1d20 + stat mod (str, dex, etc) + prof bonus(based on level) + attack bonus
+      attackRoll = roll_dice("1d20") + get_character_stat_mod(character)
+        + Dndgame.Characters.get_prof_bonus(character) + attack.attack_bonus
+      attackMessage = "#{character.name} used #{attack.name} on #{enemy.name} with #{character.weapon.name}"
+      # if it is a hit
+      if attackRoll > enemy.ac do
+        # calculate damage
+        damage = roll_dice(attack.damage_dice) + get_character_stat_mod(character) + attack.damage_bonus
+        # take damage out of enemy hp
+        hitEnemy = Map.put(enemy, :hp, enemy.hp - damage)
+        # replace less hp monster and update battleAction in game
+        game
+        |> Map.put(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
+        |> remove_dead_monsters
+        |> incrementOrderIndex
+        |> Map.put(:currentMenu, "main")
+        |> Map.put(:battleAction, attackMessage <> ", and did #{damage} damage!")
+      else
+        game
+        |> remove_dead_monsters
+        |> incrementOrderIndex
+        |> Map.put(:currentMenu, "main")
+        |> Map.put(:battleAction, attackMessage <> ", but it missed!")
+      end
     else
       game
-      |> remove_dead_monsters
-      |> incrementOrderIndex
-      |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, attackMessage <> ", but it missed!")
     end
   end
 
@@ -770,42 +796,44 @@ defmodule Dndgame.Game do
     # get current enemy
     enemyIndex = get_character_index(game)
     enemy = Enum.at(game.monsters, enemyIndex)
+    if enemy do
 
-    characterId = Enum.random(0..length(game.battleParty)-1)
-      IO.inspect("ASODKAOSDKSAOKD")
-      IO.inspect(characterId)
-    # get the target character of the attack
-    targetCharacter = Enum.at(game.battleParty, characterId)
-    # get the list of this enemy's available attacks
-    attackList = enemy.attacks
-    # pick a random attack to use this turn, based off length of attackList
-    attack = Enum.at(attackList, :rand.uniform(length(attackList)) - 1)
-    attackRoll = roll_dice("1d20") + attack.attack_bonus
+      characterId = Enum.random(0..length(game.battleParty)-1)
+      # get the target character of the attack
+      targetCharacter = Enum.at(game.battleParty, characterId)
+      # get the list of this enemy's available attacks
+      attackList = enemy.attacks
+      # pick a random attack to use this turn, based off length of attackList
+      attack = Enum.at(attackList, :rand.uniform(length(attackList)) - 1)
+      attackRoll = roll_dice("1d20") + attack.attack_bonus
 
-    enemyAttackMessage = "#{enemy.name} used #{attack.name} on #{targetCharacter.name}"
+      enemyAttackMessage = "#{enemy.name} used #{attack.name} on #{targetCharacter.name}"
 
-    # if it is indeed a hit based off the attackRoll
-    if attackRoll > targetCharacter.ac do
-      # calculate damage with a damage_dice roll and damage_bonus
-      damage = roll_dice(attack.damage_dice) + attack.damage_bonus
-      # update character's hp by subtracting damage
-      hitCharacter = Map.replace(targetCharacter, :hp, targetCharacter.hp - damage)
-      # replace the character in the game and update the battle action
-      game
-      |> update_battle_party(hitCharacter)
-      |> remove_dead_monsters
-      |> remove_dead_characters
-      |> incrementOrderIndex
-      |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, enemyAttackMessage <> ", and did #{damage} damage!")
+      # if it is indeed a hit based off the attackRoll
+      if attackRoll > targetCharacter.ac do
+        # calculate damage with a damage_dice roll and damage_bonus
+        damage = roll_dice(attack.damage_dice) + attack.damage_bonus
+        # update character's hp by subtracting damage
+        hitCharacter = Map.put(targetCharacter, :hp, targetCharacter.hp - damage)
+        # replace the character in the game and update the battle action
+        game
+        |> update_battle_party(hitCharacter)
+        |> remove_dead_monsters
+        |> check_battle_lost
+        |> incrementOrderIndex
+        |> Map.put(:currentMenu, "main")
+        |> Map.put(:battleAction, enemyAttackMessage <> ", and did #{damage} damage!")
+      else
+        # the roll wasn't higher than ac so attack missed, just update battleAction
+        game
+        |> remove_dead_monsters
+        |> incrementOrderIndex
+        |> check_battle_lost
+        |> Map.put(:currentMenu, "main")
+        |> Map.put(:battleAction, enemyAttackMessage <> ", but missed!")
+      end
     else
-      # the roll wasn't higher than ac so attack missed, just update battleAction
       game
-      |> remove_dead_monsters
-      |> incrementOrderIndex
-      |> remove_dead_characters
-      |> Map.replace(:currentMenu, "main")
-      |> Map.replace(:battleAction, enemyAttackMessage <> ", but missed!")
     end
   end
 
@@ -817,6 +845,16 @@ defmodule Dndgame.Game do
     else
       game
       |> Map.put(:orderIndex, newOrderIndex)
+    end
+  end
+
+  def get_ability_target(game, ability, targetId) do
+    if ability.target == "self"
+    || ability.target == "member"
+    || ability.target == "party" do
+      Enum.at(game.battleParty, targetId)
+    else
+      Enum.at(game.monsters, targetId)
     end
   end
 end
