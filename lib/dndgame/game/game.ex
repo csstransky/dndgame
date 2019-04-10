@@ -16,6 +16,7 @@ defmodule Dndgame.Game do
   @bossTopLeftX 29
   @bossTopLeftY 8
   @bossName "Young Green Dragon"
+  @expLossPercent 0.80 # the amount of exp you keep on loss, so you lose 20%
 
   def new_game(world) do
     # Still need to add playerIndex by joining the world
@@ -118,7 +119,7 @@ defmodule Dndgame.Game do
       buildMenuPath: [],
       menuIndex: 0,
     }
-    if game.monsters == [] do
+    if game.monsters == [] && game.battleOverArray == [] do
       staticParty = Enum.map(game.staticParty, fn character -> character_view(character) end)
       Map.put(gameView, :party, staticParty)
     else
@@ -558,7 +559,21 @@ defmodule Dndgame.Game do
 
   def check_battle_lost(game) do
     if Enum.all?(game.battleParty, fn char -> char.hp <= 0 end) do
-      battleOverArray = ["You have lost!"]
+      expArray = Enum.map(game.staticParty,
+        fn character ->
+          originalExp = character.exp
+          newExp = ceil(character.exp * @expLossPercent)
+          expLoss = originalExp - newExp
+
+          currLevel = character.level
+          newLevel = Dndgame.Characters.get_level(character)
+          if currLevel > newLevel do
+            "#{character.name} has lost #{expLoss} experience, and decreased to level #{newLevel}..."
+          else
+            "#{character.name} has lost #{expLoss} experience."
+          end
+        end)
+      battleOverArray = ["You have lost..."] ++ expArray
       game
       |> Map.put(:battleOverArray, battleOverArray)
       |> Map.put(:monsters, [])
@@ -589,7 +604,7 @@ defmodule Dndgame.Game do
         Enum.map(game.staticParty, fn character ->
           # You will lose 20% of your exp if all your members die
           Dndgame.Characters.get_character(character.id)
-          |> Ecto.Changeset.change(%{exp: ceil(character.exp * 0.80)})
+          |> Ecto.Changeset.change(%{exp: ceil(character.exp * @expLossPercent)})
           |> Dndgame.Repo.update()
 
           currLevel = character.level
@@ -597,7 +612,7 @@ defmodule Dndgame.Game do
           if currLevel > newLevel do
             create_character_list_item(character.id)
           else
-            character = Map.put(character, :exp, ceil(character.exp * 0.80))
+            character = Map.put(character, :exp, ceil(character.exp * @expLossPercent))
           end
         end)
         game
@@ -747,7 +762,7 @@ defmodule Dndgame.Game do
         spellName == "Fire Bolt" ->
           Dndgame.Game.Spells.fire_bolt(game, targetId)
         spellName == "Magic Missle" ->
-          Dndgame.Game.Spells.magic_missle(game, targetId)
+          Dndgame.Game.Spells.magic_missle(game)
         spellName == "Cure Wounds" ->
           Dndgame.Game.Spells.cure_wounds(game, targetId)
         spellName == "Shield of Faith" ->
