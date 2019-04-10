@@ -448,7 +448,31 @@ class Dndgame extends React.Component {
       }
     }
 
+
     let battleOverArray = this.state.battleOverArray;
+
+    if (!battleOverArray.length == 0) {
+      console.log("BattleOverArray");
+      ctx.fillStyle = "#ac0200";
+      ctx.fillRect(235, 150, 600, 150);
+      ctx.strokeRect(235,150,600,150);
+      ctx.stroke();
+      ctx.fillStyle = "#000000";
+      ctx.font = "30px Verdana";
+      ctx.fillText(battleOverArray[0], 245,190);
+      ctx.fillText(battleOverArray[1], 245,220);
+      ctx.fillText(battleOverArray[2], 245,250);
+      ctx.fillText(battleOverArray[3], 245,280);
+
+
+      // DAY
+      if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
+        // DAY
+        ctx.fillStyle = "#000000";
+      } else {
+        ctx.fillStyle = "#FFFFFF";
+      }
+    }
     // Draw monsters on the screen
     $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
@@ -464,27 +488,6 @@ class Dndgame extends React.Component {
           ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
         }
 
-        if (!battleOverArray.length == 0) {
-          ctx.fillStyle = "#ac0200";
-          ctx.fillRect(235, 150, 600, 150);
-          ctx.strokeRect(235,150,600,150);
-          ctx.stroke();
-          ctx.fillStyle = "#000000";
-          ctx.font = "30px Verdana";
-          ctx.fillText(battleOverArray[1] + "TEST", 245,190);
-          ctx.fillText(battleOverArray[2] + "TEST", 245,220);
-          ctx.fillText(battleOverArray[3] + "TEST", 245,250);
-          ctx.fillText(battleOverArray[3] + "TEST", 245,280);
-
-
-          // DAY
-          if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
-            // DAY
-            ctx.fillStyle = "#000000";
-          } else {
-            ctx.fillStyle = "#FFFFFF";
-          }
-        }
       }, false);
 
       img.src = getMonsterImage(monster);
@@ -508,7 +511,8 @@ class Dndgame extends React.Component {
     // Draw the headline text describing what is happening in the game
     ctx.font = "25px Ariel";
     ctx.fillText(this.state.battleAction, 20, 40);
-    
+
+
 
     return canvas;
   }
