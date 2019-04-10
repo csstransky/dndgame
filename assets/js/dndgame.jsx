@@ -56,7 +56,6 @@ class Dndgame extends React.Component {
   }
 
   got_view(view) {
-    console.log(view.game);
     this.setState(view.game);
   }
 
@@ -85,7 +84,6 @@ class Dndgame extends React.Component {
   // Parses through the chracter order array based on the current player index to determine the type of the next player
   determineCurrentPlayerType() {
     let currentPlayerString = this.state.orderArray[this.state.orderIndex]
-    console.log(currentPlayerString);
     if (currentPlayerString.charAt(0) == "c") {
       return "character";
     } else {
@@ -116,13 +114,14 @@ class Dndgame extends React.Component {
 
   // Here's the big function for drawing the game world when character is not in battle
   drawGameMap() {
+    console.log(this.state);
     UPDATEDEXP = Math.max(this.state.party.map(character => character.exp))
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.strokeStyle = "#000000";
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    //ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    //ctx.fillStyle = "#FFFFFF";
+    //ctx.strokeStyle = "#000000";
+    //ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     let drawing = this.getEnvironmentMap();
     let player = this.state.playerPosns[this.state.playerIndex];
@@ -389,7 +388,6 @@ class Dndgame extends React.Component {
               });
               break;
             case "monster":
-              console.log(spaceBuffer);
               $.each(monsters, function (index2, value2) {
                 ctx.fillText(addSelection("monster", index2), ((spaceBuffer) * (index2 + 1)) + 150, 170);
               });
@@ -486,7 +484,6 @@ class Dndgame extends React.Component {
     let upArrowCode = 38;
     let rightArrowCode = 39;
     let downArrowCode = 40;
-    console.log(ev.key);
     if (this.state.monsters.length == 0) {
       if (ev.key == "w" || ev.which == upArrowCode) {
         let newPlayerPosns = this.state.playerPosns.slice();
@@ -555,7 +552,6 @@ class Dndgame extends React.Component {
           this.setState((state, props) => ({
             subMenuCurrentSelection: (state.subMenuCurrentSelection + 1) % state.subMenuOptions.length,
           }));
-          console.log(this.state);
           break;
         case "monster":
           this.setState((state, props) => ({
@@ -578,7 +574,6 @@ class Dndgame extends React.Component {
 
     // This uses the currently selected index and the menu + party to return an array of what the next subMenu contains
     function buildSubMenu (orderIndex, menuSelection, party) {
-      console.log(orderIndex)
       switch (menuSelection) {
         case 0:
           return ["no options"];
@@ -610,7 +605,24 @@ class Dndgame extends React.Component {
             //subMenuCurrentSelection: 0,
             currentMenu: "monster",
           }));
-        } else {
+        }
+
+        // Check if character has enough mp and sp to perform spells
+        if (!this.state.party[this.state.orderIndex].mp <= 0 && this.state.mainMenuCurrentSelection == 2) {
+          this.setState((state, props) => ({
+            battleAction: "Sorry, you don't have enough MP for "  + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
+          }));
+          return;
+        }
+
+        // Check if character has enough mp and sp to perform spells
+        if (!this.state.party[this.state.orderIndex].sp <= 0 && this.state.mainMenuCurrentSelection == 1) {
+          this.setState((state, props) => ({
+            battleAction: "Sorry, you don't have enough SP for " + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
+          }));
+          return;
+        }
+        else {
           this.setState((state, props) => ({
             buildMenuPath: state.buildMenuPath.concat([state.mainMenuCurrentSelection]),
             // mainMenuCurrentSelection: 0,
