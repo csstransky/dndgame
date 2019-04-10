@@ -837,6 +837,24 @@ defmodule Dndgame.Game do
     end
   end
 
+  # I want to do this a million different ways, but Elixir wants it this way
+  def select_alive_character(party, hp, characterId) when hp > 0 do
+    Enum.at(party, characterId)
+  end
+
+  def select_alive_character(party, hp, characterId) do
+    characterId = characterId + 1
+    if characterId >= length(party) do
+      characterId = 0
+      targetCharacter = Enum.at(party, characterId)
+      select_alive_character(party, targetCharacter.hp, characterId)
+    else
+      targetCharacter = Enum.at(party, characterId)
+      select_alive_character(party, targetCharacter.hp, characterId)
+    end
+  end
+
+
   def enemy_attack(game, characterId) do
     # get current enemy
     enemyIndex = get_character_index(game)
@@ -846,6 +864,7 @@ defmodule Dndgame.Game do
       characterId = Enum.random(0..length(game.battleParty)-1)
       # get the target character of the attack
       targetCharacter = Enum.at(game.battleParty, characterId)
+      targetCharacter = select_alive_character(game.battleParty, targetCharacter.hp, characterId)
       # get the list of this enemy's available attacks
       attackList = enemy.attacks
       # pick a random attack to use this turn, based off length of attackList
