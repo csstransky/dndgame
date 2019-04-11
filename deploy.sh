@@ -2,7 +2,7 @@
 
 export MIX_ENV=prod
 export ENV=prod
-export PORT=1998
+export PORT=9977
 export NODEBIN=`pwd`/assets/node_modules/.bin
 export PATH="$PATH:$NODEBIN"
 export SSL_KEY_PATH=/etc/letsencrypt/live/dndgame.cstransky.me/privkey.pem

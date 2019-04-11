@@ -25,6 +25,7 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :oauth2, debug: true
 
 config :darkskyx, api_key: System.get_env("DARKSKY_API_KEY"),
        defaults: [
@@ -32,11 +33,15 @@ config :darkskyx, api_key: System.get_env("DARKSKY_API_KEY"),
         lang: "en"
        ]
 
-config :spotify_ex, client_id: System.get_env("SPOTIFY_CLIENT_ID"),
-                    secret_key: System.get_env("SPOTIFY_CLIENT_SECRET"),
+config :spotify_ex, client_id: System.gen_env("SPOTIFY_CLIENT_ID"),
+                    secret_key:  "SPOTIFY_CLIENT_SECRET",
                     user_id: "<YOUR SPOTIFY USER ID>",
                     scopes: ["playlist-read-private", "playlist-modify-private"],
-                    callback_url: "http://localhost:4000/auth/authenticate/2"
+                    callback_url: "https://dndgame.cstransky.me/auth/authenticate/2"
+
+
+# Use Jason for JSON parsing in Phoenix
+config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

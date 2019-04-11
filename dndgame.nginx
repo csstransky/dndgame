@@ -2,14 +2,14 @@ server {
 
     listen 80;
     listen [::]:80;
-    server_name dndgame.brycedewitt.com;
+    server_name dndgame.cstransky.me;
 
     location / {
-        proxy_pass https://localhost:1998;
+        proxy_pass https://localhost:9977;
     }
 
     location /socket {
-        proxy_pass https://localhost:1998;
+        proxy_pass https://localhost:9977;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
