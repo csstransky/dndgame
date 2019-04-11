@@ -1,4 +1,4 @@
-# Multiplayer DnD RPG
+# Multiplayer D&D RPG
 
 Hopefully we can get this working.  
 
