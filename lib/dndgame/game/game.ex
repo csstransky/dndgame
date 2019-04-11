@@ -558,6 +558,7 @@ defmodule Dndgame.Game do
     battleOverArray = ["You have won!"] ++ expArray
     game
     |> Map.put(:battleOverArray, battleOverArray)
+    |> Map.put(:monster, [])
   end
 
   def check_battle_lost(game) do

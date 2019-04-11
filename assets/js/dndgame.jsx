@@ -206,7 +206,7 @@ class Dndgame extends React.Component {
         let date = this.calcTime(this.state.timezone)
         character.onload = function() {
           // DAY
-          if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
+          if (DAWNHOUR <= date.getHours() && date.getHours() < DUSKHOUR) {
             // DAY
             ctx.fillStyle = "#000000";
           } else {
@@ -268,7 +268,7 @@ class Dndgame extends React.Component {
     let date =  this.calcTime(this.state.timezone);
 
     // DAY
-    if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
+    if (DAWNHOUR <= date.getHours() && date.getHours() < DUSKHOUR) {
       // snow
       if(this.state.weather.temperature < 30) {
         drawing.src = require("../static/snow_day.png");
@@ -329,7 +329,7 @@ class Dndgame extends React.Component {
     let date =  this.calcTime(this.state.timezone);
 
     // DAY
-    if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
+    if (DAWNHOUR <= date.getHours() && date.getHours() < DUSKHOUR) {
       // DAY
       ctx.fillStyle = "#000000";
     }
@@ -462,7 +462,7 @@ class Dndgame extends React.Component {
 
 
 
-
+    if (this.state.monsters.length > 0) {
       // Draw monsters on the screen
       $.each(this.state.monsters, function (monsterIndex, monster) {
         let img = new Image();
@@ -490,6 +490,7 @@ class Dndgame extends React.Component {
         }
 
       });
+    }
 
 
     if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
@@ -505,8 +506,8 @@ class Dndgame extends React.Component {
 
     if (this.state.battleOverArray[0]) {
       console.log("BattleOverArray");
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      // ctx.fillStyle = "#000000";
+      // ctx.fillRect(0, 0, WIDTH, HEIGHT);
       ctx.fillStyle = "#ac0200";
       ctx.fillRect(235, 350, 600, 150);
       ctx.strokeRect(235,350,600,150);
@@ -533,7 +534,7 @@ class Dndgame extends React.Component {
       ctx.fillText("Press Enter to continue", 710, 82);
 
       // DAY
-      if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
+      if (DAWNHOUR <= date.getHours() && date.getHours() < DUSKHOUR) {
         // DAY
         ctx.fillStyle = "#000000";
       } else {
