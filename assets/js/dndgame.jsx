@@ -461,20 +461,72 @@ class Dndgame extends React.Component {
     }
 
 
-    let battleOverArray = this.state.battleOverArray;
 
-    if (!battleOverArray.length == 0) {
+
+      // Draw monsters on the screen
+      $.each(this.state.monsters, function (monsterIndex, monster) {
+        let img = new Image();
+        img.addEventListener('load', function () {
+          if (monster.name.toLowerCase() == BOSSNAME) {
+            ctx.drawImage(img, 350, 50, 350, 350);
+            // stack party vertically based on order in array
+            ctx.fillText("HP:" + monster.hp, 660, 250);
+          } else {
+            ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 150);
+            // stack party vertically based on order in array
+            ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
+          }
+        }, false);
+
+        img.src = getMonsterImage(monster);
+
+
+        // Check if the current charcter's turn is a monster
+        if (currentPlayerType == "monster") {
+          // Check if the current character matches the monsterIndex
+          if (currentPlayerIndex == monsterIndex) {
+            // TODO: add some graphics here to indicate which monster is selected
+          }
+        }
+
+      });
+
+
+    if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
+      ctx.font = "35px Ariel";
+      ctx.fillText("Press Enter to continue", 710, 82);
+
+    }
+
+    // Draw the headline text describing what is happening in the game
+    ctx.font = "25px Ariel";
+    ctx.fillText(this.state.battleAction, 20, 40);
+
+
+    if (this.state.battleOverArray[0]) {
       console.log("BattleOverArray");
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
       ctx.fillStyle = "#ac0200";
-      ctx.fillRect(235, 150, 600, 150);
-      ctx.strokeRect(235,150,600,150);
+      ctx.fillRect(235, 350, 600, 150);
+      ctx.strokeRect(235,350,600,150);
       ctx.stroke();
       ctx.fillStyle = "#000000";
       ctx.font = "30px Verdana";
-      ctx.fillText(battleOverArray[0], 245,190);
-      ctx.fillText(battleOverArray[1], 245,220);
-      ctx.fillText(battleOverArray[2], 245,250);
-      ctx.fillText(battleOverArray[3], 245,280);
+      if (this.state.battleOverArray[0]) {
+        ctx.fillText(this.state.battleOverArray[0], 245,390);
+      }
+      if (this.state.battleOverArray[1]) {
+        ctx.fillText(this.state.battleOverArray[1], 245,420);
+      }
+      if (this.state.battleOverArray[2]) {
+        ctx.fillText(this.state.battleOverArray[2], 245,450);
+
+      }
+      if (this.state.battleOverArray[3]) {
+        ctx.fillText(this.state.battleOverArray[3], 245,480);
+
+      }
 
       // DAY
       if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
@@ -483,46 +535,8 @@ class Dndgame extends React.Component {
       } else {
         ctx.fillStyle = "#FFFFFF";
       }
+
     }
-    // Draw monsters on the screen
-    $.each(this.state.monsters, function (monsterIndex, monster) {
-      let img = new Image();
-      img.addEventListener('load', function() {
-        if (monster.name.toLowerCase() == BOSSNAME) {
-          ctx.drawImage(img, 350, 50, 350, 350);
-          // stack party vertically based on order in array
-          ctx.fillText("HP:" + monster.hp, 660, 250);
-        }
-        else {
-          ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 150);
-          // stack party vertically based on order in array
-          ctx.fillText("HP:" + monster.hp, ((monsterIndex + 1) * spaceBuffer), 280);
-        }
-
-      }, false);
-
-      img.src = getMonsterImage(monster);
-
-
-      // Check if the current charcter's turn is a monster
-      if (currentPlayerType == "monster") {
-        // Check if the current character matches the monsterIndex
-        if (currentPlayerIndex == monsterIndex) {
-          // TODO: add some graphics here to indicate which monster is selected
-        }
-      }
-
-    });
-
-    if (!this.state.battleAction == "" && (this.determineCurrentPlayerType() == "monster")) {
-      ctx.font = "35px Ariel";
-      ctx.fillText("Press Enter to continue", 710, 82);
-    }
-
-    // Draw the headline text describing what is happening in the game
-    ctx.font = "25px Ariel";
-    ctx.fillText(this.state.battleAction, 20, 40);
-
 
 
     return canvas;
