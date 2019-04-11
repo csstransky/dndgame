@@ -33,8 +33,8 @@ config :darkskyx, api_key: System.get_env("DARKSKY_API_KEY"),
         lang: "en"
        ]
 
-config :spotify_ex, client_id: System.gen_env("SPOTIFY_CLIENT_ID"),
-                    secret_key:  "SPOTIFY_CLIENT_SECRET",
+config :spotify_ex, client_id: System.get_env("SPOTIFY_CLIENT_ID"),
+                    secret_key: System.get_env("SPOTIFY_CLIENT_SECRET"),
                     user_id: "<YOUR SPOTIFY USER ID>",
                     scopes: ["playlist-read-private", "playlist-modify-private"],
                     callback_url: "https://dndgame.cstransky.me/auth/authenticate/2"
