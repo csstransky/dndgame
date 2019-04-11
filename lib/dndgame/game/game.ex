@@ -837,6 +837,24 @@ defmodule Dndgame.Game do
     end
   end
 
+  def select_alive_character(game) do
+    aliveList = Enum.filter(game.battleParty, fn char -> char.hp > 0 end)
+    liveLength = length(aliveList)
+    charSelect = Enum.at(aliveList, :rand.uniform(liveLength) - 1)
+  end
+
+  def update_battleparty_by_name(game, character) do
+    newParty = Enum.map(game.battleParty, fn char ->
+      if char.name == character.name do
+        character
+      else
+        char
+      end end)
+
+    game
+    |> Map.put(:battleParty, newParty)
+  end
+
   def enemy_attack(game, characterId) do
     # get current enemy
     enemyIndex = get_character_index(game)
@@ -845,7 +863,8 @@ defmodule Dndgame.Game do
       # TODO fix this tomorrow cristian
       characterId = Enum.random(0..length(game.battleParty)-1)
       # get the target character of the attack
-      targetCharacter = Enum.at(game.battleParty, characterId)
+#character = Enum.at(game.battleParty, characterId)
+      targetCharacter = select_alive_character(game) #(game.battleParty, character.hp, characterId)
       # get the list of this enemy's available attacks
       attackList = enemy.attacks
       # pick a random attack to use this turn, based off length of attackList
@@ -862,7 +881,7 @@ defmodule Dndgame.Game do
         hitCharacter = Map.put(targetCharacter, :hp, targetCharacter.hp - damage)
         # replace the character in the game and update the battle action
         game
-        |> Map.put(:battleParty, List.replace_at(game.battleParty, characterId, hitCharacter))
+        |> update_battleparty_by_name(hitCharacter)
         |> remove_dead_monsters
         |> check_battle_lost
         |> incrementOrderIndex
@@ -882,14 +901,36 @@ defmodule Dndgame.Game do
     end
   end
 
+  def checkOrderIndex(game) do
+    orderstring = Enum.at(game.orderArray, game.orderIndex)
+
+    if orderstring =~ "character" do
+      charIndex = game
+      |> get_character_index
+
+      char = Enum.at(game.battleParty, charIndex)
+
+      if char.hp <= 0 do
+        incrementOrderIndex(game)
+      else
+        game
+      end
+    else
+      game
+    end
+  end
+
   def incrementOrderIndex(game) do
     newOrderIndex = game.orderIndex + 1
+    # reached the end of the index, reset
     if newOrderIndex >= length(game.orderArray) do
       game
       |> Map.put(:orderIndex, 0)
+      |> checkOrderIndex
     else
       game
       |> Map.put(:orderIndex, newOrderIndex)
+      |> checkOrderIndex
     end
   end
 

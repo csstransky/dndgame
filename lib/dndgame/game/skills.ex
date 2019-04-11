@@ -1,5 +1,8 @@
 defmodule Dndgame.Game.Skills do
   import Dndgame.Game
+
+  @d20 "1d20"
+
   ##### SKILL FUNCTIONS #####
 
   def short_rest(game) do

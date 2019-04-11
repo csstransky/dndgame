@@ -16,6 +16,7 @@ let PLAYERX = 500;
 let PLAYERY = 300;
 let PLAYERSIZE = 50;
 let MAPSIZE = 4000;
+let BOSSNAME = "young green dragon"
 
 class Dndgame extends React.Component {
   constructor(props) {
@@ -487,10 +488,10 @@ class Dndgame extends React.Component {
     $.each(this.state.monsters, function (monsterIndex, monster) {
       let img = new Image();
       img.addEventListener('load', function() {
-        if (monster.name.toLowerCase() == "young green dragon") {
+        if (monster.name.toLowerCase() == BOSSNAME) {
           ctx.drawImage(img, 350, 50, 350, 350);
           // stack party vertically based on order in array
-          ctx.fillText("HP:" + monster.hp, 450, 390);
+          ctx.fillText("HP:" + monster.hp, 660, 250);
         }
         else {
           ctx.drawImage(img, ((monsterIndex + 1) * spaceBuffer), 100, 150, 150);
