@@ -527,6 +527,10 @@ class Dndgame extends React.Component {
         ctx.fillText(this.state.battleOverArray[3], 245,480);
 
       }
+      ctx.fillStyle = "#ffffff";
+
+      ctx.font = "35px Ariel";
+      ctx.fillText("Press Enter to continue", 710, 82);
 
       // DAY
       if (DAWNHOUR <= date.getHours() && date.getHours() <= DUSKHOUR) {
