@@ -764,6 +764,8 @@ defmodule Dndgame.Game do
       cond do
         spellName == "Fire Bolt" ->
           Dndgame.Game.Spells.fire_bolt(game, targetId)
+        spellName == "Ray of Frost" ->
+          Dndgame.Game.Spells.ray_of_frost(game, targetId)
         spellName == "Magic Missle" ->
           Dndgame.Game.Spells.magic_missle(game)
         spellName == "Cure Wounds" ->

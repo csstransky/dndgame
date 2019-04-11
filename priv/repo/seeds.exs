@@ -59,6 +59,8 @@ Repo.insert!(%Race{name: "Human", str_bonus: 1, dex_bonus: 1, int_bonus: 1,
 ###### SPELLS ######
 Repo.insert!(%Spell{name: "Fire Bolt", dice: "1d10",
         level_req: 1, target: "enemy", type: "fire", mp_cost: 0})
+Repo.insert!(%Spell{name: "Ray of Frost", dice: "1d8",
+        level_req: 1, target: "enemy", type: "ice", mp_cost: 0})
 Repo.insert!(%Spell{name: "Magic Missle", dice: "1d4", dice_bonus: 1,
         level_req: 1, target: "enemies", type: "force", mp_cost: 1})
 # TODO: Make these "member" in the future and deal with it
@@ -119,6 +121,8 @@ Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Magic Missle")})
 Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Fire Bolt")})
+Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
+                              spell: Spells.get_spell_by_name("Ray of Frost")})
 
 cleric_profs = ["Medicine", "Persuasion"]
 cleric_saves = ["WIS", "CHA"]

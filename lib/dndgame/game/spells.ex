@@ -30,6 +30,37 @@ defmodule Dndgame.Game.Spells do
       end
     end
 
+    def ray_of_frost(game, targetId) do
+      charIndex = get_character_index(game)
+      character = Enum.at(game.battleParty, charIndex)
+      spell = Dndgame.Spells.get_spell_by_name("Ray of Frost")
+
+      # double damage for ice type
+      damage = roll_dice(spell.dice)
+      enemy = Enum.at(game.monsters, targetId)
+
+      if enemy.element == "fire" do
+        # double damage for ice enemies
+        newHP = enemy.hp - damage - damage
+        new_enemy = enemy
+        |> Map.put(:hp, newHP)
+        |> Map.put(:dex, enemy.dex - 1)
+
+        game
+        |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
+        |> Map.put(:battleAction, "#{character.name} did #{damage + damage} damage and -1 DEX to #{enemy.name} with Ray of Frost! It was super effective!")
+      else
+        newHP = enemy.hp - damage
+        new_enemy = enemy
+        |> Map.put(:hp, newHP)
+        |> Map.put(:dex, enemy.dex - 1)
+
+        game
+        |> Map.put(:monsters, List.replace_at(game.monsters, targetId, new_enemy))
+        |> Map.put(:battleAction, "#{character.name} did #{damage} damage and -1 DEX to #{enemy.name} with Ray of Frost!")
+      end
+    end
+
     def magic_missle(game) do
       # 1d4 + 1 force damage to all enemies
       # USE THE SPELL'S HIT DIE AND DAMAGE BONUS
