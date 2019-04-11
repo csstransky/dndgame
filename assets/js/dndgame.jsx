@@ -506,7 +506,6 @@ class Dndgame extends React.Component {
     if (this.state.battleOverArray[0]) {
       console.log("BattleOverArray");
       ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
       ctx.fillStyle = "#ac0200";
       ctx.fillRect(235, 350, 600, 150);
       ctx.strokeRect(235,350,600,150);

@@ -97,6 +97,7 @@ defmodule DndgameWeb.GamesChannel do
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
+
   def handle_out("update_players", %{"world" => world, "playerUpdaterName" => playerUpdaterName}, socket) do
     playerName = socket.assigns[:playerName]
     worldName = socket.assigns[:worldName]
