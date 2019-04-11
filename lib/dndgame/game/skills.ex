@@ -2,6 +2,8 @@ defmodule Dndgame.Game.Skills do
   import Dndgame.Game
 
   @d20 "1d20"
+  @duskTime ~T[18:00:00.0]
+  @dawnTime ~T[06:00:00.0]
 
   ##### SKILL FUNCTIONS #####
 
@@ -139,6 +141,32 @@ defmodule Dndgame.Game.Skills do
     end
   end
 
+  def stealth_check(game, character) do
+    currTime = Time.utc_now()
+    worldTime = Time.add(currTime, game.timezone*60*60, :second)
+    # Day time
+    if @dawnTime < worldTime && worldTime < @duskTime do
+      cond do
+        Enum.member?(character.class.prof_array, "Stealth") ->
+          roll_dice(@d20) + get_character_stat_mod(character) + Dndgame.Characters.get_prof_bonus(character)
+        true ->
+          roll_dice(@d20) + get_character_stat_mod(character)
+      end
+    else
+      rolls = [0, 0]
+      cond do
+        Enum.member?(character.class.prof_array, "Stealth") ->
+          rolls = rolls
+          |> Enum.map(fn _roll -> roll_dice(@d20) + get_character_stat_mod(character) + Dndgame.Characters.get_prof_bonus(character) end)
+          Enum.max(rolls)
+        true ->
+          rolls = rolls
+          |> Enum.map(fn _roll -> roll_dice(@d20) + get_character_stat_mod(character) end)
+          Enum.max(rolls)
+      end
+    end
+  end
+
   def sneak_attack(game, targetId) do
     # HARDEST ONE TO DO
 
@@ -163,7 +191,7 @@ defmodule Dndgame.Game.Skills do
     char = Enum.at(game.battleParty, charIndex)
     monster = Enum.at(game.monsters, targetId)
     skillStealth = Dndgame.Skills.get_skill_by_name("Sneak Attack")
-    check = roll_dice(@d20) + get_character_stat_mod(char) + Dndgame.Characters.get_prof_bonus(char)
+    check = stealth_check(game, char)
     monsterCheck = roll_dice(@d20) + Dndgame.Characters.get_stat_modifier(monster.wis)
 
     attack = char.weapon.attack
@@ -244,7 +272,7 @@ defmodule Dndgame.Game.Skills do
     char = Enum.at(game.battleParty, charIndex)
     skillHide = Dndgame.Skills.get_skill_by_name("Hide")
     # stealth check
-    check = roll_dice(@d20) + get_character_stat_mod(char) + Dndgame.Characters.get_prof_bonus(char)
+    check = stealth_check(game, char)
     monsterCheck = Enum.max(Enum.map(game.monsters, fn x ->
       roll_dice(@d20) + Dndgame.Characters.get_stat_modifier(x.wis) end))
 
