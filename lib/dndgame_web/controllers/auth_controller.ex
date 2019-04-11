@@ -33,6 +33,8 @@ defmodule DndgameWeb.AuthController do
     case Spotify.Authentication.authenticate(conn, params) do
       {:ok, conn } ->
         {:ok, profile} = Spotify.Profile.me(conn)
+        IO.inspect(profile.display_name)
+        IO.inspect(profile.id)
         DndgameWeb.SessionController.create(conn, profile.display_name, profile.id)
         redirect conn, to: "/"
       { :error, reason, conn }-> redirect conn, to: "/error"
