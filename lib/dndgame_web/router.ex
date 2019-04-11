@@ -55,6 +55,8 @@ defmodule DndgameWeb.Router do
   scope "/auth", DndgameWeb do
     pipe_through :browser
 
+    get "/spotifylogin", AuthController, :spotifyAuthorization
+    get "/authenticate/2", AuthController, :spotifyAuthentication
     get "/:provider", AuthController, :index2
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
