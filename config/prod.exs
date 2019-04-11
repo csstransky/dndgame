@@ -13,17 +13,10 @@ config :dndgame, Dndgame.Endpoint,
   server: true,
   root: ".",
   version: Application.spec(:phoenix_distillery, :vsn),
-  url: [host: "dndgame.cstransky.me", port: 443],
-#  http: [:inet6, port: {:system, "PORT"}],
-  force_ssl: [hsts: true],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  https: [
-    :inet6,
-    port: {:system, "PORT"},
-    cipher_suite: :strong,
-    keyfile: "/etc/letsencrypt/live/dndgame.cstransky.me/privkey.pem",
-    certfile: "/etc/letsencrypt/live/dndgame.cstransky.me/fullchain.pem"
-  ]
+  url: [host: "dndgame.brycedewitt.com", port: 1998],
+  http: [:inet6, port: {:system, "PORT"}],
+  cache_static_manifest: "priv/static/cache_manifest.json"
+
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -96,6 +89,6 @@ config :dndgame, DndgameWeb.Endpoint,
 # Configure your database
 config :dndgame, Dndgame.Repo,
   username: "dndgame",
-  database: "dndgame_prod3",
-  password: "TODO_GET_PASSWORD_LOCALLY",
+  database: "dndgame_prod",
+  password: System.get_env("DATABASE_PASSWORD"),
   pool_size: 15
