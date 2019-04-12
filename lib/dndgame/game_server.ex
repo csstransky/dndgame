@@ -31,10 +31,10 @@ defmodule Dndgame.GameServer do
   end
 
   def start_link(name) do
-    game = Dndgame.BackupAgent.get(name) || Dndgame.Game.World.new_world(name)
+    #game = Dndgame.BackupAgent.get(name) || Dndgame.Game.World.new_world(name)
     IO.inspect(name)
     IO.inspect("genserver name above")
-    GenServer.start_link(__MODULE__, game, name: reg(name))
+    GenServer.start_link(__MODULE__, "lol", name: reg(name))
   end
 
   def start_game(name) do
@@ -64,9 +64,7 @@ defmodule Dndgame.GameServer do
   end
 
   def start_world_updater(worldName) do
-    if worldName != [] do
-      IO.inspect("CALLING BOSTON")
-      GenServer.call(reg(worldName), {:start_world_updater, worldName})
-    end
+    IO.inspect("CALLING BOSTON")
+    GenServer.call(reg(worldName), {:start_world_updater, worldName})
   end
 end
