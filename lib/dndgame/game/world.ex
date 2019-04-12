@@ -7,6 +7,8 @@ defmodule Dndgame.Game.World do
   @gameMap Dndgame.Game.GameMap.get_map()
 
   def new_world(worldName) do
+    # Dndgame.GameServer.start(worldName)
+    # Dndgame.GameServer.start_world_updater(worldName)
     weatherInfo = call_weather_api(worldName)
     |> Map.put_new(:playerPosns, [])
   end

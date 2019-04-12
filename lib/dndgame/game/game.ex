@@ -530,6 +530,7 @@ defmodule Dndgame.Game do
       game
       |> Map.put(:staticParty, updatedCharacters)
       |> Map.put(:monsters, removedDeadMonsters)
+      |> Map.put(:battleAction, "")
       |> set_battle_win_string
       |> update_database_character_exp("win")
     else
@@ -581,6 +582,7 @@ defmodule Dndgame.Game do
       game
       |> Map.put(:battleOverArray, battleOverArray)
       |> Map.put(:monsters, [])
+      |> Map.put(:battleAction, "")
       |> update_database_character_exp("lose")
     else
       game
@@ -637,6 +639,7 @@ defmodule Dndgame.Game do
       |> Map.put(:battle_party, [])
       |> Map.put(:monsters, [])
       |> Map.put(:battleOverArray, ["You successfully ran away!"])
+      |> Map.put(:battleAction, "")
     else
       game
       |> Map.put(:battleAction, "You tried to run away, but failed!")
@@ -824,16 +827,16 @@ defmodule Dndgame.Game do
         # replace less hp monster and update battleAction in game
         game
         |> Map.put(:monsters, List.replace_at(game.monsters, enemyId, hitEnemy))
-        |> remove_dead_monsters
-        |> incrementOrderIndex
         |> Map.put(:currentMenu, "main")
         |> Map.put(:battleAction, attackMessage <> ", and did #{damage} damage!")
-      else
-        game
         |> remove_dead_monsters
         |> incrementOrderIndex
+      else
+        game
         |> Map.put(:currentMenu, "main")
         |> Map.put(:battleAction, attackMessage <> ", but it missed!")
+        |> remove_dead_monsters
+        |> incrementOrderIndex
       end
     else
       game
@@ -884,20 +887,21 @@ defmodule Dndgame.Game do
         hitCharacter = Map.put(targetCharacter, :hp, targetCharacter.hp - damage)
         # replace the character in the game and update the battle action
         game
+        |> Map.put(:currentMenu, "main")
+        |> Map.put(:battleAction, enemyAttackMessage <> ", and did #{damage} damage!")
         |> update_battleparty_by_name(hitCharacter)
         |> remove_dead_monsters
         |> check_battle_lost
         |> incrementOrderIndex
-        |> Map.put(:currentMenu, "main")
-        |> Map.put(:battleAction, enemyAttackMessage <> ", and did #{damage} damage!")
       else
         # the roll wasn't higher than ac so attack missed, just update battleAction
         game
+        |> Map.put(:currentMenu, "main")
+        |> Map.put(:battleAction, enemyAttackMessage <> ", but missed!")
         |> remove_dead_monsters
         |> incrementOrderIndex
         |> check_battle_lost
-        |> Map.put(:currentMenu, "main")
-        |> Map.put(:battleAction, enemyAttackMessage <> ", but missed!")
+
       end
     else
       game

@@ -522,7 +522,6 @@ class Dndgame extends React.Component {
       }
       if (this.state.battleOverArray[2]) {
         ctx.fillText(this.state.battleOverArray[2], 245,450);
-
       }
       if (this.state.battleOverArray[3]) {
         ctx.fillText(this.state.battleOverArray[3], 245,480);
@@ -556,9 +555,8 @@ class Dndgame extends React.Component {
   onKeyDown(ev) {
 
     if ((!this.state.battleOverArray.length <= 0) && (ev.key = "Enter")) {
-      this.setState((state, props) => ({
-        battleOverArray: [],
-      }));
+      this.channel.push("clear_end_screen").receive("ok", this.got_view.bind(this));
+      this.drawDisplay();
       return;
     };
 
@@ -696,7 +694,7 @@ class Dndgame extends React.Component {
         // Check if character has enough mp and sp to perform spells
         if ((this.state.party[this.determineCurrentPlayerIndex()].mp <= 0) && (this.state.mainMenuCurrentSelection == 2)) {
           this.setState((state, props) => ({
-            battleAction: "Not enough MP for "  + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
+            battleAction: "Not enough MP for " + state.mainMenuOptions[state.mainMenuCurrentSelection] + " right now.",
           }));
           return;
         }

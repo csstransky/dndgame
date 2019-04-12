@@ -40,7 +40,9 @@ defmodule DndgameWeb.GamesChannel do
     world = BackupAgent.get(worldName)
     game = BackupAgent.get(playerName)
     |> Game.walk(direction)
-    world = Map.put(world, :playerPosns, game.playerPosns)
+    newPlayerPosn = Enum.at(game.playerPosns, game.playerIndex)
+    newPlayerPosns = List.replace_at(world.playerPosns, game.playerIndex, newPlayerPosn)
+    world = Map.put(world, :playerPosns, newPlayerPosns)
     BackupAgent.put(worldName, world)
     BackupAgent.put(playerName, game)
     update_players(worldName, playerName)
@@ -88,11 +90,21 @@ defmodule DndgameWeb.GamesChannel do
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
+  def handle_in("clear_end_screen", _payload, socket) do
+    playerName = socket.assigns[:playerName]
+    worldName = socket.assigns[:worldName]
+    world = BackupAgent.get(worldName)
+    game = BackupAgent.get(playerName)
+    |> Map.put(:battleOverArray, [])
+    |> Map.put(:playerPosns, world.playerPosns)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
   def handle_in("enemy_attack", characterIndex, socket) do
     playerName = socket.assigns[:playerName]
     game = BackupAgent.get(playerName)
     |> Game.enemy_attack(characterIndex)
-
     BackupAgent.put(playerName, game)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
@@ -101,9 +113,9 @@ defmodule DndgameWeb.GamesChannel do
   def handle_out("update_players", %{"world" => world, "playerUpdaterName" => playerUpdaterName}, socket) do
     playerName = socket.assigns[:playerName]
     worldName = socket.assigns[:worldName]
-    if playerName != playerUpdaterName && worldName do
-      game = BackupAgent.get(playerName)
-      |> Game.update_game_world(world, playerName)
+    game = BackupAgent.get(playerName)
+    if playerName != playerUpdaterName && worldName && game.battleAction == "" do
+      game = Game.update_game_world(game, world, playerName)
       IO.inspect("I AM GETTING UPDATED")
       IO.inspect(playerName)
       IO.inspect(game.playerIndex)
@@ -117,7 +129,6 @@ defmodule DndgameWeb.GamesChannel do
   end
 
   def update_players(worldName, playerName) do
-
     if playerName do
       IO.inspect(playerName)
       IO.inspect("I AM UPDATING")
