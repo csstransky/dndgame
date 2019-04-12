@@ -3,13 +3,13 @@ defmodule Dndgame.GameServer do
 
   alias Dndgame.BackupAgent
 
+  @worldUpdateTime 600000
+
   def reg(name) do
     {:via, Registry, {Dndgame.GameReg, name}}
   end
 
   def start(name) do
-    IO.inspect("LOOK HERE FOR THE CHILDREN")
-    IO.inspect(name)
     spec = child_spec(name)
     Dndgame.GameSup.start_child(spec)
   end
@@ -34,7 +34,7 @@ defmodule Dndgame.GameServer do
     #game = Dndgame.BackupAgent.get(name) || Dndgame.Game.World.new_world(name)
     IO.inspect(name)
     IO.inspect("genserver name above")
-    GenServer.start_link(__MODULE__, "lol", name: reg(name))
+    GenServer.start_link(__MODULE__, name, name: reg(name))
   end
 
   def start_game(name) do
@@ -42,29 +42,23 @@ defmodule Dndgame.GameServer do
   end
 
   def handle_info(:update_worlds, worldName) do
+    IO.inspect("Updating Game World with API:")
+    IO.inspect(worldName)
     world = BackupAgent.get(worldName)
     newWorld = Dndgame.Game.World.call_weather_api(worldName)
     newWorld = Map.put_new(newWorld, :playerPosns, world.playerPosns)
     BackupAgent.put(worldName, newWorld)
-    IO.inspect("COME AND GET IT")
-    Endpoint.broadcast!("games:#{worldName}", "update_players", %{"world" => newWorld, "playerUpdaterName" => "THE_ALMIGHTY_SERVER"})
-    Process.send_after(self(), :update_worlds, 5000)
+    DndgameWeb.Endpoint.broadcast!("games:#{worldName}", "update_players", %{"world" => newWorld, "playerUpdaterName" => "THE_ALMIGHTY_SERVER"})
+    Process.send_after(self(), :update_worlds, @worldUpdateTime)
     {:noreply, worldName}
   end
 
   def handle_call({:start_world_updater, worldName}, _from, _game) do
-    world = BackupAgent.get(worldName)
-    newWorld = Dndgame.Game.World.call_weather_api(worldName)
-    newWorld = Map.put_new(newWorld, :playerPosns, world.playerPosns)
-    BackupAgent.put(worldName, newWorld)
-    IO.inspect("START HE BAD BOI")
-    Endpoint.broadcast!("games:#{worldName}", "update_players", %{"world" => newWorld, "playerUpdaterName" => "THE_ALMIGHTY_SERVER"})
-    Process.send_after(self(), :update_worlds, 5000)
-    {:reply, worldName, world}
+    Process.send_after(self(), :update_worlds, @worldUpdateTime)
+    {:reply, worldName, worldName}
   end
 
   def start_world_updater(worldName) do
-    IO.inspect("CALLING BOSTON")
     GenServer.call(reg(worldName), {:start_world_updater, worldName})
   end
 end

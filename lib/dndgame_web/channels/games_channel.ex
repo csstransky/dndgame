@@ -94,9 +94,13 @@ defmodule DndgameWeb.GamesChannel do
     playerName = socket.assigns[:playerName]
     worldName = socket.assigns[:worldName]
     world = BackupAgent.get(worldName)
+    # Added weather updates too in case player misses update while in battle
     game = BackupAgent.get(playerName)
     |> Map.put(:battleOverArray, [])
     |> Map.put(:playerPosns, world.playerPosns)
+    |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
+    |> Map.put(:temperature, Map.get(world, "apparentTemperature"))
+    |> Map.put(:visibility, Map.get(world, "visibility"))
     BackupAgent.put(playerName, game)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end

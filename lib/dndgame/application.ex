@@ -17,7 +17,6 @@ defmodule Dndgame.Application do
       # {Dndgame.Worker, arg},
       Dndgame.GameSup,
       Dndgame.BackupAgent,
-      #Dndgame.GameServer,
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

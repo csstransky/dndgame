@@ -7,11 +7,9 @@ defmodule Dndgame.Game.World do
   @gameMap Dndgame.Game.GameMap.get_map()
 
   def new_world(worldName) do
-    lol = Dndgame.GameServer.start_link(worldName)
-    IO.inspect("LOOK HERE")
-    IO.inspect(lol)
+    Dndgame.GameServer.start_link(worldName)
     Dndgame.GameServer.start_world_updater(worldName)
-    world = Dndgame.BackupAgent.get(worldName)
+    world = call_weather_api(worldName)
     |> Map.put_new(:playerPosns, [])
   end
 
