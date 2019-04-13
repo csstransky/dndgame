@@ -63,6 +63,9 @@ defmodule Dndgame.Characters do
 
   def get_character(id), do: Repo.get(Character, id)
 
+  def get_character_by_name(name) do
+    Repo.get_by(Character, name: name)
+  end
   @doc """
   Creates a character.
 
@@ -190,6 +193,26 @@ defmodule Dndgame.Characters do
     exp = character.exp
     # I may just make this a forumla in the future because this is kinda ugly
     cond do
+      exp >= 355000 ->
+        20
+      exp >= 305000 ->
+        19
+      exp >= 265000 ->
+        18
+      exp >= 225000 ->
+        17
+      exp >= 195000 ->
+        16
+      exp >= 165000 ->
+        15
+      exp >= 140000 ->
+        14
+      exp >= 120000 ->
+        13
+      exp >= 100000 ->
+        12
+      exp >= 85000 ->
+        11
       exp >= 64000 ->
         10
       exp >= 48000 ->

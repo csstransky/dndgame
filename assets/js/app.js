@@ -15,13 +15,34 @@ window.jQuery = window.$ = jQuery;
 import "bootstrap";
 import _ from "lodash";
 
+import socket from "./socket";
+console.log(socket)
+import dndgame_init from "./dndgame";
+
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
 
 $(function () {
+  let gameCanvas = document.getElementById('dndgame');
+  if (gameCanvas) {
+    let channel = socket.channel("games:" + window.gameName,
+      {user: window.playerName,
+        partyId1: window.partyId1,
+        partyId2: window.partyId2,
+        partyId3: window.partyId3});
+    dndgame_init(gameCanvas, channel);
+  }
+
+  $('.world-location').click((ev) => {
+    console.log(ev.target)
+    $('#world_name').val(ev.target.id)
+  })
+
   $('#roll').click((ev) => {
+    update_armors();
+    update_weapons();
     update_stats();
   });
 
@@ -256,7 +277,8 @@ function show_armor(armor) {
     + category
     + base
     + dex_bonus
-    + stealth_disadvantage;
+    + stealth_disadvantage
+    + str_min;
 }
 
 function show_list(string_array) {

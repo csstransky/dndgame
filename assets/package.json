@@ -27,13 +27,15 @@
     "babel-loader": "^8.0.0",
     "bootstrap": "^4.3.1",
     "copy-webpack-plugin": "^4.5.0",
-    "css-loader": "^0.28.10",
+    "css-loader": "^2.1.1",
+    "file-loader": "^3.0.1",
     "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.11.0",
-    "optimize-css-assets-webpack-plugin": "^4.0.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "sass-loader": "^7.1.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
+    "url-loader": "^1.1.2",
     "webpack": "4.4.0",
-    "webpack-cli": "^2.0.10"
+    "webpack-cli": "^3.3.0"
   }
 }

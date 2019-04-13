@@ -1,17 +1,35 @@
-gamestate {
-    player posn: {
-        x: int
-        y: int
-        direction: string
-    }
-    other_characters: [player_posn]
-    party: [characters]
-    monsters: [monster] // empty when not in battle
-    boss: posn
-    turn: string // name of player's turn
-		isLevelUp: boolean // flag to show a level screen or not
-		isBossDead: boolean // flag to show that main boss has been defeated
-		isGameOver: boolean // flag to show a gameover screen
+gamestate for worldName
+%{
+  windSpeed: int # in MPH
+  temperature: int # in F
+  timezone: int # the difference from UTC, Boston = -4
+  playerPosns: [posn]
+  playerCount: int # number of players, serves as index
+}
+
+gamestate for user_id
+%{
+    playerPosns: [posn] # TODO filled with posns from other characters
+    playerIndex: integer
+    battleParty: [character],
+    staticParty: [character], # TODO: fill this
+    monsters: [monster], # fills up when character encounters monsters
+    boss: %{
+      x: @boss_x,
+      y: @boss_y,
+    },
+    # We'll have to grab this from the server state
+
+    orderArray: [string], # fills up with strings of whose turn it is
+    orderIndex: integer, # who's turn it is
+
+    isLevelUp: [integer,integer,integer], # flag to show a level screen or not
+    isBossDead: string, # name of person who killed boss
+    isGameOver: boolean, # flag to show a gameover screen
+
+    currentMenu: string,
+    menuIndex: int,
+    battleAction: sting,
 }
 
 posn {
@@ -29,7 +47,7 @@ character {
 
     level: int
     exp: int
-    initiatiave: int
+    initiative: int
 
     str: int
     dex: int
@@ -42,12 +60,14 @@ character {
     weapon_attack_name: string
 
     armor_name: string
+    deathSaves: int
+    deathFails: int
 }
 
 monster {
-    monster_name: string
-    monster_attack: string
-    monster_hit: int
+  name: string
+  attack: string
+  hit: int
 }
 
 https://latitude.to/articles-by-country/us/united-states/78/north-america
@@ -57,10 +77,26 @@ https://api.darksky.net/forecast/7ab051896e5846a9ed959860db043643/37.8267,-122.4
 Boston: 42.361145, -71.057083
 Death Valley: 	36.4622, -116.867
 Greenland: 69.869007, -41.954900
-
-
 Everest: 27.986065, 86.922623
-Dasht-e Loot, Iran: 30.60500001, 59.0677777878
+Dallol, Afar Region, Ethiopia: 14.236499054 40.289665508
+Sydney, Australia: -33.865143, 151.209900
 
 	1554245660
   1554246646
+
+
+FOR MAP LOGIC:
+OFFSET:
+  X = 15
+  Y = 12
+
+Server Calls:
+
+walk (int 0-3) // 0 = up, 1 = right, 2 = down, 3 = left
+attack (enemyIndex \\ 0)
+use_skill (skillIndex, enemyIndex \\ 0)
+use_spell(spellIndex, enemyIndex \\ 0)
+run
+death_save # We won't need the character ID because we know whose turn it is
+enemy_attack(enemyId \\ 0) # enemies are attack individually now
+Example of orderArray: ["chararcter0", "monster1", "character1", "monster1"]

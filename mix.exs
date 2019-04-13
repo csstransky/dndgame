@@ -20,7 +20,7 @@ defmodule Dndgame.MixProject do
   def application do
     [
       mod: {Dndgame.Application, []},
-      extra_applications: [:logger, :runtime_tools, :oauth2, :darkskyx]
+      extra_applications: [:logger, :runtime_tools, :oauth2, :darkskyx, :spotify_ex]
 
     ]
   end
@@ -39,6 +39,9 @@ defmodule Dndgame.MixProject do
       {:phoenix_ecto, "~> 3.5"},
       {:ecto, "~> 3.0-rc", override: true},
       {:ecto_sql, "~> 3.0-rc", override: true},
+      {:httpoison, "~> 1.4", override: true},
+      {:darkskyx, "~> 0.1.5"},
+      {:spotify_ex, "~> 2.0.9"},
       {:postgrex, ">= 0.0.0-rc"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2-rc", only: :dev},
@@ -48,7 +51,6 @@ defmodule Dndgame.MixProject do
       {:distillery, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
       {:oauth2, "~> 1.0"},
-      {:darkskyx, "~> 0.1.5"}
     ]
   end
 

@@ -2,67 +2,130 @@ defmodule DndgameWeb.GamesChannel do
   use DndgameWeb, :channel
 
   alias Dndgame.Game
+  alias Dndgame.Game.World
   alias Dndgame.BackupAgent
 
   intercept ["update_players"]
 
   def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
-      game = BackupAgent.get(name) || Game.new()
-      player = Map.get(payload, "user")
-      game = game
-      |> Dndgame.Game.add_to_lobby(player)
-      |> Dndgame.Game.add_name(name)
-      BackupAgent.put(name, game)
-      update_players(name, player)
 
+      world = BackupAgent.get(name) || World.new_world(name)
+      playerName = Map.get(payload, "user")
+      world = World.join_world(world, playerName)
+      game = BackupAgent.get(playerName) || Game.new_game(world)
+      partyId1 = Map.get(payload, "partyId1")
+      partyId2 = Map.get(payload, "partyId2")
+      partyId3 = Map.get(payload, "partyId3")
+      game = game
+      |> Game.create_party(partyId1, partyId2, partyId3)
+      |> Game.update_game_world(world, playerName)
+      BackupAgent.put(name, world)
+      BackupAgent.put(playerName, game)
+      update_players(name, playerName)
+      IO.inspect("TEEDEE")
+      IO.inspect(game.playerIndex)
       socket = socket
-        |> assign(:player, player)
-        |> assign(:game, game)
-        |> assign(:name, name)
+        |> assign(:playerName, playerName)
+        |> assign(:worldName, name)
       {:ok, %{"join" => name, "game" => Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
   end
 
-  def handle_in("start_game", _payload, socket) do
-    name = socket.assigns[:name]
-    game = BackupAgent.get(name) || socket.assigns[:game]
-
-    if length(game.lobbyList) >= 2 do
-      game = Game.start_game(game)
-      socket = assign(socket, :game, game)
-      BackupAgent.put(name, game)
-
-      player = socket.assigns[:player]
-      update_players(name, player)
-
-      Dndgame.GameServer.start(name)
-      {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
-    else
-      {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
-    end
-  end
-
-  def handle_in("play_next_game", _map, socket) do
-    name = socket.assigns[:name]
-
-    game = Game.play_next_game(BackupAgent.get(name))
-    socket = assign(socket, :game, game)
-    BackupAgent.put(name, game)
-
-    player = socket.assigns[:player]
-    update_players(name, player)
-
+  def handle_in("walk", direction, socket) do
+    worldName = socket.assigns[:worldName]
+    playerName = socket.assigns[:playerName]
+    world = BackupAgent.get(worldName)
+    game = BackupAgent.get(playerName)
+    |> Game.walk(direction)
+    newPlayerPosn = Enum.at(game.playerPosns, game.playerIndex)
+    newPlayerPosns = List.replace_at(world.playerPosns, game.playerIndex, newPlayerPosn)
+    world = Map.put(world, :playerPosns, newPlayerPosns)
+    BackupAgent.put(worldName, world)
+    BackupAgent.put(playerName, game)
+    update_players(worldName, playerName)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
-  def handle_out("update_players", game, socket) do
-    player = socket.assigns[:player]
-    name = socket.assigns[:name]
+  def handle_in("attack", enemyIndex, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.attack(enemyIndex)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
 
-    if player && name do
+  def handle_in("use_skill", %{"skillId" => skillId, "enemyIndex" => enemyIndex}, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.use_skill(skillId, enemyIndex)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("use_spell", %{"spellId" => spellId, "enemyIndex" => enemyIndex}, socket) do
+
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.use_spell(spellId, enemyIndex)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("run", _payload, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.run()
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("death_save", _payload, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.death_save()
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("clear_end_screen", _payload, socket) do
+    playerName = socket.assigns[:playerName]
+    worldName = socket.assigns[:worldName]
+    world = BackupAgent.get(worldName)
+    # Added weather updates too in case player misses update while in battle
+    game = BackupAgent.get(playerName)
+    |> Map.put(:battleOverArray, [])
+    |> Map.put(:battleAction, "")
+    |> Map.put(:playerPosns, world.playerPosns)
+    |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
+    |> Map.put(:temperature, Map.get(world, "apparentTemperature"))
+    |> Map.put(:visibility, Map.get(world, "visibility"))
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("enemy_attack", characterIndex, socket) do
+    playerName = socket.assigns[:playerName]
+    game = BackupAgent.get(playerName)
+    |> Game.enemy_attack(characterIndex)
+    BackupAgent.put(playerName, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
+
+  def handle_out("update_players", %{"world" => world, "playerUpdaterName" => playerUpdaterName}, socket) do
+    playerName = socket.assigns[:playerName]
+    worldName = socket.assigns[:worldName]
+    game = BackupAgent.get(playerName)
+    if playerName != playerUpdaterName && worldName && game.battleAction == "" do
+      game = Game.update_game_world(game, world, playerName)
+      IO.inspect("I AM GETTING UPDATED")
+      IO.inspect(playerName)
+      IO.inspect(game.playerIndex)
+
+      BackupAgent.put(playerName, game)
       push socket, "update", Game.client_view(game)
       {:noreply, socket}
     else
@@ -70,11 +133,15 @@ defmodule DndgameWeb.GamesChannel do
     end
   end
 
-  def update_players(name, player) do
-    if player do
-      game = BackupAgent.get(name)
-      DndgameWeb.Endpoint.broadcast!("games:#{name}", "update_players", game)
-      {:ok, game}
+  def update_players(worldName, playerName) do
+    if playerName do
+      IO.inspect(playerName)
+      IO.inspect("I AM UPDATING")
+      playerUpdaterName = playerName
+      # I'm doing this here so backup agent is only called once for world
+      world = BackupAgent.get(worldName)
+      DndgameWeb.Endpoint.broadcast!("games:#{worldName}", "update_players", %{"world" => world, "playerUpdaterName" => playerUpdaterName})
+      {:ok, world}
     end
   end
 

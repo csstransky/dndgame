@@ -1,43 +1,27 @@
 <h1>Choose a World!</h1>
 <br/>
 <%= if @current_user do %>
-
-  <%= form_for @conn, "/party", fn func -> %>
-    <%= hidden_input func, :user_id, value: @current_user.id %>
-    <%= select func, :world_name,
-      ["Boston": "boston",
-      "Death Valley": "death-valley",
-      "Greenland": "greenland",
-      "TODO": "TODO",
-      "Dasht-e Loot": "dasht-e-loot",
-      "Mount Everest": "everest"] %>
-    <br/>
-    <%= submit "Join Game TODO make me attractive" %>
-  <% end %>
-  <br/>
-  <br/>
   <div class="row">
     <div class="card-group">
       <div class="card card-primary", style="width: 45rem;">
         <div class="card-header"><h2>Worlds</h2></div>
         <div class="card-body">
-
-          <p id="boston" class="list-group-item list-group-item-action" onMouseOver="desc('boston')" onclick="select('boston')">
+          <p id="boston" class="world-location list-group-item list-group-item-action" onMouseOver="desc('boston')" onclick="select('boston')">
             Boston, Massachusetts, USA
           </p>
-          <p id="death-valley" class="list-group-item list-group-item-action" onMouseOver="desc('death-valley')" onclick="select('death-valley')">
+          <p id="death-valley" class="world-location list-group-item list-group-item-action" onMouseOver="desc('death-valley')" onclick="select('death-valley')">
             Death Valley, California, USA
           </p>
-          <p id="greenland" class="list-group-item list-group-item-action" onMouseOver="desc('greenland')" onclick="select('greenland')">
+          <p id="greenland" class="world-location list-group-item list-group-item-action" onMouseOver="desc('greenland')" onclick="select('greenland')">
             Greenland
           </p>
-          <p id="TODO" class="list-group-item list-group-item-action" onMouseOver="desc('TODO')" onclick="select('TODO')">
-            Pending Location (TODO: East, 12-ish hours ahead, 70-ish weather)
+          <p id="sydney" class="world-location list-group-item list-group-item-action" onMouseOver="desc('sydney')" onclick="select('sydney')">
+            Sydney, Australia
           </p>
-          <p id="dasht-e-loot" class="list-group-item list-group-item-action" onMouseOver="desc('dasht-e-loot')" onclick="select('dasht-e-loot')">
-            Dasht-e Loot, Kerman Province, Iran
+          <p id="dallol" class="world-location list-group-item list-group-item-action" onMouseOver="desc('dallol')" onclick="select('dallol')">
+            Dallol, Afar Region, Ethiopia
           </p>
-          <p id="everest" class="list-group-item list-group-item-action" onMouseOver="desc('everest')" onclick="select('everest')">
+          <p id="everest" class="world-location list-group-item list-group-item-action" onMouseOver="desc('everest')" onclick="select('everest')">
             Mount Everest, Mahalangur Himal, Himalayas
           </p>
         </div>
@@ -50,29 +34,33 @@
       </div>
     </div>
   </div>
-  <br/>
-  <br/>
+  <%= form_for @conn, "/party", fn func -> %>
+    <%= hidden_input func, :user_id, value: @current_user.id %>
+    <%= hidden_input func, :world_name, value: "", id: "world_name" %>
+    <br/>
+    <%= submit "Join Game", class: "btn btn-success" %>
+  <% end %>
   <script>
     function desc(place) {
       location_desc = ""
       switch(place) {
         case "boston":
-          location_desc = "boston location_description"
+          location_desc = "State Capital of Massachusetts. Known for its cool weather. GMT -4."
           break;
         case "death-valley":
-          location_desc = "death valley location_description"
+          location_desc = "A land of extremes. Known for its scorching weather. GMT -7."
           break;
         case "greenland":
-          location_desc = "greenland location_descript"
+          location_desc = "Actually known for its ice. GMT -2."
           break;
-        case "TODO":
-          location_desc = "TODO"
+        case "sydney":
+          location_desc = "Watch out for drop bears! Known for its warm weather. GMT +10."
           break;
-        case "dasht-e-loot":
-          location_desc = "dashte-e loot location_descirption"
+        case "dallol":
+          location_desc = "Known for its volcanoes. GMT +3."
           break;
         case "everest":
-          location_desc = "everest location_description"
+          location_desc = "A really tall mountain. Known for being really tall. And cold. GMT -5."
           break;
         default:
           location_desc = "error"
@@ -81,32 +69,13 @@
     }
 
     function select(place) {
-      switch(place) {
-        case "boston":
-          location_desc = "boston location_description"
-          break;
-        case "death-valley":
-          location_desc = "death valley location_description"
-          break;
-        case "greenland":
-          location_desc = "greenland location_descript"
-          break;
-        case "TODO":
-          location_desc = "TODO"
-          break;
-        case "dasht-e-loot":
-          location_desc = "dashte-e loot location_descirption"
-          break;
-        case "everest":
-          location_desc = "everest location_description"
-          break;
-        default:
-          location_desc = "error"
+      var groupItems = document.getElementsByClassName("world-location");
+      for (let ii = 0; ii < groupItems.length; ii++) {
+        groupItems.item(ii).className = "world-location list-group-item list-group-item-action";
       }
-      text = "This function should actually select the :world input for Elixir, but because ofthe languages disconnects, I'm stuck with an ugly select box."
-      document.getElementById("world-desc").innerHTML = text;
+      document.getElementById(place).className += " active";
     }
   </script>
 <% else %>
-  Please <a href="/login"><u>login</u></a> to enter a world.
+  <h6> Please <a href="/login"><u>login</u></a> to enter a world.</h6>
 <% end %>

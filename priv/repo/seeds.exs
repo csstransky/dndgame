@@ -30,6 +30,8 @@ alias Dndgame.Races.Race
 alias Dndgame.Races
 alias Dndgame.Users.User
 alias Dndgame.Users
+alias Dndgame.Monsters
+alias Dndgame.Monsters.Monster
 
 pwhash = Argon2.hash_pwd_salt("password")
 
@@ -57,12 +59,15 @@ Repo.insert!(%Race{name: "Human", str_bonus: 1, dex_bonus: 1, int_bonus: 1,
 ###### SPELLS ######
 Repo.insert!(%Spell{name: "Fire Bolt", dice: "1d10",
         level_req: 1, target: "enemy", type: "fire", mp_cost: 0})
+Repo.insert!(%Spell{name: "Ray of Frost", dice: "1d8",
+        level_req: 1, target: "enemy", type: "ice", mp_cost: 0})
 Repo.insert!(%Spell{name: "Magic Missle", dice: "1d4", dice_bonus: 1,
-        level_req: 1, target: "enemies", type: "force", mp_cost: 0})
+        level_req: 1, target: "enemies", type: "force", mp_cost: 1})
+# TODO: Make these "member" in the future and deal with it
 Repo.insert!(%Spell{name: "Cure Wounds", dice: "1d8",
-        level_req: 1, target: "member", type: "heal", mp_cost: 1})
+        level_req: 1, target: "self", type: "heal", mp_cost: 1})
 Repo.insert!(%Spell{name: "Shield of Faith", dice: "2d1",
-        level_req: 1, target: "member", type: "buff", buff_stat: "AC", mp_cost: 1})
+        level_req: 1, target: "self", type: "buff", buff_stat: "AC", mp_cost: 1})
 
 ###### SKILLS ######
 Repo.insert!(%Skill{name: "Short Rest", level_req: 1, type: "rest",
@@ -78,11 +83,11 @@ Repo.insert!(%Skill{name: "Sneak Attack", level_req: 1, type: "damage",
 Repo.insert!(%Skill{name: "Hide", level_req: 1, type: "buff",
               sp_cost: 1, target: "self", buff_stat: "DEX", dice: "4d1"})
 
-###### CLASSES #######https:https://www.dndbeyond.com/races/gnome//www.dndbeyond.com/races/gnome
+###### CLASSES #######
 barbarian_profs = ["Athletics", "Intimidation"]
 barbarian_saves = ["STR", "CON"]
 barbarian_wpns = ["Simple", "Martial"]
-barbarian_armor = ["Light", "Medium"]
+barbarian_armor = ["Light", "Medium", "Heavy"]
 Repo.insert!(%Class{name: "Barbarian", hit_die: 12, ability_modifier: "STR", prof_array: barbarian_profs,
                     save_array: barbarian_saves, weapon_prof_array: barbarian_wpns,
                     armor_prof_array: barbarian_armor})
@@ -116,6 +121,8 @@ Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Magic Missle")})
 Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
                               spell: Spells.get_spell_by_name("Fire Bolt")})
+Repo.insert!(%Classes.Spells{class: Classes.get_class_by_name("Wizard"),
+                              spell: Spells.get_spell_by_name("Ray of Frost")})
 
 cleric_profs = ["Medicine", "Persuasion"]
 cleric_saves = ["WIS", "CHA"]
@@ -221,10 +228,92 @@ Repo.insert!(%Weapon{name: "Hand Crossbow", weapon_category: "Martial",
 ###### USERS ######
 Repo.insert!(%User{email: "Cristian", admin: true, password_hash: pwhash})
 
+###### Debug Weapon ######
+Repo.insert!(%Attack{name: "Obliterate", damage_dice: "2d10", damage_bonus: 99,
+                    attack_bonus: 99, target: "enemy", type: "pierce"})
+Repo.insert!(%Weapon{name: "God Killer", weapon_category: "Heavenly",
+                    attack: Attacks.get_attack_by_name("Obliterate")})
 ###### CHARACTERS ######
-Repo.insert!(%Character{name: "Chuck", str: 10, dex: 10, int: 10, con: 10,
-                wis: 10, cha: 13, weapon: Weapons.get_weapon_by_name("Dagger"),
+Repo.insert!(%Character{name: "Chuck", str: 10, dex: 20, int: 10, con: 20,
+                wis: 10, cha: 13, weapon: Weapons.get_weapon_by_name("God Killer"),
                 armor: Armors.get_armor_by_name("Mage Armor"),
                 class: Classes.get_class_by_name("Wizard"),
                 race: Races.get_race_by_name("Elf"),
                 user: Users.get_user_by_email("Cristian")})
+
+###### MONSTER ATTACKS ######
+Repo.insert!(%Attack{name: "Swipe", damage_dice: "1d4", attack_bonus: 1,
+                    damage_bonus: 1, target: "member", type: "slash"})
+Repo.insert!(%Attack{name: "Headbutt", damage_dice: "1d4", attack_bonus: 1,
+                    damage_bonus: 2, target: "member", type: "bludgeon"})
+Repo.insert!(%Attack{name: "Fire Throw", damage_dice: "1d4", attack_bonus: 1,
+                    damage_bonus: 1, target: "member", type: "fire"})
+Repo.insert!(%Attack{name: "Ice Punch", damage_dice: "1d4", attack_bonus: 2,
+                    damage_bonus: 2, target: "member", type: "ice"})
+Repo.insert!(%Attack{name: "Bite", damage_dice: "1d4", attack_bonus: 1,
+                    damage_bonus: 1, target: "member", type: "pierce"})
+Repo.insert!(%Attack{name: "Lava Chomp", damage_dice: "1d4", attack_bonus: 2,
+                    damage_bonus: 2, target: "member", type: "fire"})
+Repo.insert!(%Attack{name: "Frostbite", damage_dice: "1d4", attack_bonus: 1,
+                    damage_bonus: 1, target: "member", type: "ice"})
+Repo.insert!(%Attack{name: "Dragon Claw", damage_dice: "2d4", attack_bonus: 7,
+                    damage_bonus: 4, target: "member", type: "slash"})
+Repo.insert!(%Attack{name: "Poison Breath", damage_dice: "3d8",
+                    target: "party", type: "poison"})
+Repo.insert!(%Attack{name: "Chomp", damage_dice: "2d10", damage_bonus: 4,
+                    attack_bonus: 5, target: "member", type: "pierce"})
+
+
+###### MONSTERS ######
+Repo.insert!(%Monster{name: "Goblin", hp: 13, ac: 5,
+                      type: "goblin", element: "normal", str: 8, dex: 14,
+                      int: 10, con: 10, cha: 8, wis: 8})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Goblin"),
+                                attack: Attacks.get_attack_by_name("Swipe")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Goblin"),
+                                attack: Attacks.get_attack_by_name("Headbutt")})
+Repo.insert!(%Monster{name: "Ice Goblin", hp: 13, ac: 6,
+                      type: "goblin", element: "ice", str: 8, dex: 14, int: 10,
+                      con: 10, cha: 8, wis: 8})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Goblin"),
+                                attack: Attacks.get_attack_by_name("Swipe")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Goblin"),
+                                attack: Attacks.get_attack_by_name("Ice Punch")})
+Repo.insert!(%Monster{name: "Fire Goblin", hp: 13, ac: 7,
+                      type: "goblin", element: "fire", str: 8, dex: 14, int: 10,
+                      con: 10, cha: 8, wis: 8})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Goblin"),
+                                attack: Attacks.get_attack_by_name("Swipe")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Goblin"),
+                                attack: Attacks.get_attack_by_name("Fire Throw")})
+
+Repo.insert!(%Monster{name: "Zombie", hp: 25, ac: 4,
+                      type: "undead", element: "normal", str: 13, dex: 6,
+                      int: 3, con: 16, cha: 5, wis: 6})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Zombie"),
+                                attack: Attacks.get_attack_by_name("Swipe")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Zombie"),
+                                attack: Attacks.get_attack_by_name("Bite")})
+Repo.insert!(%Monster{name: "Ice Zombie", hp: 25, ac: 5,
+                      type: "undead", element: "ice", str: 13, dex: 6,
+                      int: 3, con: 16, cha: 5, wis: 6})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Zombie"),
+                                attack: Attacks.get_attack_by_name("Bite")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Ice Zombie"),
+                                attack: Attacks.get_attack_by_name("Frostbite")})
+Repo.insert!(%Monster{name: "Fire Zombie", hp: 25, ac: 7,
+                      type: "undead", element: "fire", str: 13, dex: 6,
+                      int: 3, con: 16, cha: 5, wis: 6})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombie"),
+                                attack: Attacks.get_attack_by_name("Bite")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Fire Zombie"),
+                                attack: Attacks.get_attack_by_name("Lava Chomp")})
+Repo.insert!(%Monster{name: "Young Green Dragon", hp: 136, ac: 15, type: "dragon",
+                      element: "poison", size: 1, str: 19, dex: 12, con: 17,
+                      int: 16, wis: 13, cha: 15, exp: 10000})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
+                                attack: Attacks.get_attack_by_name("Dragon Claw")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
+                                attack: Attacks.get_attack_by_name("Chomp")})
+Repo.insert!(%Monsters.Attacks{monster: Monsters.get_monster_by_name("Young Green Dragon"),
+                                attack: Attacks.get_attack_by_name("Poison Breath")})

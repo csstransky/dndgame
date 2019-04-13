@@ -6,6 +6,7 @@ defmodule Dndgame.Application do
   use Application
 
   def start(_type, _args) do
+
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
@@ -16,9 +17,7 @@ defmodule Dndgame.Application do
       # {Dndgame.Worker, arg},
       Dndgame.GameSup,
       Dndgame.BackupAgent,
-      Dndgame.GameServer,
     ]
-
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Dndgame.Supervisor]

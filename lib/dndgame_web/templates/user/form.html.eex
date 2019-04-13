@@ -6,14 +6,14 @@
   <% end %>
 
   <%= label f, :email %>
-  <%= text_input f, :email %>
+  <%= text_input f, :email, class: "form-control" %>
   <%= error_tag f, :email %>
 
   <%= label f, :password %>
-  <%= text_input f, :password %>
+  <%= text_input f, :password, class: "form-control", type: "password"%>
   <%= error_tag f, :password %>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

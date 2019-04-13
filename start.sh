@@ -1,4 +1,5 @@
 #!/bin/bash
+source profile
 
 export MIX_ENV=prod
 export PORT=9977

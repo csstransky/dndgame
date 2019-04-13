@@ -1,5 +1,5 @@
 [Unit]
-Description=Multiplayer DnD RPG
+Description=Multiplayer D&D RPG
 
 [Service]
 Type=simple
