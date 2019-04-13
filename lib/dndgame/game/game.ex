@@ -530,7 +530,6 @@ defmodule Dndgame.Game do
       game
       |> Map.put(:staticParty, updatedCharacters)
       |> Map.put(:monsters, removedDeadMonsters)
-      |> Map.put(:battleAction, "")
       |> set_battle_win_string
       |> update_database_character_exp("win")
     else
@@ -582,7 +581,6 @@ defmodule Dndgame.Game do
       game
       |> Map.put(:battleOverArray, battleOverArray)
       |> Map.put(:monsters, [])
-      |> Map.put(:battleAction, "")
       |> update_database_character_exp("lose")
     else
       game

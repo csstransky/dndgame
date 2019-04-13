@@ -97,6 +97,7 @@ defmodule DndgameWeb.GamesChannel do
     # Added weather updates too in case player misses update while in battle
     game = BackupAgent.get(playerName)
     |> Map.put(:battleOverArray, [])
+    |> Map.put(:battleAction, "")
     |> Map.put(:playerPosns, world.playerPosns)
     |> Map.put(:windSpeed, Map.get(world, "windSpeed"))
     |> Map.put(:temperature, Map.get(world, "apparentTemperature"))
