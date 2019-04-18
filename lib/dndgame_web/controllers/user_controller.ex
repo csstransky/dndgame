@@ -33,7 +33,8 @@ defmodule DndgameWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
-    render(conn, "show.html", user: user)
+    characters =   Dndgame.Characters.list_user_characters(id)
+    render(conn, "show.html", user: user, characters: characters)
   end
 
   def edit(conn, %{"id" => id}) do
