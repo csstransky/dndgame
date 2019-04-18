@@ -19,10 +19,12 @@
 
         <td>
           <%= link "Show", to: Routes.user_path(@conn, :show, user), class: "btn btn-info"  %>
-          <br/>
-          <%= link "Edit", to: Routes.user_path(@conn, :edit, user), class: "btn btn-light" %>
-          <br/>
-          <%= link "Delete", to: Routes.user_path(@conn, :delete, user), class: "btn btn-secondary", method: :delete, data: [confirm: "Are you sure?"] %>
+          <%= if @current_user != nil && @current_user.email == user.email do %>
+            <%= link "Edit", to: Routes.user_path(@conn, :edit, user), class: "btn btn-secondary" %>
+          <% end %>
+          <%= if @current_user != nil && @current_user.admin do %>
+            <%= link "Delete", to: Routes.user_path(@conn, :delete, user), class: "btn btn-danger", method: :delete, data: [confirm: "Are you sure?"] %>
+          <% end %>
         </td>
       </tr>
     <% end %>
