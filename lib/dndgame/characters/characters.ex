@@ -136,10 +136,13 @@ defmodule Dndgame.Characters do
   def get_ac(character) do
     armor = character.armor
     dex_mod = get_stat_modifier(character.dex)
-    if (armor.max_dex_bonus < dex_mod) do
-      armor.base + armor.max_dex_bonus
-    else
-      armor.base + dex_mod
+    cond do
+      armor.max_dex_bonus <= dex_mod ->
+        armor.base + armor.max_dex_bonus
+      dex_mod <= 0 ->
+        armor.base
+      true ->
+        armor.base + dex_mod
     end
   end
 
