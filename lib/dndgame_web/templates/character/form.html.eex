@@ -106,11 +106,11 @@
               </tr>
               <tr>
                 <td> <Strong> Weapons </Strong> </td>
-                <td> <%= select f, :weapon_id, [], id: "weapon_select", class: "form-control" %> </td>
+                <td> <%= select f, :weapon_id, Dndgame.Weapons.select_default_weapons(), id: "weapon_select", class: "form-control" %> </td>
               </tr>
               <tr>
                 <td> <Strong> Armor </Strong> </td>
-                <td> <%= select f, :armor_id, [], id: "armor_select", class: "form-control" %> </td>
+                <td> <%= select f, :armor_id, Dndgame.Armors.select_default_armors(), id: "armor_select", class: "form-control" %> </td>
               </tr>
               <tr>
                 <td> <Strong> Armor Class </Strong> </td>

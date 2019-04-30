@@ -22,6 +22,19 @@ defmodule Dndgame.Weapons do
     |> Repo.preload([:attack])
   end
 
+  def select_default_weapons do
+    default_id = 1
+    race = Repo.get!(Dndgame.Races.Race, default_id)
+    class = Repo.get!(Dndgame.Classes.Class, default_id)
+    weapon_profs = Enum.uniq(race.weapon_prof_array ++ class.weapon_prof_array)
+    query = from weapon in Weapon,
+            where: weapon.weapon_category in ^weapon_profs
+                or weapon.name in ^weapon_profs,
+            select: weapon
+    Repo.all(query)
+    |> Enum.map(&{&1.name, &1.id})
+  end
+
   @doc """
   Gets a single weapon.
 
