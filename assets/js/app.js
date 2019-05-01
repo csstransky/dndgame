@@ -41,8 +41,6 @@ $(function () {
   })
 
   $('#roll').click((ev) => {
-    update_armors();
-    update_weapons();
     update_stats();
   });
 
@@ -264,7 +262,7 @@ function show_weapon(weapon) {
 }
 
 function show_armor(armor) {
-  console.log(armor)
+  let str = $('#str').val()
   let name = "<h2><u>" + armor.name + "</u></h2>";
   let desc = armor.desc === "" ? "" : "<b>Desc:</b> " + armor.desc + "<br/>";
   let category = "<b>Category:</b> " + armor.armor_category + "<br/>";
@@ -272,6 +270,7 @@ function show_armor(armor) {
   let dex_bonus = armor.max_dex_bonus > 90 ? "<b>Max DEX Bonus:</b> No Limit<br/>" : "<b>Max DEX Bonus:</b> " + armor.max_dex_bonus + "<br/>"
   let stealth_disadvantage = armor.stealth_disadvantage ? "<b>Stealth Disadvantage:</b> Yes<br/>" : "<b>Stealth Disadvantage:</b> No<br/>"
   let str_min = armor.str_minimum ? "<b>STR Minimum:</b> " + armor.str_minimum + "<br/>" : ""
+  str_min = armor.str_minimum > str ? "<font color=\"red\">" + str_min + "</font>" : str_min
   return name
     + desc
     + category

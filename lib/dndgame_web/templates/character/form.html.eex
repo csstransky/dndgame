@@ -2,6 +2,16 @@
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
+      <%= for error <- @changeset.errors do %>
+        <%= cond do %>
+          <%= elem(error, 0) == :name -> %>
+            <p>+ You must enter a name for your character.</p>
+          <%= elem(error, 0) == :armor_id -> %>
+            <p>+ You must meet minimum strength requirement for armor.</p>
+          <%= true -> %>
+            <p>+ Unknown Error. Contact Admin.</p>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 
@@ -110,7 +120,8 @@
               </tr>
               <tr>
                 <td> <Strong> Armor </Strong> </td>
-                <td> <%= select f, :armor_id, Dndgame.Armors.select_default_armors(), id: "armor_select", class: "form-control" %> </td>
+                <td> <%= select f, :armor_id, Dndgame.Armors.select_default_armors(), id: "armor_select", class: "form-control" %>
+                <%= error_tag f, :armor_id %> </td>
               </tr>
               <tr>
                 <td> <Strong> Armor Class </Strong> </td>
