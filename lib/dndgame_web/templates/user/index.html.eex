@@ -3,7 +3,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Email</th>
+      <th>Name</th>
       <th>Admin</th>
       <th>Date Created</th>
 

@@ -2,7 +2,7 @@
 
 <ul class="list-group">
   <li class="list-group-item">
-    <strong>Email:</strong>
+    <strong>Name:</strong>
     <%= @user.email %>
   </li>
 
