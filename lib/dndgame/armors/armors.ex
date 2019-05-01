@@ -21,6 +21,19 @@ defmodule Dndgame.Armors do
     Repo.all(Armor)
   end
 
+  def select_default_armors do
+    default_id = 1
+    race = Repo.get!(Dndgame.Races.Race, default_id)
+    class = Repo.get!(Dndgame.Classes.Class, default_id)
+    armor_profs = Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
+    query = from armor in Armor,
+            where: armor.armor_category in ^armor_profs
+                or armor.name in ^armor_profs,
+            select: armor
+    Repo.all(query)
+    |> Enum.map(&{&1.name, &1.id})
+  end
+
   @doc """
   Gets a single armor.
 
@@ -106,13 +119,10 @@ defmodule Dndgame.Armors do
     Armor.changeset(armor, %{})
   end
 
-  def get_select_armors(armors, race, class, str) do
-    total_str = str + race.str_bonus
+  def get_select_armors(armors, race, class) do
     armor_profs = Enum.uniq(race.armor_prof_array ++ class.armor_prof_array)
     armors
-    |> Enum.filter(fn armor ->
-      is_selectable_armor(armor, armor_profs)
-      && total_str >= armor.str_minimum
+    |> Enum.filter(fn armor -> is_selectable_armor(armor, armor_profs)
     end)
   end
 

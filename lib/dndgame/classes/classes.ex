@@ -26,7 +26,6 @@ defmodule Dndgame.Classes do
   def select_classes do
     Repo.all(Class)
     |> Enum.map(&{&1.name, &1.id})
-
   end
 
   @doc """

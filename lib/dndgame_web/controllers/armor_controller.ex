@@ -45,13 +45,11 @@ defmodule DndgameWeb.ArmorController do
     end
   end
 
-  def select_armors(conn, %{"race_id" => race_id,
-    "class_id" => class_id, "str" => str}) do
-    {str, _} = Integer.parse(str)
+  def select_armors(conn, %{"race_id" => race_id, "class_id" => class_id}) do
     armors = Armors.list_armors()
     class = Dndgame.Classes.get_class!(class_id)
     race = Dndgame.Races.get_race!(race_id)
-    select_armors = Dndgame.Armors.get_select_armors(armors, race, class, str)
+    select_armors = Dndgame.Armors.get_select_armors(armors, race, class)
     render(conn, "index.json", armors: select_armors)
   end
 end
