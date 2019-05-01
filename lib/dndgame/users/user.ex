@@ -6,12 +6,8 @@ defmodule Dndgame.Users.User do
     field :admin, :boolean, default: false
     field :email, :string
     field :password_hash, :string
-
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
-
-
-
     timestamps()
   end
 
@@ -22,7 +18,7 @@ defmodule Dndgame.Users.User do
     |> unique_constraint(:email)
     |> validate_confirmation(:password)
     |> validate_password(:password)
-    |> validate_required([:email])
+    |> validate_required([:email, :password])
     |> put_pass_hash()
   end
 
@@ -41,7 +37,7 @@ defmodule Dndgame.Users.User do
     {:ok, password}
   end
 
-  def valid_password?(_), do: {:error, "The password is too short"}
+  def valid_password?(_), do: {:error, "must be 8 characters or greater"}
 
   def put_pass_hash(%Ecto.Changeset{
     valid?: true, changes: %{password: password}} = changeset) do

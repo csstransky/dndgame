@@ -5,7 +5,7 @@
     </div>
   <% end %>
 
-  <%= label f, :email %>
+  <%= label f, "Name" %>
   <%= text_input f, :email, class: "form-control" %>
   <font color="red"><%= error_tag f, :email %></font>
   <br/>

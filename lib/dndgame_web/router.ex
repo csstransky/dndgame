@@ -25,7 +25,7 @@ defmodule DndgameWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/signup", UserController, :new
+    get "/register", UserController, :new
     get "/login", PageController, :login
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
     resources "/users", UserController
