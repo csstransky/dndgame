@@ -14,23 +14,28 @@
       <% end %>
     </div>
   <% end %>
-
+  <br/>
   <div class="row">
-    <div class="card card-default">
-      <div class="card-heading">
-        <table class="table">
-          <tr>
-            <td> <Strong> Name </Strong> </td>
-            <td> <%= text_input f, :name %>
-            <font color="red"><%= error_tag f, :name %></font> </td>
-          </tr>
-        </table>
+    <div class="row">
+      <div class="card card-default", style="width: 45rem;">
+        <div class="card-header"><h2>Name</h2></div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <Strong>Character Name</Strong>
+            </div>
+            <div class="col-9">
+              <%= text_input f, :name %>
+              <font color="red"><%= error_tag f, :name %></font>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="card-group">
         <div class="card card-primary", style="width: 45rem;">
-          <div class="card-header"><h2><u>Stats</u></h2></div>
+          <div class="card-header"><h2>Stats</h2></div>
           <div class="card-body">
             <table class="table table-hover table-condensed">
               <thead>
@@ -93,7 +98,7 @@
           </div>
           <div class="card-body">
             <h3 id="skill-desc-title"></h3>
-            <p id="skill-desc"></p>
+            <p id="skill-desc">Hover your mouse over a specific stat to see its details.</p>
           </div>
         </div>
       </div>
@@ -152,8 +157,7 @@
           </div>
           <div class="card-body">
             <div id="HELLFIRE">
-
-              <%= #TODO: I will add something that'll show off race here %>
+              <!-- Stuff is dynamically shown here in app.js -->
             </div>
           </div>
         </div>
