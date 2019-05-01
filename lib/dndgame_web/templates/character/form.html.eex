@@ -22,7 +22,7 @@
           <tr>
             <td> <Strong> Name </Strong> </td>
             <td> <%= text_input f, :name %>
-            <%= error_tag f, :name %> </td>
+            <font color="red"><%= error_tag f, :name %></font> </td>
           </tr>
         </table>
       </div>
@@ -121,7 +121,7 @@
               <tr>
                 <td> <Strong> Armor </Strong> </td>
                 <td> <%= select f, :armor_id, Dndgame.Armors.select_default_armors(), id: "armor_select", class: "form-control" %>
-                <%= error_tag f, :armor_id %> </td>
+                <font color="red"><%= error_tag f, :armor_id %></font> </td>
               </tr>
               <tr>
                 <td> <Strong> Armor Class </Strong> </td>

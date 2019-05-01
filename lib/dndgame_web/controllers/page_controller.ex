@@ -39,6 +39,10 @@ defmodule DndgameWeb.PageController do
     render(conn, "index.html")
   end
 
+  def login(conn, _params) do
+    render(conn, "login.html")
+  end
+
   def is_id_dups?(party_id_1, party_id_2, party_id_3) do
     (party_id_1 == party_id_2 && party_id_1 != "")
       || (party_id_1 == party_id_3 && party_id_1 != "")
