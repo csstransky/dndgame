@@ -6,5 +6,8 @@
     <%= if @current_user == nil do %>
       <h6> Please <a href="/login"><u>login</u></a> to begin.</h6>
     <% end %>
+    <%= if get_flash(@conn, :info) do %>
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <% end %>
   </div>
 </div>

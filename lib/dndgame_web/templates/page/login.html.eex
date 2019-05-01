@@ -1,5 +1,6 @@
 <section class="phx-hero">
-  <p>Login Page</p>
+  <h3><u>Login Page</u></h3>
+  <br/>
   <div>
     <a class="btn btn-primary btn-lg" href="<%= Routes.auth_path(@conn, :spotifyAuthorization) %>">
       <i class="fa fa-google"></i>
@@ -12,6 +13,9 @@
       <%= submit "Login", class: "btn btn-secondary" %>
     <% end %>
     <br/>
+    <%= if get_flash(@conn, :error) do %>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <% end %>
     <br/>
     <p>Not a Member? Click
       <u><%= link "Register", to: Routes.user_path(@conn, :new) %></u>
