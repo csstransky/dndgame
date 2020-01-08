@@ -2,7 +2,7 @@ server {
 
     listen 80;
     listen [::]:80;
-    server_name dndgame.cstransky.me;
+    server_name dndgame.cstransky.com;
 
     location / {
         proxy_pass https://localhost:9977;

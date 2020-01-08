@@ -1,6 +1,6 @@
 Meta
  - Our team for Project 2 was comprised of Bryce DeWitt, Noah Kennedy, Bach-An (Bach) Nguyen, and Cristian Stransky.
- - The app is deployed to our VPS and is available at dndgame.cstransky.me
+ - The app is deployed to our VPS and is available at dndgame.cstransky.com
  - The source code for our app is available at http://www.github.ccs.neu.edu/cstransky/dndgame
  - The app is deployed to the VPS and is fully functional
  - 	Bryce DeWitt – VP of Front End and API President of National Outreach
