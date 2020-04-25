@@ -23,13 +23,13 @@ mix phx.digest
 echo "Generating release..."
 mix release
 
-echo "Starting database..."
-mix ecto.create
-mix ecto.migrate
-mix ecto.reset
+#echo "Starting database..."
+#mix ecto.create
+#mix ecto.migrate
+#mix ecto.reset
 
-#echo "Stopping old copy of app, if any..."
-#_build/prod/rel/draw/bin/practice stop || true
+echo "Stopping old copy of app, if any..."
+_build/prod/rel/draw/bin/dndgame stop || true
 
 echo "Starting app..."
 
