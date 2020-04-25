@@ -1,13 +1,15 @@
 <div class="row">
   <div class="col-12">
     <h1><%= gettext "Welcome to D&D Game!" %></h1>
-    <p>A fully playable web-based D&D app that lets you create characters, fight monsters, and explore an open world.</p>
-    <p>Select a world location and fight weather-based monsters in world that changes in realtime</p>
+    <p>A fully playable in-browser MMORPG based on Dungeons & Dragons that let's you create characters, fight monsters, and explore an open world.</p>
+    <p>Select a real-world location and explore 6 different worlds that are directly affected by the local time and weather. Beware the night...</p>
     <%= if @current_user == nil do %>
       <h6> Please <a href="/login"><u>login</u></a> to begin.</h6>
     <% end %>
     <%= if get_flash(@conn, :info) do %>
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
     <% end %>
+    <br>
+    <img src="images/dndgame_screenshots.png" width="100%">
   </div>
 </div>
