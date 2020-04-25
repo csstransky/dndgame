@@ -29,10 +29,10 @@
           <td><%= character.weapon.name %></td>
           <td><%= character.armor.name %></td>
           <td>
-            <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
+            <%= link "View Stats", to: Routes.character_path(@conn, :show, character), class: "btn btn-info" %>
           </td>
           <td>
-            <%= link "Delete", to: Routes.character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"] %>
+            <%= link "Delete", to: Routes.character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger" %>
           </td>
         </tr>
       <% end %>
