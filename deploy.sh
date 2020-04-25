@@ -29,7 +29,7 @@ mix release
 #mix ecto.reset
 
 echo "Stopping old copy of app, if any..."
-_build/prod/rel/draw/bin/dndgame stop || true
+_build/prod/rel/dndgame/bin/dndgame stop || true
 
 echo "Starting app..."
 
