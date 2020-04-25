@@ -60,7 +60,7 @@ defmodule Dndgame.Game do
       nil
     else
       character = Dndgame.Characters.get_character!(party_id)
-      character = character
+      character
       |> Map.put(:weapon, Dndgame.Weapons.get_weapon!(character.weapon_id))
       |> Map.put(:class, Dndgame.Classes.get_class!(character.class_id))
       |> Map.put(:hp, Characters.get_hp(character))
@@ -657,7 +657,7 @@ defmodule Dndgame.Game do
   # roll a death save for character
   def death_save(game) do
     # get the character
-    character = List.at(game.battleParty, game.playerIndex)
+    character = Enum.at(game.battleParty, game.playerIndex)
     # roll the d20 for save failure
     roll = roll_dice("1d20")
     # if greater than 10, update save rolls, if < then update failures
@@ -867,7 +867,6 @@ defmodule Dndgame.Game do
       # TODO fix this tomorrow cristian
       characterId = Enum.random(0..length(game.battleParty)-1)
       # get the target character of the attack
-#character = Enum.at(game.battleParty, characterId)
       targetCharacter = select_alive_character(game) #(game.battleParty, character.hp, characterId)
       # get the list of this enemy's available attacks
       attackList = enemy.attacks
