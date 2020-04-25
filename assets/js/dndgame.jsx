@@ -271,25 +271,25 @@ class Dndgame extends React.Component {
     if (DAWNHOUR <= date.getHours() && date.getHours() < DUSKHOUR) {
       // snow
       if(this.state.weather.temperature < 30) {
-        drawing.src = require("../static/snow_day.png");
+        drawing.src = require("../static/maps/snow_day.png");
       }
        // hot
       else if (this.state.weather.temperature > 90) {
-        drawing.src = require("../static/hot_day.png");
+        drawing.src = require("../static/maps/hot_day.png");
       } // anything in between (day)
       else {
-        drawing.src = require("../static/cool_day.png");
+        drawing.src = require("../static/maps/cool_day.png");
       }
     }
     else { // NIGHT
       if(this.state.weather.temperature < 20) {
-        drawing.src = require("../static/snow_night.png");
+        drawing.src = require("../static/maps/snow_night.png");
       } // hot
       else if (this.state.weather.temperature > 80) {
-        drawing.src = require("../static/hot_night.png");
+        drawing.src = require("../static/maps/hot_night.png");
       } // anything in between (day)
       else {
-        drawing.src = require("../static/cool_night.png");
+        drawing.src = require("../static/maps/cool_night.png");
       }
     }
     return drawing;

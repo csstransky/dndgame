@@ -46,7 +46,7 @@
         <td><%= character.weapon.name %></td>
         <td><%= character.armor.name %></td>
         <td>
-          <%= link "View Stats", to: Routes.character_path(@conn, :show, character) %>
+          <%= link "View Stats", to: Routes.character_path(@conn, :show, character), class: "btn btn-info" %>
         </td>
       </tr>
     <% end %>

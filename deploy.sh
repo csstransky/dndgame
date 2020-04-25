@@ -5,9 +5,9 @@ export ENV=prod
 export PORT=9977
 export NODEBIN=`pwd`/assets/node_modules/.bin
 export PATH="$PATH:$NODEBIN"
-export SSL_KEY_PATH=/etc/letsencrypt/live/dndgame.cstransky.me/privkey.pem
-export SSL_CERT_PATH=/etc/letsencrypt/live/dndgame.cstransky.me/cert.pem
-export SSL_CACERT_PATH=/etc/letsencrypt/live/dndgame.cstransky.me/chain.pem
+export SSL_KEY_PATH=/etc/letsencrypt/live/dndgame.cstransky.com/privkey.pem
+export SSL_CERT_PATH=/etc/letsencrypt/live/dndgame.cstransky.com/cert.pem
+export SSL_CACERT_PATH=/etc/letsencrypt/live/dndgame.cstransky.com/chain.pem
 
 echo "Building..."
 
@@ -23,13 +23,13 @@ mix phx.digest
 echo "Generating release..."
 mix release
 
-echo "Starting database..."
-mix ecto.create
-mix ecto.migrate
-mix ecto.reset
+#echo "Starting database..."
+#mix ecto.create
+#mix ecto.migrate
+#mix ecto.reset
 
-#echo "Stopping old copy of app, if any..."
-#_build/prod/rel/draw/bin/practice stop || true
+echo "Stopping old copy of app, if any..."
+_build/prod/rel/dndgame/bin/dndgame stop || true
 
 echo "Starting app..."
 

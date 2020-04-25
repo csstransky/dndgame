@@ -29,12 +29,10 @@ defmodule DndgameWeb.Router do
     get "/login", PageController, :login
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
     resources "/users", UserController
-    # TODO: Maybe make this a "POST" instead of "get" in the future
     post "/game", PageController, :game
     post "/party", PageController, :party
     get "/worlds", PageController, :worlds
     resources "/characters", CharacterController
-    resources "/sessions", SessionController, only: [:create, :delete], singleton: true
   end
 
     scope "/ajax/v1", DndgameWeb do
@@ -50,16 +48,6 @@ defmodule DndgameWeb.Router do
         resources "/classes", ClassController, except: [:new, :edit]
         resources "/attacks", AttackController, except: [:new, :edit]
         resources "/stats", StatsController, except: [:new, :edit]
-  end
-
-  scope "/auth", DndgameWeb do
-    pipe_through :browser
-
-    get "/spotifylogin", AuthController, :spotifyAuthorization
-    get "/authenticate/2", AuthController, :spotifyAuthentication
-    get "/:provider", AuthController, :index2
-    get "/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
   end
 
   # Other scopes may use custom stacks.

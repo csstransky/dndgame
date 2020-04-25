@@ -7,13 +7,13 @@
     <h5><Strong>About</Strong></h5>
   </div>
   <div class="card-body">
-    <p class="card-text"><u>Health Points</u>: <%= Dndgame.Characters.get_hp(@character) %></p>
-    <p class="card-text"><u>Mana Points</u>: <%= Dndgame.Characters.get_mp(@character) %></p>
-    <p class="card-text"><u>Spirit Points</u>: <%= Dndgame.Characters.get_sp(@character) %></p>
-    <p class="card-text"><u>Armor Class</u>: <%= Dndgame.Characters.get_ac(@character) %></p>
-    <p class="card-text"><u>Level</u>: <%= Dndgame.Characters.get_level(@character) %></p>
-    <p class="card-text"><u>Experience</u>: <%= @character.exp %></p>
-    <p class="card-text"><u>Initiative</u>: <%= Dndgame.Characters.get_initiative(@character) %></p>
+    <p class="card-text"><b>Health Points</b>: <%= Dndgame.Characters.get_hp(@character) %></p>
+    <p class="card-text"><b>Mana Points</b>: <%= Dndgame.Characters.get_mp(@character) %></p>
+    <p class="card-text"><b>Spirit Points</b>: <%= Dndgame.Characters.get_sp(@character) %></p>
+    <p class="card-text"><b>Armor Class</b>: <%= Dndgame.Characters.get_ac(@character) %></p>
+    <p class="card-text"><b>Level</b>: <%= Dndgame.Characters.get_level(@character) %></p>
+    <p class="card-text"><b>Experience</b>: <%= @character.exp %></p>
+    <p class="card-text"><b>Initiative</b>: <%= Dndgame.Characters.get_initiative(@character) %></p>
   </div>
 </div>
 </td>
@@ -24,12 +24,12 @@
     <h5><Strong>Skills</Strong></h5>
   </div>
   <div class="card-body">
-    <p class="card-text"><u>Charisma</u>: <%= @character.cha %></p>
-    <p class="card-text"><u>Constitution</u>: <%= @character.con %></p>
-    <p class="card-text"><u>Dexterity</u>: <%= @character.dex %></p>
-    <p class="card-text"><u>Intelligence</u>: <%= @character.int %></p>
-   <p class="card-text"><u>Strength</u>: <%= @character.str %></p>
-   <p class="card-text"><u>Wisdom</u>: <%= @character.wis %></p>
+    <p class="card-text"><b>Charisma</b>: <%= @character.cha %></p>
+    <p class="card-text"><b>Constitution</b>: <%= @character.con %></p>
+    <p class="card-text"><b>Dexterity</b>: <%= @character.dex %></p>
+    <p class="card-text"><b>Intelligence</b>: <%= @character.int %></p>
+   <p class="card-text"><b>Strength</b>: <%= @character.str %></p>
+   <p class="card-text"><b>Wisdom</b>: <%= @character.wis %></p>
   </div>
 </div>
 </td>
@@ -40,7 +40,7 @@
   </div>
   <div class="card-body">
     <%= for save <- Dndgame.Characters.get_saves(@character) do %>
-      <p><u><%= save %></u></p>
+      <p><b><%= save %></b></p>
     <% end %>
   </div>
 </div>
@@ -54,7 +54,7 @@
   </div>
   <div class="card-body">
    <%= for weapon_prof <- Dndgame.Characters.get_weapon_profs(@character) do %>
-      <p><u><%= weapon_prof %></u></p>
+      <p><b><%= weapon_prof %></b></p>
     <% end %>
   </div>
 </div>
@@ -66,7 +66,7 @@
   </div>
   <div class="card-body">
      <%= for prof <- Dndgame.Characters.get_profs(@character) do %>
-      <p><u><%= prof %></u></p>
+      <p><b><%= prof %></b></p>
     <% end %>
   </div>
 </div>
@@ -79,7 +79,7 @@
   </div>
   <div class="card-body">
     <%= for armor_prof <- Dndgame.Characters.get_armor_profs(@character) do %>
-      <p><u><%= armor_prof %></u></p>
+      <p><b><%= armor_prof %></b></p>
     <% end %>
   </div>
 </div>
