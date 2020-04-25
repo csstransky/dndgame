@@ -57,3 +57,5 @@ npm-debug.log
 *.profile
 *profile
 *.beam
+*.deb
+*.lock
